@@ -1,0 +1,191 @@
+<div class="my-events-container">
+  <div class="container">
+
+    <!-- Page Header -->
+    <div class="page-header text-center mb-5">
+      <h1 class="page-title">My Registered Events</h1>
+      <p class="page-subtitle">Keep track of all events you've registered for</p>
+    </div>
+
+    <!-- Loading State -->
+    <div class="text-center" *ngIf="loading">
+      <div class="spinner-border text-emerald" role="status">
+        <span class="visually-hidden">Loading your events...</span>
+      </div>
+      <p class="mt-3 text-muted">Loading your registered events...</p>
+    </div>
+
+    <!-- Error State -->
+    <div class="alert alert-danger" *ngIf="error" role="alert">
+      <i class="fas fa-exclamation-circle me-2"></i>
+      {{ error }}
+      <button type="button" class="btn btn-sm btn-outline-danger ms-3" (click)="refreshEvents()">
+        <i class="fas fa-redo-alt"></i>
+        Try Again
+      </button>
+    </div>
+
+    <!-- No Events State -->
+    <div class="no-events-state text-center" *ngIf="!loading && !error && !hasEvents">
+      <div class="no-events-icon">
+        <i class="fas fa-calendar-times"></i>
+      </div>
+      <h3 class="no-events-title">No Registered Events</h3>
+      <p class="no-events-text">You haven't registered for any events yet.</p>
+      <button class="btn btn-gold btn-lg" (click)="navigateToAllEvents()">
+        <i class="fas fa-search me-2"></i>
+        Browse Events
+      </button>
+    </div>
+
+    <!-- Events Content -->
+    <div class="events-content" *ngIf="!loading && !error && hasEvents">
+
+      <!-- Today's Events -->
+      <div class="events-section" *ngIf="todayEvents.length > 0">
+        <div class="section-header">
+          <h2 class="section-title">
+            <i class="fas fa-star"></i>
+            Today's Events
+          </h2>
+          <span class="event-count">{{ todayEvents.length }}</span>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-6 col-md-12 mb-4" *ngFor="let event of todayEvents">
+            <div class="event-card event-today" (click)="navigateToEventDetails(event.id)">
+              <div class="event-status-badge today">
+                <i class="fas fa-clock"></i>
+                Today
+              </div>
+
+              <div class="event-date">
+                <span class="day">{{ getEventDay(event.eventDate) }}</span>
+                <span class="month">{{ getEventMonth(event.eventDate) }}</span>
+              </div>
+
+              <div class="event-content">
+                <h5 class="event-title">{{ event.title }}</h5>
+                <p class="event-description">{{ event.description }}</p>
+                <div class="event-meta">
+                  <span class="event-time">
+                    <i class="fas fa-clock"></i>
+                    {{ formatEventTime(event.eventDate) }}
+                  </span>
+                  <span class="event-location" *ngIf="event.masjidName"
+                    (click)="navigateToMasjid(event.masjidId!); $event.stopPropagation()">
+                    <i class="fas fa-mosque"></i>
+                    {{ event.masjidName }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upcoming Events -->
+      <div class="events-section" *ngIf="upcomingEvents.length > 0">
+        <div class="section-header">
+          <h2 class="section-title">
+            <i class="fas fa-calendar-plus"></i>
+            Upcoming Events
+          </h2>
+          <span class="event-count">{{ upcomingEvents.length }}</span>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-6 col-md-12 mb-4" *ngFor="let event of upcomingEvents">
+            <div class="event-card event-upcoming" (click)="navigateToEventDetails(event.id)">
+              <div class="event-status-badge upcoming">
+                <i class="fas fa-calendar-check"></i>
+                {{ getDaysUntilEventText(event.eventDate) }}
+              </div>
+
+              <div class="event-date">
+                <span class="day">{{ getEventDay(event.eventDate) }}</span>
+                <span class="month">{{ getEventMonth(event.eventDate) }}</span>
+              </div>
+
+              <div class="event-content">
+                <h5 class="event-title">{{ event.title }}</h5>
+                <p class="event-description">{{ event.description }}</p>
+                <div class="event-meta">
+                  <span class="event-datetime">
+                    <i class="fas fa-calendar-alt"></i>
+                    {{ formatEventDate(event.eventDate) }}
+                  </span>
+                  <span class="event-time">
+                    <i class="fas fa-clock"></i>
+                    {{ formatEventTime(event.eventDate) }}
+                  </span>
+                  <span class="event-location" *ngIf="event.masjidName"
+                    (click)="navigateToMasjid(event.masjidId!); $event.stopPropagation()">
+                    <i class="fas fa-mosque"></i>
+                    {{ event.masjidName }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Past Events -->
+      <div class="events-section" *ngIf="pastEvents.length > 0">
+        <div class="section-header">
+          <h2 class="section-title">
+            <i class="fas fa-history"></i>
+            Past Events
+          </h2>
+          <span class="event-count">{{ pastEvents.length }}</span>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-6 col-md-12 mb-4" *ngFor="let event of pastEvents">
+            <div class="event-card event-past" (click)="navigateToEventDetails(event.id)">
+              <div class="event-status-badge past">
+                <i class="fas fa-check-circle"></i>
+                Attended
+              </div>
+
+              <div class="event-date">
+                <span class="day">{{ getEventDay(event.eventDate) }}</span>
+                <span class="month">{{ getEventMonth(event.eventDate) }}</span>
+              </div>
+
+              <div class="event-content">
+                <h5 class="event-title">{{ event.title }}</h5>
+                <p class="event-description">{{ event.description }}</p>
+                <div class="event-meta">
+                  <span class="event-datetime">
+                    <i class="fas fa-calendar-alt"></i>
+                    {{ formatEventDate(event.eventDate) }}
+                  </span>
+                  <span class="event-location" *ngIf="event.masjidName"
+                    (click)="navigateToMasjid(event.masjidId!); $event.stopPropagation()">
+                    <i class="fas fa-mosque"></i>
+                    {{ event.masjidName }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-section text-center mt-5">
+        <button class="btn btn-gold btn-lg me-3" (click)="navigateToAllEvents()">
+          <i class="fas fa-search me-2"></i>
+          Browse More Events
+        </button>
+        <button class="btn btn-outline-emerald btn-lg" (click)="refreshEvents()">
+          <i class="fas fa-sync-alt me-2"></i>
+          Refresh
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,121 @@
+<div class="edit-event-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+
+                <!-- Page Header -->
+                <div class="page-header text-center mb-5">
+                    <h1 class="page-title">Edit Event</h1>
+                    <p class="page-subtitle">Update your event details</p>
+                </div>
+
+                <!-- Loading State -->
+                <div *ngIf="loadingEvent" class="text-center py-5">
+                    <div class="spinner-border text-emerald" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2 text-muted">Loading event details...</p>
+                </div>
+
+                <!-- Success Message -->
+                <div class="alert alert-success alert-dismissible" *ngIf="success" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>
+                    {{ success }}
+                    <button type="button" class="btn-close" (click)="clearSuccess()"></button>
+                </div>
+
+                <!-- Error Message -->
+                <div class="alert alert-danger alert-dismissible" *ngIf="error" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    {{ error }}
+                    <button type="button" class="btn-close" (click)="clearError()"></button>
+                </div>
+
+                <!-- Edit Event Form -->
+                <div class="event-form-card" *ngIf="!loadingEvent && originalEvent">
+                    <form (ngSubmit)="onSubmit()" #eventForm="ngForm">
+
+                        <!-- Title Field -->
+                        <div class="form-group mb-4">
+                            <label for="title" class="form-label">
+                                <i class="fas fa-heading"></i>
+                                Event Title *
+                            </label>
+                            <input type="text" id="title" name="title" class="form-control" [(ngModel)]="event.title"
+                                placeholder="Enter event title" required maxlength="200" />
+                        </div>
+
+                        <!-- Description Field -->
+                        <div class="form-group mb-4">
+                            <label for="description" class="form-label">
+                                <i class="fas fa-align-left"></i>
+                                Description *
+                            </label>
+                            <textarea id="description" name="description" class="form-control" rows="5"
+                                [(ngModel)]="event.description" placeholder="Describe your event in detail..." required
+                                maxlength="1000"></textarea>
+                            <small class="form-text">{{ event.description.length }}/1000 characters</small>
+                        </div>
+
+                        <!-- Event Date Field -->
+                        <div class="form-group mb-4">
+                            <label for="eventDate" class="form-label">
+                                <i class="fas fa-calendar-alt"></i>
+                                Event Date & Time *
+                            </label>
+                            <input type="datetime-local" id="eventDate" name="eventDate" class="form-control"
+                                [(ngModel)]="event.eventDate" required />
+                        </div>
+
+                        <!-- Masjid Selection -->
+                        <div class="form-group mb-4">
+                            <label for="masjidId" class="form-label">
+                                <i class="fas fa-mosque"></i>
+                                Masjid (Optional)
+                            </label>
+                            <select id="masjidId" name="masjidId" class="form-control" [(ngModel)]="event.masjidId">
+                                <option value="">Select a masjid (optional)</option>
+                                <option *ngFor="let masjid of masjids" [value]="masjid.id">
+                                    {{ masjid.shortName }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Language Selection -->
+                        <div class="form-group mb-4">
+                            <label for="languageId" class="form-label">
+                                <i class="fas fa-language"></i>
+                                Language (Optional)
+                            </label>
+                            <select id="languageId" name="languageId" class="form-control"
+                                [(ngModel)]="event.languageId">
+                                <option value="">Select a language (optional)</option>
+                                <option *ngFor="let language of languages" [value]="language.id">
+                                    {{ language.name }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline-secondary me-3" (click)="onCancel()"
+                                [disabled]="loading">
+                                <i class="fas fa-times"></i>
+                                Cancel
+                            </button>
+
+                            <button type="submit" class="btn btn-gold" [disabled]="loading || !eventForm.form.valid">
+                                <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"
+                                    role="status"></span>
+                                <i *ngIf="!loading" class="fas fa-save me-2"></i>
+                                {{ loading ? 'Updating...' : 'Update Event' }}
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

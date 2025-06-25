@@ -1,0 +1,145 @@
+<div class="community-details-container">
+  <!-- Navigation Header -->
+  <div class="nav-header">
+    <button class="back-btn" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i>
+      Back
+    </button>
+
+    <div class="nav-actions">
+      <button class="share-btn" (click)="shareCommunity()" *ngIf="community">
+        <i class="fas fa-share-alt"></i>
+        Share
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Loading community details...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-container">
+    <div class="error-icon">
+      <i class="fas fa-exclamation-triangle"></i>
+    </div>
+    <h3>Something went wrong</h3>
+    <p>{{ error }}</p>
+    <div class="error-actions">
+      <button class="retry-btn" (click)="loadCommunity()">Try Again</button>
+      <button class="home-btn" routerLink="/home">Go Home</button>
+    </div>
+  </div>
+
+  <!-- Community Details -->
+  <div *ngIf="community && !loading && !error" class="community-content">
+    <!-- Community Header -->
+    <div class="community-header">
+      <div class="header-main">
+        <div class="title-section">
+          <h1 class="community-title">{{ community?.title }}</h1>
+          <div class="community-meta">
+            <div class="meta-item">
+              <i class="fas fa-mosque"></i>
+              <span class="masjid-link" (click)="goToMasjid()">{{ community?.masjidName }}</span>
+            </div>
+            <div class="meta-item">
+              <i class="fas fa-language"></i>
+              <span class="language-info">
+                <span class="flag">{{ getLanguageFlag(community?.languageCode || 'en') }}</span>
+                {{ getLanguageName(community?.languageCode || 'en') }}
+              </span>
+            </div>
+            <div class="meta-item">
+              <i class="fas fa-users"></i>
+              <span>{{ community?.memberCount || 0 }} member{{ (community?.memberCount || 0) !== 1 ? 's' : '' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="membership-section">
+          <div class="membership-status" *ngIf="community?.isUserMember">
+            <i class="fas fa-check-circle"></i>
+            <span>You're a member</span>
+          </div>
+
+          <button *ngIf="isAuthenticated" class="membership-btn" [class.join]="!community?.isUserMember"
+            [class.leave]="community?.isUserMember" [disabled]="membershipLoading" (click)="toggleMembership()">
+            <div *ngIf="membershipLoading" class="btn-spinner"></div>
+            <i *ngIf="!membershipLoading" class="fas" [class.fa-plus]="!community?.isUserMember"
+              [class.fa-minus]="community?.isUserMember"></i>
+            {{ membershipLoading ? 'Processing...' : (community?.isUserMember ? 'Leave Community' : 'Join Community') }}
+          </button>
+
+          <button *ngIf="!isAuthenticated" class="login-required-btn" routerLink="/login">
+            <i class="fas fa-sign-in-alt"></i>
+            Login to Join
+          </button>
+        </div>
+      </div>
+
+      <div class="community-info">
+        <div class="info-item">
+          <i class="fas fa-user"></i>
+          <span>Created by <strong>{{ community.createdByName }}</strong></span>
+        </div>
+        <div class="info-item">
+          <i class="fas fa-calendar"></i>
+          <span>{{ formatDate(community.dateCreated.toString()) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Community Content -->
+    <div class="community-body">
+      <div class="content-section">
+        <h3>About This Community</h3>
+        <div class="content-text" [innerHTML]="community.content"></div>
+      </div>
+
+      <!-- Community Features -->
+      <div class="features-section" *ngIf="community?.isUserMember">
+        <h3>Community Features</h3>
+        <div class="features-grid">
+          <div class="feature-card">
+            <i class="fas fa-comments"></i>
+            <h4>Discussions</h4>
+            <p>Join ongoing conversations and share your thoughts</p>
+          </div>
+          <div class="feature-card">
+            <i class="fas fa-calendar-alt"></i>
+            <h4>Events</h4>
+            <p>Stay updated on community events and activities</p>
+          </div>
+          <div class="feature-card">
+            <i class="fas fa-share-alt"></i>
+            <h4>Share Stories</h4>
+            <p>Share your experiences and stories about this masjid</p>
+          </div>
+          <div class="feature-card">
+            <i class="fas fa-bell"></i>
+            <h4>Notifications</h4>
+            <p>Get notified about important community updates</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Join Call-to-Action for Non-Members -->
+      <div class="join-cta" *ngIf="!community?.isUserMember && isAuthenticated">
+        <div class="cta-content">
+          <h3>Join Our Community</h3>
+          <p>Connect with {{ community?.memberCount || 0 }} other members who share your interest in {{
+            community?.masjidName
+            }}</p>
+          <button class="cta-btn" (click)="toggleMembership()" [disabled]="membershipLoading">
+            <div *ngIf="membershipLoading" class="btn-spinner"></div>
+            <i *ngIf="!membershipLoading" class="fas fa-plus"></i>
+            {{ membershipLoading ? 'Joining...' : 'Join Community' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

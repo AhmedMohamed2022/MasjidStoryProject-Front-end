@@ -1,0 +1,659 @@
+/* File: src/app/features/masjid-detail/masjid-detail.component.css */
+
+/* Color Variables */
+* {
+  --primary-white: #ffffff;
+  --deep-emerald: #185542;
+  --midnight-emerald: #053426;
+  --rich-gold: #c2a25d;
+  --warm-gold: #ad8d49;
+  --forest-emerald: #06543c;
+  --light-gray: #f8f9fa;
+  --border-color: #e9ecef;
+  --shadow-light: rgba(0, 0, 0, 0.1);
+  --shadow-medium: rgba(0, 0, 0, 0.15);
+}
+
+.masjid-detail-container {
+  min-height: calc(
+    100vh - var(--header-height) - 200px
+  ); /* Account for header and footer */
+  background: linear-gradient(
+    135deg,
+    var(--primary-white) 0%,
+    var(--light-gray) 100%
+  );
+  padding-top: 20px; /* Add top padding */
+}
+
+/* Loading State */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 2rem;
+}
+
+.islamic-spinner {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  margin-bottom: 1rem;
+}
+
+.spinner-circle {
+  width: 100%;
+  height: 100%;
+  border: 4px solid var(--light-gray);
+  border-top: 4px solid var(--rich-gold);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-text {
+  color: var(--deep-emerald);
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* Error State */
+.error-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 2rem;
+}
+
+.error-card {
+  background: var(--primary-white);
+  border-radius: 15px;
+  padding: 3rem;
+  text-align: center;
+  box-shadow: 0 10px 30px var(--shadow-light);
+  max-width: 400px;
+}
+
+.error-icon {
+  font-size: 3rem;
+  color: #dc3545;
+  margin-bottom: 1rem;
+}
+
+.error-card h3 {
+  color: var(--midnight-emerald);
+  margin-bottom: 1rem;
+}
+
+.error-card p {
+  color: #6c757d;
+  margin-bottom: 2rem;
+}
+
+/* Back Navigation */
+.back-navigation {
+  padding: 1rem 0;
+  background: var(--primary-white);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.btn-back {
+  background: none;
+  border: none;
+  color: var(--deep-emerald);
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-back:hover {
+  background: var(--light-gray);
+  color: var(--midnight-emerald);
+}
+
+/* Hero Section */
+.hero-section {
+  padding: 2rem 0;
+  background: transparent;
+  margin-bottom: 2rem;
+}
+
+/* Image Gallery */
+.image-gallery {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  background: var(--primary-white);
+}
+
+.main-image-container {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+}
+
+.main-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.main-image:hover {
+  transform: scale(1.05);
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(194, 162, 93, 0.1) 100%
+  );
+  pointer-events: none;
+}
+
+.islamic-pattern {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 60px;
+  height: 60px;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 10 L90 90 H10 Z" fill="rgba(194,162,93,0.3)"/></svg>');
+  background-size: contain;
+  opacity: 0.7;
+}
+
+/* Carousel Buttons */
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: var(--deep-emerald);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.carousel-btn:hover {
+  background: var(--rich-gold);
+  color: var(--primary-white);
+  transform: translateY(-50%) scale(1.05);
+}
+
+.prev-btn {
+  left: 1.5rem;
+}
+
+.next-btn {
+  right: 1.5rem;
+}
+
+/* Thumbnail Strip */
+.thumbnail-strip {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: var(--light-gray);
+  overflow-x: auto;
+}
+
+.thumbnail-btn {
+  flex-shrink: 0;
+  width: 80px;
+  height: 60px;
+  border: none;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 0.6;
+}
+
+.thumbnail-btn:hover,
+.thumbnail-btn.active {
+  opacity: 1;
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px var(--shadow-medium);
+}
+
+.thumbnail-btn.active {
+  border: 3px solid var(--rich-gold);
+}
+
+.thumbnail-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Info Card */
+.info-card {
+  background: var(--primary-white);
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  border: 1px solid rgba(233, 236, 239, 0.8);
+}
+
+.card-header {
+  background: linear-gradient(
+    135deg,
+    var(--deep-emerald),
+    var(--forest-emerald)
+  );
+  padding: 2rem;
+  text-align: center;
+  color: var(--primary-white);
+}
+
+.masjid-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.masjid-subtitle {
+  font-size: 1rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+.card-body {
+  padding: 2rem;
+}
+
+/* Info Items */
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.info-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.info-icon {
+  color: var(--rich-gold);
+  font-size: 1.2rem;
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+
+.info-content strong {
+  display: block;
+  color: var(--midnight-emerald);
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+.info-content p {
+  margin: 0;
+  color: #495057;
+  line-height: 1.5;
+}
+
+.text-muted {
+  color: #6c757d !important;
+  font-size: 0.9rem;
+}
+
+/* Statistics */
+.stats-section {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--border-color);
+}
+
+.stat-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--light-gray), var(--primary-white));
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.stat-icon {
+  color: var(--warm-gold);
+  font-size: 1.5rem;
+}
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--midnight-emerald);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Sections */
+.description-section,
+.stories-section,
+.events-section,
+.communities-section {
+  padding: 2rem 0;
+  background: transparent;
+}
+
+.communities-section {
+  background: linear-gradient(
+    135deg,
+    var(--light-gray) 0%,
+    var(--primary-white) 100%
+  );
+}
+
+.section-card {
+  background: var(--primary-white);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(233, 236, 239, 0.8);
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--midnight-emerald);
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 3px solid var(--rich-gold);
+}
+
+.section-icon {
+  color: var(--rich-gold);
+  font-size: 1.5rem;
+}
+
+/* Description */
+.description-content {
+  color: #495057;
+  line-height: 1.8;
+  font-size: 1.1rem;
+}
+
+/* Stories Grid */
+.stories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.story-card {
+  background: var(--primary-white);
+  border-radius: 15px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(233, 236, 239, 0.8);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+}
+
+.story-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+.story-image {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.story-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.story-card:hover .story-image img {
+  transform: scale(1.1);
+}
+
+.story-content {
+  padding: 1.5rem;
+}
+
+.story-title {
+  color: var(--midnight-emerald);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.story-author {
+  color: var(--warm-gold);
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+}
+
+.story-date {
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.story-summary {
+  color: #495057;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.story-stats {
+  display: flex;
+  gap: 1rem;
+}
+
+.story-stats .stat {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.story-stats .stat i {
+  color: var(--warm-gold);
+}
+
+/* Map Placeholder */
+.map-placeholder {
+  background: var(--light-gray);
+  border: 2px dashed var(--border-color);
+  border-radius: 15px;
+  padding: 3rem;
+  text-align: center;
+  color: #6c757d;
+}
+
+.coordinates {
+  font-family: monospace;
+  color: var(--deep-emerald);
+  font-weight: 500;
+}
+
+/* Common Button Styles */
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: linear-gradient(
+    135deg,
+    var(--deep-emerald),
+    var(--forest-emerald)
+  );
+  color: var(--primary-white);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(
+    135deg,
+    var(--forest-emerald),
+    var(--midnight-emerald)
+  );
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px var(--shadow-medium);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 1rem 0;
+  }
+
+  .main-image-container {
+    height: 250px;
+  }
+
+  .info-card {
+    margin-top: 2rem;
+  }
+
+  .card-header {
+    padding: 1.5rem;
+  }
+
+  .masjid-title {
+    font-size: 1.5rem;
+  }
+
+  .card-body {
+    padding: 1.5rem;
+  }
+
+  .section-card {
+    padding: 1.5rem;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .stories-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-section {
+    flex-direction: column;
+  }
+
+  .thumbnail-strip {
+    padding: 0.5rem;
+  }
+
+  .carousel-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .prev-btn {
+    left: 0.5rem;
+  }
+
+  .next-btn {
+    right: 0.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  .back-navigation {
+    padding: 0.5rem 1rem;
+  }
+
+  .info-item {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .info-icon {
+    align-self: flex-start;
+  }
+
+  .story-content {
+    padding: 1rem;
+  }
+
+  .section-card {
+    padding: 1rem;
+  }
+
+  .map-placeholder {
+    padding: 2rem 1rem;
+  }
+}

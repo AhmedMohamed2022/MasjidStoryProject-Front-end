@@ -1,0 +1,80 @@
+<!-- src/app/features/auth/login/login.component.html -->
+<div class="auth-container">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="auth-card">
+          <!-- Header with Islamic pattern -->
+          <div class="auth-header">
+            <div class="islamic-pattern"></div>
+            <h2 class="auth-title">Welcome Back</h2>
+            <p class="auth-subtitle">Sign in to continue your journey</p>
+          </div>
+
+          <!-- Login Form -->
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+            <!-- Error Message -->
+            <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+              <i class="fas fa-exclamation-circle me-2"></i>
+              {{ errorMessage }}
+            </div>
+
+            <!-- Email Field -->
+            <div class="form-group">
+              <label for="email" class="form-label">
+                <i class="fas fa-envelope me-2"></i>Email Address
+              </label>
+              <input type="email" id="email" formControlName="email" class="form-control"
+                [class.is-invalid]="email?.invalid && email?.touched" placeholder="Enter your email"
+                autocomplete="email">
+              <div *ngIf="email?.invalid && email?.touched" class="invalid-feedback">
+                <span *ngIf="email?.errors?.['required']">Email is required</span>
+                <span *ngIf="email?.errors?.['email']">Please enter a valid email</span>
+              </div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+              <label for="password" class="form-label">
+                <i class="fas fa-lock me-2"></i>Password
+              </label>
+              <div class="password-input-wrapper">
+                <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password"
+                  class="form-control" [class.is-invalid]="password?.invalid && password?.touched"
+                  placeholder="Enter your password" autocomplete="current-password">
+                <button type="button" class="password-toggle" (click)="togglePasswordVisibility()"
+                  [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+                  <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                </button>
+              </div>
+              <div *ngIf="password?.invalid && password?.touched" class="invalid-feedback">
+                <span *ngIf="password?.errors?.['required']">Password is required</span>
+                <span *ngIf="password?.errors?.['minlength']">Password must be at least 6 characters</span>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary btn-auth" [disabled]="isLoading">
+              <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+              <i *ngIf="!isLoading" class="fas fa-sign-in-alt me-2"></i>
+              {{ isLoading ? 'Signing In...' : 'Sign In' }}
+            </button>
+          </form>
+
+          <!-- Footer -->
+          <div class="auth-footer">
+            <p class="text-center">
+              Don't have an account?
+              <a routerLink="/register" class="auth-link">Create Account</a>
+            </p>
+          </div>
+
+          <!-- Islamic Decoration -->
+          <div class="islamic-decoration">
+            <div class="decoration-pattern"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

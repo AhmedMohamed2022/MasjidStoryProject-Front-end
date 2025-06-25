@@ -1,0 +1,374 @@
+.community-list-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: var(--primary-white);
+}
+
+/* Header Section */
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.title-section {
+  flex: 1;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--deep-emerald);
+  margin: 0 0 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.section-title i {
+  color: var(--rich-gold);
+}
+
+.section-subtitle {
+  color: var(--text-muted);
+  margin: 0;
+  font-size: 1rem;
+}
+
+.create-btn {
+  background: var(--deep-emerald);
+  color: var(--primary-white);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.create-btn:hover {
+  background: var(--midnight-emerald);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(24, 85, 66, 0.3);
+}
+
+/* Loading and Error States */
+.loading-container,
+.error-container {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-muted);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--border-color);
+  border-top: 4px solid var(--deep-emerald);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.error-container i {
+  font-size: 2rem;
+  color: #dc3545;
+  margin-bottom: 1rem;
+}
+
+.retry-btn {
+  background: var(--deep-emerald);
+  color: var(--primary-white);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-muted);
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  color: var(--border-color);
+}
+
+.empty-state h3 {
+  color: var(--deep-emerald);
+  margin-bottom: 1rem;
+}
+
+.create-first-btn,
+.login-btn {
+  background: var(--rich-gold);
+  color: var(--primary-white);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
+
+.create-first-btn:hover,
+.login-btn:hover {
+  background: var(--warm-gold);
+  transform: translateY(-2px);
+}
+
+/* Communities Grid */
+.communities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Community Card */
+.community-card {
+  background: var(--primary-white);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.community-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border-color: var(--deep-emerald);
+}
+
+.community-card.member {
+  border-color: var(--rich-gold);
+  background: linear-gradient(
+    135deg,
+    var(--primary-white) 0%,
+    rgba(194, 162, 93, 0.05) 100%
+  );
+}
+
+.community-card.member::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--rich-gold);
+}
+
+/* Card Header */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.title-area {
+  flex: 1;
+}
+
+.community-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--deep-emerald);
+  margin: 0 0 0.5rem 0;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.community-title:hover {
+  color: var(--midnight-emerald);
+}
+
+.language-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.flag {
+  font-size: 1rem;
+}
+
+.membership-status {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: var(--rich-gold);
+  color: var(--primary-white);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Card Content */
+.card-content {
+  margin-bottom: 1.5rem;
+}
+
+.community-content {
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Card Footer */
+.card-footer {
+  border-top: 1px solid var(--border-color);
+  padding-top: 1rem;
+}
+
+.community-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.meta-item i {
+  color: var(--rich-gold);
+  width: 12px;
+}
+
+/* Card Actions */
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.view-btn,
+.membership-btn,
+.login-required-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: all 0.3s ease;
+}
+
+.view-btn {
+  background: var(--light-gray);
+  color: var(--deep-emerald);
+  border: 1px solid var(--border-color);
+}
+
+.view-btn:hover {
+  background: var(--border-color);
+}
+
+.membership-btn.join {
+  background: var(--deep-emerald);
+  color: var(--primary-white);
+}
+
+.membership-btn.join:hover {
+  background: var(--midnight-emerald);
+}
+
+.membership-btn.leave {
+  background: #dc3545;
+  color: var(--primary-white);
+}
+
+.membership-btn.leave:hover {
+  background: #c82333;
+}
+
+.login-required-btn {
+  background: var(--rich-gold);
+  color: var(--primary-white);
+}
+
+.login-required-btn:hover {
+  background: var(--warm-gold);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .community-list-container {
+    padding: 1rem;
+  }
+
+  .header-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  .communities-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card-actions {
+    justify-content: stretch;
+  }
+
+  .view-btn,
+  .membership-btn,
+  .login-required-btn {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .community-card.member::before {
+  left: auto;
+  right: 0;
+}
+
+[dir="rtl"] .card-actions {
+  justify-content: flex-start;
+}

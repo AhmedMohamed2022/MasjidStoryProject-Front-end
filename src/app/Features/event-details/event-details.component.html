@@ -1,0 +1,155 @@
+<div class="event-details-container">
+  <div class="container">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner-border text-emerald" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-2 text-muted">Loading event details...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error" class="alert alert-danger text-center" role="alert">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      {{ error }}
+    </div>
+
+    <!-- Event Details -->
+    <div *ngIf="!loading && !error && event" class="row">
+      <div class="col-12">
+        <!-- Back Button -->
+        <div class="mb-4">
+          <a routerLink="/upcoming-events" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Events
+          </a>
+        </div>
+
+        <!-- Main Event Card -->
+        <div class="event-detail-card">
+          <!-- Event Header -->
+          <div class="event-header">
+            <div class="event-title-section">
+              <h1 class="event-title">{{ event.title }}</h1>
+              <div class="event-meta">
+                <span class="event-status" [class]="getEventStatusClass()">
+                  <i class="fas" [class]="getEventStatusIcon()"></i>
+                  {{ getEventStatusText() }}
+                </span>
+                <span class="event-date">
+                  <i class="fas fa-calendar-alt"></i>
+                  {{ formatDate(event.eventDate) }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Action Buttons for Creator -->
+            <div class="event-actions" *ngIf="isEventCreator">
+              <button class="btn btn-outline-primary me-2" (click)="editEvent()" [disabled]="isEventPast">
+                <i class="fas fa-edit"></i>
+                Edit
+              </button>
+              <button class="btn btn-outline-danger" (click)="deleteEvent()" [disabled]="deleting">
+                <span *ngIf="deleting" class="spinner-border spinner-border-sm me-2" role="status"></span>
+                <i *ngIf="!deleting" class="fas fa-trash"></i>
+                {{ deleting ? 'Deleting...' : 'Delete' }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Event Content -->
+          <div class="event-content">
+            <!-- Event Info Grid -->
+            <div class="event-info-grid">
+              <div class="info-item" *ngIf="event.masjidName">
+                <div class="info-label">
+                  <i class="fas fa-mosque"></i>
+                  Masjid
+                </div>
+                <div class="info-value">
+                  <a href="javascript:void(0)" (click)="navigateToMasjid(event.masjidId)" class="masjid-link">
+                    {{ event.masjidName }}
+                  </a>
+                </div>
+              </div>
+
+              <div class="info-item">
+                <div class="info-label">
+                  <i class="fas fa-user"></i>
+                  Organized by
+                </div>
+                <div class="info-value">{{ event.createdByName }}</div>
+              </div>
+
+              <div class="info-item">
+                <div class="info-label">
+                  <i class="fas fa-clock"></i>
+                  Time
+                </div>
+                <div class="info-value">{{ formatTime(event.eventDate) }}</div>
+              </div>
+
+              <div class="info-item">
+                <div class="info-label">
+                  <i class="fas fa-users"></i>
+                  Registration Status
+                </div>
+                <div class="info-value">
+                  <span class="registration-badge" [class]="event.isUserRegistered ? 'registered' : 'not-registered'">
+                    <i class="fas" [class]="event.isUserRegistered ? 'fa-check' : 'fa-clock'"></i>
+                    {{ event.isUserRegistered ? 'Registered' : 'Not Registered' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Description -->
+            <div class="description-section">
+              <h3 class="section-title">
+                <i class="fas fa-align-left"></i>
+                Description
+              </h3>
+              <div class="description-content">
+                <p>{{ event.description }}</p>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+              <div class="action-group">
+                <!-- Registration Button -->
+                <button *ngIf="!event.isUserRegistered && !isEventPast" class="btn btn-gold btn-lg"
+                  (click)="registerForEvent()" [disabled]="registering">
+                  <span *ngIf="registering" class="spinner-border spinner-border-sm me-2" role="status"></span>
+                  <i *ngIf="!registering" class="fas fa-user-plus me-2"></i>
+                  {{ registering ? 'Registering...' : 'Register for Event' }}
+                </button>
+
+                <span *ngIf="event.isUserRegistered" class="btn btn-success btn-lg disabled">
+                  <i class="fas fa-check me-2"></i>Already Registered
+                </span>
+
+                <span *ngIf="isEventPast" class="btn btn-secondary btn-lg disabled">
+                  <i class="fas fa-calendar-times me-2"></i>Event has passed
+                </span>
+              </div>
+
+              <div class="action-group">
+                <!-- Share Button -->
+                <button class="btn btn-outline-secondary" (click)="shareEvent()">
+                  <i class="fas fa-share-alt me-2"></i>
+                  Share Event
+                </button>
+
+                <!-- View Masjid Button -->
+                <a *ngIf="event.masjidId" [routerLink]="['/masjid', event.masjidId]" class="btn btn-outline-primary">
+                  <i class="fas fa-mosque me-2"></i>
+                  View Masjid
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

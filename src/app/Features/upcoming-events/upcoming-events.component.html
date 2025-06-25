@@ -1,0 +1,84 @@
+<div class="container-fluid py-5 bg-gradient">
+  <div class="container">
+    <!-- Header Section -->
+    <div class="row mb-5">
+      <div class="col-12 text-center">
+        <div class="islamic-pattern-border mb-4">
+          <h1 class="display-4 text-primary-dark fw-bold">All Upcoming Events</h1>
+        </div>
+        <p class="lead text-muted">Discover events happening across all masjids in our community</p>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner-border text-secondary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-2 text-muted">Loading upcoming events...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error" class="alert alert-danger text-center" role="alert">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      {{ error }}
+    </div>
+
+    <!-- Events Grid -->
+    <div *ngIf="!loading && !error" class="row g-4">
+      <div class="col-lg-4 col-md-6" *ngFor="let event of events">
+        <div class="card event-card h-100 shadow-sm">
+          <div class="card-header bg-secondary text-white">
+            <div class="d-flex justify-content-between align-items-center">
+              <h5 class="card-title mb-0 text-truncate">{{ event.title }}</h5>
+              <i class="fas fa-calendar-alt"></i>
+            </div>
+          </div>
+          <div class="card-body d-flex flex-column">
+            <p class="card-text text-muted mb-2">
+              <i class="fas fa-mosque me-2 text-secondary"></i>
+              {{ event.masjidName }}
+            </p>
+            <p class="card-text mb-3 flex-grow-1">{{ event.description }}</p>
+            <div class="event-date mb-3">
+              <i class="fas fa-clock me-2 text-ternary"></i>
+              <small class="text-muted">{{ formatDate(event.eventDate) }}</small>
+            </div>
+            <div class="card-actions mt-auto">
+              <div class="d-flex gap-2">
+                <button *ngIf="!event.isUserRegistered" class="btn btn-secondary flex-grow-1"
+                  (click)="registerForEvent(event.id)">
+                  <i class="fas fa-user-plus me-2"></i>Register
+                </button>
+                <span *ngIf="event.isUserRegistered" class="badge bg-success px-3 py-2 flex-grow-1 text-center">
+                  <i class="fas fa-check me-2"></i>Registered
+                </span>
+                <a [routerLink]="['/events', event.id]" class="btn btn-outline-secondary">
+                  <i class="fas fa-info-circle"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && !error && events.length === 0" class="text-center py-5">
+      <div class="empty-state">
+        <i class="fas fa-calendar-times fa-5x text-muted mb-4"></i>
+        <h3 class="text-muted">No Upcoming Events</h3>
+        <p class="text-muted">Check back later for new events</p>
+      </div>
+    </div>
+
+    <!-- Action Button -->
+    <div class="row mt-5">
+      <div class="col-12 text-center">
+        <a routerLink="/create-event" class="btn btn-ternary btn-lg">
+          <i class="fas fa-plus me-2"></i>Create New Event
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

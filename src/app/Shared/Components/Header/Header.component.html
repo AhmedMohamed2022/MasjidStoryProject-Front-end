@@ -1,0 +1,101 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-emerald fixed-top">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/">
+      <i class="fas fa-mosque me-2"></i>
+      MasjidStory
+    </a>
+
+    <button class="navbar-toggler" type="button" (click)="toggleMenu()" [attr.aria-expanded]="!isMenuCollapsed">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" [class.show]="!isMenuCollapsed" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+            (click)="isMenuCollapsed = true">
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/search" routerLinkActive="active" (click)="isMenuCollapsed = true">
+            Explore
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/stories" routerLinkActive="active" (click)="isMenuCollapsed = true">
+            Stories
+          </a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" role="button" (click)="toggleEventsDropdown()"
+            [attr.aria-expanded]="!isEventsDropdownCollapsed">
+            Events
+          </a>
+          <ul class="dropdown-menu" [class.show]="!isEventsDropdownCollapsed">
+            <li>
+              <a class="dropdown-item" routerLink="/upcoming-events"
+                (click)="isMenuCollapsed = true; isEventsDropdownCollapsed = true">
+                <i class="fas fa-calendar-alt me-2"></i>All Events
+              </a>
+            </li>
+            <li *ngIf="isAuthenticated">
+              <a class="dropdown-item" routerLink="/my-events"
+                (click)="isMenuCollapsed = true; isEventsDropdownCollapsed = true">
+                <i class="fas fa-user-check me-2"></i>My Events
+              </a>
+            </li>
+            <li *ngIf="isAuthenticated">
+              <a class="dropdown-item" routerLink="/create-event"
+                (click)="isMenuCollapsed = true; isEventsDropdownCollapsed = true">
+                <i class="fas fa-plus me-2"></i>Create Event
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <!-- Guest Menu Items -->
+        <li class="nav-item" *ngIf="!isAuthenticated">
+          <a class="nav-link" routerLink="/register" routerLinkActive="active" (click)="isMenuCollapsed = true">
+            SignUp
+          </a>
+        </li>
+        <li class="nav-item" *ngIf="!isAuthenticated">
+          <a class="nav-link" routerLink="/login" routerLinkActive="active" (click)="isMenuCollapsed = true">
+            Login
+          </a>
+        </li>
+
+        <!-- Authenticated User Menu -->
+        <li class="nav-item dropdown" *ngIf="isAuthenticated">
+          <a class="nav-link dropdown-toggle" role="button" (click)="toggleUserDropdown()"
+            [attr.aria-expanded]="!isUserDropdownCollapsed">
+            <i class="fas fa-user me-1"></i>{{ currentUser?.email }}
+          </a>
+          <ul class="dropdown-menu" [class.show]="!isUserDropdownCollapsed">
+            <li>
+              <a class="dropdown-item" routerLink="/my-events"
+                (click)="isMenuCollapsed = true; isUserDropdownCollapsed = true">
+                <i class="fas fa-calendar-check me-2"></i>My Events
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/create-event"
+                (click)="isMenuCollapsed = true; isUserDropdownCollapsed = true">
+                <i class="fas fa-plus me-2"></i>Create Event
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <a class="dropdown-item" href="javascript:void(0)" (click)="logout()">
+                <i class="fas fa-sign-out-alt me-2"></i>Logout
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

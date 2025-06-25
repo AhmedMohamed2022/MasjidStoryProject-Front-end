@@ -1,0 +1,215 @@
+<!-- File: src/app/features/masjid-detail/masjid-detail.component.html -->
+<div class="masjid-detail-container">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="islamic-spinner">
+      <div class="spinner-circle"></div>
+    </div>
+    <p class="loading-text">Loading masjid details...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-container">
+    <div class="error-card">
+      <i class="fas fa-exclamation-triangle error-icon"></i>
+      <h3>Error Loading Masjid</h3>
+      <p>{{ error }}</p>
+      <button class="btn btn-primary" (click)="goBack()">
+        <i class="fas fa-arrow-left"></i> Go Back
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="masjid && !loading" class="masjid-content">
+    <!-- Back Button -->
+    <div class="back-navigation">
+      <button class="btn-back" (click)="goBack()">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Explore</span>
+      </button>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8">
+            <!-- Image Gallery Carousel -->
+            <div class="image-gallery" *ngIf="masjid.mediaUrls.length > 0">
+              <div class="main-image-container">
+                <img [src]="masjid.mediaUrls[currentImageIndex]" [alt]="masjid.localizedName" class="main-image">
+                <div class="image-overlay">
+                  <div class="islamic-pattern"></div>
+                </div>
+
+                <!-- Navigation Arrows -->
+                <button class="carousel-btn prev-btn" (click)="previousImage()" *ngIf="masjid.mediaUrls.length > 1">
+                  <i class="fas fa-angle-left fa-lg"></i>
+                </button>
+                <button class="carousel-btn next-btn" (click)="nextImage()" *ngIf="masjid.mediaUrls.length > 1">
+                  <i class="fas fa-angle-right fa-lg"></i>
+                </button>
+              </div>
+
+              <!-- Thumbnail Strip -->
+              <div class="thumbnail-strip" *ngIf="masjid.mediaUrls.length > 1">
+                <button *ngFor="let url of masjid.mediaUrls; let i = index" class="thumbnail-btn"
+                  [class.active]="i === currentImageIndex" (click)="selectImage(i)">
+                  <img [src]="url" [alt]="'Image ' + (i + 1)">
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4">
+            <!-- Masjid Information Card -->
+            <div class="info-card">
+              <div class="card-header">
+                <h1 class="masjid-title">{{ masjid.localizedName }}</h1>
+                <p class="masjid-subtitle">{{ masjid.shortName }}</p>
+              </div>
+
+              <div class="card-body">
+                <!-- Location -->
+                <div class="info-item">
+                  <i class="fas fa-map-marker-alt info-icon"></i>
+                  <div class="info-content">
+                    <strong>Location</strong>
+                    <p>{{ masjid.address }}</p>
+                    <p class="text-muted">{{ masjid.cityName }}, {{ masjid.countryName }}</p>
+                  </div>
+                </div>
+
+                <!-- Architectural Style -->
+                <div class="info-item" *ngIf="masjid.archStyle">
+                  <i class="fas fa-building info-icon"></i>
+                  <div class="info-content">
+                    <strong>Architectural Style</strong>
+                    <p>{{ masjid.archStyle }}</p>
+                  </div>
+                </div>
+
+                <!-- Year of Establishment -->
+                <div class="info-item" *ngIf="masjid.yearOfEstablishment">
+                  <i class="fas fa-calendar-alt info-icon"></i>
+                  <div class="info-content">
+                    <strong>Established</strong>
+                    <p>{{ masjid.yearOfEstablishment }}</p>
+                  </div>
+                </div>
+
+                <!-- Statistics -->
+                <div class="stats-section">
+                  <div class="stat-item">
+                    <i class="fas fa-eye stat-icon"></i>
+                    <div class="stat-content">
+                      <span class="stat-number">{{ masjid.totalVisits }}</span>
+                      <span class="stat-label">Visits</span>
+                    </div>
+                  </div>
+                  <div class="stat-item">
+                    <i class="fas fa-calendar-check stat-icon"></i>
+                    <div class="stat-content">
+                      <span class="stat-number">{{ masjid.upcomingEventCount }}</span>
+                      <span class="stat-label">Upcoming Events</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Description Section -->
+    <div class="description-section" *ngIf="masjid.localizedDescription">
+      <div class="container">
+        <div class="section-card">
+          <h2 class="section-title">
+            <i class="fas fa-mosque section-icon"></i>
+            About This Masjid
+          </h2>
+          <div class="description-content">
+            <p>{{ masjid.localizedDescription }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Associated Stories Section -->
+    <div class="stories-section" *ngIf="masjid.stories && masjid.stories.length > 0">
+      <div class="container">
+        <div class="section-card">
+          <h2 class="section-title">
+            <i class="fas fa-book-open section-icon"></i>
+            Associated Stories
+          </h2>
+          <div class="stories-grid">
+            <div *ngFor="let story of masjid.stories" class="story-card" (click)="navigateToStory(story.id)">
+              <div class="story-image" *ngIf="story.imageUrl">
+                <img [src]="story.imageUrl" [alt]="story.title">
+              </div>
+              <div class="story-content">
+                <h3 class="story-title">{{ story.title }}</h3>
+                <p class="story-author">By {{ story.authorName }}</p>
+                <p class="story-date">{{ story.datePublished ? formatDate(story.datePublished) : 'Date not available' }}
+                </p>
+                <p class="story-summary">{{ story.summary }}</p>
+                <div class="story-stats">
+                  <span class="stat">
+                    <i class="fas fa-heart"></i>
+                    {{ story.likeCount }}
+                  </span>
+                  <span class="stat">
+                    <i class="fas fa-comment"></i>
+                    {{ story.commentCount }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Masjid Events Section -->
+    <div class="events-section">
+      <div class="container">
+        <div class="section-card">
+          <app-masjid-events [masjidId]="masjid.id" [masjidName]="masjid.shortName">
+          </app-masjid-events>
+        </div>
+      </div>
+    </div>
+
+    <!-- Communities Section -->
+    <div class="communities-section">
+      <div class="container">
+        <div class="section-card">
+          <app-community-list [masjidId]="masjid.id" [masjidName]="masjid.shortName">
+          </app-community-list>
+        </div>
+      </div>
+    </div>
+
+    <!-- Map Section (Placeholder for future implementation) -->
+    <div class="map-section" *ngIf="masjid.latitude && masjid.longitude">
+      <div class="container">
+        <div class="section-card">
+          <h2 class="section-title">
+            <i class="fas fa-map section-icon"></i>
+            Location
+          </h2>
+          <div class="map-placeholder">
+            <p>Map will be implemented here</p>
+            <p class="coordinates">
+              Coordinates: {{ masjid.latitude }}, {{ masjid.longitude }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

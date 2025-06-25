@@ -1,0 +1,145 @@
+<div class="create-community-container">
+    <!-- Header -->
+    <div class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">
+                <i class="icon-users"></i>
+                Create New Community
+            </h1>
+            <p class="page-description">
+                Start a discussion group for your masjid community
+            </p>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Loading form data...</p>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage && !isLoading" class="alert alert-error">
+        <i class="icon-alert-circle"></i>
+        <span>{{ errorMessage }}</span>
+    </div>
+
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="alert alert-success">
+        <i class="icon-check-circle"></i>
+        <span>{{ successMessage }}</span>
+    </div>
+
+    <!-- Main Form -->
+    <div class="form-container" *ngIf="!isLoading">
+        <form [formGroup]="communityForm" (ngSubmit)="onSubmit()" class="community-form">
+
+            <!-- Title Field -->
+            <div class="form-group">
+                <label for="title" class="form-label required">Community Title</label>
+                <input id="title" type="text" formControlName="title" class="form-input"
+                    [class.error]="isFieldInvalid('title')" placeholder="Enter a descriptive title for your community"
+                    maxlength="200" />
+                <div class="field-info">
+                    <span class="char-count">
+                        {{ communityForm.get('title')?.value?.length || 0 }}/200
+                    </span>
+                </div>
+                <div *ngIf="isFieldInvalid('title')" class="field-error">
+                    {{ getFieldError('title') }}
+                </div>
+            </div>
+
+            <!-- Content Field -->
+            <div class="form-group">
+                <label for="content" class="form-label required">Description</label>
+                <textarea id="content" formControlName="content" class="form-textarea"
+                    [class.error]="isFieldInvalid('content')"
+                    placeholder="Describe the purpose and goals of this community..." rows="6"
+                    maxlength="2000"></textarea>
+                <div class="field-info">
+                    <span class="char-count">
+                        {{ communityForm.get('content')?.value?.length || 0 }}/2000
+                    </span>
+                </div>
+                <div *ngIf="isFieldInvalid('content')" class="field-error">
+                    {{ getFieldError('content') }}
+                </div>
+            </div>
+
+            <!-- Masjid Selection -->
+            <div class="form-group">
+                <label for="masjidId" class="form-label required">Select Masjid</label>
+                <select id="masjidId" formControlName="masjidId" class="form-select"
+                    [class.error]="isFieldInvalid('masjidId')" [disabled]="preselectedMasjidId !== null">
+                    <option value="">Choose a masjid...</option>
+                    <option *ngFor="let masjid of masjids" [value]="masjid.id">
+                        {{ masjid.shortName }} - {{ masjid.cityName }}, {{ masjid.countryName }}
+                    </option>
+                </select>
+                <div *ngIf="preselectedMasjidId" class="field-hint">
+                    <i class="icon-info"></i>
+                    This community will be created for the selected masjid
+                </div>
+                <div *ngIf="isFieldInvalid('masjidId')" class="field-error">
+                    {{ getFieldError('masjidId') }}
+                </div>
+            </div>
+
+            <!-- Language Selection -->
+            <div class="form-group">
+                <label for="languageId" class="form-label required">Language</label>
+                <select id="languageId" formControlName="languageId" class="form-select"
+                    [class.error]="isFieldInvalid('languageId')">
+                    <option value="">Select language...</option>
+                    <option *ngFor="let language of languages" [value]="language.id">
+                        {{ language.name }} ({{ language.code.toUpperCase() }})
+                    </option>
+                </select>
+                <div class="field-hint">
+                    <i class="icon-globe"></i>
+                    Choose the primary language for this community
+                </div>
+                <div *ngIf="isFieldInvalid('languageId')" class="field-error">
+                    {{ getFieldError('languageId') }}
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="isSubmitting">
+                    <i class="icon-x"></i>
+                    Cancel
+                </button>
+
+                <button type="submit" class="btn btn-primary" [disabled]="communityForm.invalid || isSubmitting">
+                    <span *ngIf="!isSubmitting">
+                        <i class="icon-plus"></i>
+                        Create Community
+                    </span>
+                    <span *ngIf="isSubmitting" class="submitting-state">
+                        <div class="btn-spinner"></div>
+                        Creating...
+                    </span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Form Guidelines -->
+    <div class="guidelines-container" *ngIf="!isLoading">
+        <div class="guidelines-card">
+            <h3 class="guidelines-title">
+                <i class="icon-lightbulb"></i>
+                Community Guidelines
+            </h3>
+            <ul class="guidelines-list">
+                <li>Choose a clear, descriptive title that reflects your community's purpose</li>
+                <li>Provide detailed information about what discussions will take place</li>
+                <li>Be respectful and welcoming to encourage participation</li>
+                <li>Consider your target audience when selecting the language</li>
+                <li>Make sure your community adds value to the masjid's online presence</li>
+            </ul>
+        </div>
+    </div>
+</div>

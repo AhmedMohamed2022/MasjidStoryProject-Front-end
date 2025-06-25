@@ -1,0 +1,132 @@
+.bg-gradient {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  min-height: calc(
+    100vh - var(--header-height) - 200px
+  ); /* Account for header and footer */
+  padding-top: 20px; /* Add top padding */
+  padding-bottom: 40px; /* Add bottom padding */
+}
+
+.container-fluid {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.islamic-pattern-border {
+  position: relative;
+  display: inline-block;
+  padding: 20px 40px;
+}
+
+.islamic-pattern-border::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, #185542, #053426);
+  opacity: 0.1;
+  border-radius: 8px;
+  z-index: -1;
+}
+
+.event-card {
+  border: none;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+.card-header {
+  background: linear-gradient(135deg, #185542 0%, #053426 100%) !important;
+  border: none;
+  padding: 15px 20px;
+}
+
+.card-body {
+  padding: 20px;
+  background: #ffffff;
+}
+
+.event-date {
+  background: #f8f9fa;
+  padding: 10px;
+  border-radius: 6px;
+  border-left: 4px solid #c2a25d;
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #185542 0%, #053426 100%);
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(135deg, #053426 0%, #185542 100%);
+  transform: translateY(-1px);
+}
+
+.btn-ternary {
+  background: linear-gradient(135deg, #c2a25d 0%, #ad8d49 100%);
+  border: none;
+  color: white;
+  border-radius: 8px;
+  padding: 12px 30px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-ternary:hover {
+  background: linear-gradient(135deg, #ad8d49 0%, #c2a25d 100%);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.btn-outline-secondary {
+  border-color: #185542;
+  color: #185542;
+}
+
+.btn-outline-secondary:hover {
+  background: #185542;
+  border-color: #185542;
+}
+
+.text-primary-dark {
+  color: #053426 !important;
+}
+
+.text-secondary {
+  color: #185542 !important;
+}
+
+.text-ternary {
+  color: #c2a25d !important;
+}
+
+.empty-state i {
+  opacity: 0.3;
+}
+
+@media (max-width: 768px) {
+  .islamic-pattern-border {
+    padding: 15px 20px;
+  }
+
+  .display-4 {
+    font-size: 2rem;
+  }
+
+  .event-card {
+    margin-bottom: 20px;
+  }
+}
