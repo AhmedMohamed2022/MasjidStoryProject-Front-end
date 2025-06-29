@@ -8,9 +8,11 @@ import {
   CommentCreateViewModel,
   LikeCreateViewModel,
   StoryCreateViewModel,
+  StoryEditViewModel,
 } from '../../Core/Models/story.model';
 import { environment } from '../environments/environment';
 import { ApiResponse } from '../Models/api-response.model';
+import { PaginatedResponse } from '../Models/paginated-response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -68,7 +70,8 @@ export class StoryService {
           content: commentData.content,
           datePosted: new Date().toISOString(),
           userName: 'You', // Or get from AuthService
-          storyId: commentData.storyId,
+          contentId: commentData.contentId,
+          contentType: commentData.contentType,
         };
       }
 
@@ -105,6 +108,37 @@ export class StoryService {
       return response || [];
     } catch (error) {
       console.error('Error fetching all stories:', error);
+      throw error;
+    }
+  }
+
+  async getStoriesPaginated(
+    page: number = 1,
+    size: number = 10
+  ): Promise<PaginatedResponse<StoryViewModel>> {
+    try {
+      console.log(`Fetching stories: page=${page}, size=${size}`);
+      const response = await firstValueFrom(
+        this.http.get<PaginatedResponse<StoryViewModel>>(
+          `${this.baseUrl}/story/paginated?page=${page}&size=${size}`
+        )
+      );
+
+      console.log('Raw pagination response:', response);
+
+      return (
+        response || {
+          items: [],
+          totalCount: 0,
+          pageNumber: page,
+          pageSize: size,
+          totalPages: 0,
+          hasPreviousPage: false,
+          hasNextPage: false,
+        }
+      );
+    } catch (error) {
+      console.error('Error fetching paginated stories:', error);
       throw error;
     }
   }
@@ -176,6 +210,77 @@ export class StoryService {
       );
     } catch (error) {
       console.error('Error deleting story:', error);
+      throw error;
+    }
+  }
+
+  async updateStory(id: number, story: StoryEditViewModel): Promise<string> {
+    const formData = new FormData();
+    formData.append('id', story.id.toString());
+    formData.append('title', story.title);
+    formData.append('content', story.content);
+    formData.append('masjidId', story.masjidId.toString());
+    if (story.languageId)
+      formData.append('languageId', story.languageId.toString());
+    formData.append('isApproved', story.isApproved.toString());
+
+    // Handle media IDs to keep (not delete)
+    if (story.keepMediaIds) {
+      story.keepMediaIds.forEach((mediaId) =>
+        formData.append('keepMediaIds', mediaId.toString())
+      );
+    }
+
+    // Handle media IDs to remove
+    if (story.removeMediaIds) {
+      story.removeMediaIds.forEach((mediaId) =>
+        formData.append('removeMediaIds', mediaId.toString())
+      );
+    }
+
+    // Handle new images
+    if (story.newStoryImages) {
+      story.newStoryImages.forEach((file) =>
+        formData.append('newStoryImages', file)
+      );
+    }
+
+    try {
+      const response = await firstValueFrom(
+        this.http.put<ApiResponse<string>>(
+          `${this.baseUrl}/story/update/${id}`,
+          formData
+        )
+      );
+      return response.message || 'Story updated successfully.';
+    } catch (error) {
+      console.error('Error updating story:', error);
+      throw error;
+    }
+  }
+
+  async getUserStories(): Promise<StoryViewModel[]> {
+    try {
+      const response = await firstValueFrom(
+        this.http.get<StoryViewModel[]>(`${this.baseUrl}/story/my-stories`)
+      );
+      return response || [];
+    } catch (error) {
+      console.error('Error fetching user stories:', error);
+      throw error;
+    }
+  }
+
+  async deleteStoryMedia(storyId: number, mediaId: number): Promise<string> {
+    try {
+      const response = await firstValueFrom(
+        this.http.delete<ApiResponse<string>>(
+          `${this.baseUrl}/story/${storyId}/media/${mediaId}`
+        )
+      );
+      return response.message || 'Media deleted successfully.';
+    } catch (error) {
+      console.error('Error deleting story media:', error);
       throw error;
     }
   }

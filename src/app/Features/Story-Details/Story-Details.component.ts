@@ -97,7 +97,10 @@ export class StoryDetailComponent implements OnInit {
 
     try {
       this.togglingLike = true;
-      const likeData: LikeCreateViewModel = { storyId: this.story.id };
+      const likeData: LikeCreateViewModel = {
+        contentId: this.story.id,
+        contentType: 'Story',
+      };
       await this.storyService.toggleLike(likeData);
 
       // Update local state
@@ -132,7 +135,8 @@ export class StoryDetailComponent implements OnInit {
       this.commentError = '';
 
       const commentData: CommentCreateViewModel = {
-        storyId: this.story.id,
+        contentId: this.story.id,
+        contentType: 'Story',
         content: this.newComment.trim(),
       };
 

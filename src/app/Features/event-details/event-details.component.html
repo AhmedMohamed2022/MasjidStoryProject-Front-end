@@ -147,6 +147,94 @@
                 </a>
               </div>
             </div>
+
+            <!-- Like Section -->
+            <div class="interaction-section">
+              <div class="like-section">
+                <button class="like-btn" [class.liked]="event.isLikedByCurrentUser" [disabled]="togglingLike"
+                  (click)="toggleLike()">
+                  <i class="fas fa-heart" [class.text-danger]="event.isLikedByCurrentUser"></i>
+                  <span class="like-count">{{ event.likeCount || 0 }}</span>
+                  <span class="like-text">{{ (event.likeCount || 0) === 1 ? 'Like' : 'Likes' }}</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="comments-section">
+              <div class="comments-header">
+                <h3 class="section-title">
+                  <i class="fas fa-comments me-2"></i>
+                  Comments ({{ event.comments?.length || 0 }})
+                </h3>
+              </div>
+
+              <!-- Add Comment Form -->
+              <div class="add-comment-form" *ngIf="isAuthenticated">
+                <div class="comment-input-card">
+                  <div class="form-group">
+                    <label for="newComment" class="form-label">Share your thoughts</label>
+                    <textarea id="newComment" class="form-control comment-textarea" [(ngModel)]="newComment"
+                      placeholder="Write your comment here..." maxlength="500" rows="3"></textarea>
+                    <div class="character-count">
+                      {{ newComment.length || 0 }}/500
+                    </div>
+                  </div>
+                  <div class="comment-actions">
+                    <button class="btn btn-primary submit-comment-btn"
+                      [disabled]="!newComment.trim() || submittingComment" (click)="addComment()">
+                      <i class="fas fa-paper-plane me-2" *ngIf="!submittingComment"></i>
+                      <i class="fas fa-spinner fa-spin me-2" *ngIf="submittingComment"></i>
+                      {{ submittingComment ? 'Posting...' : 'Post Comment' }}
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Error Message for Comment Submission -->
+                <div class="alert alert-danger mt-2" *ngIf="commentError">
+                  <i class="fas fa-exclamation-circle me-2"></i>
+                  {{ commentError }}
+                </div>
+              </div>
+
+              <!-- Login Prompt -->
+              <div class="login-prompt" *ngIf="!isAuthenticated">
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle me-2"></i>
+                  Please <a href="/login" class="alert-link">log in</a> to add comments and like events.
+                </div>
+              </div>
+
+              <!-- Comments List -->
+              <div class="comments-list">
+                <div class="comment-card" *ngFor="let comment of event.comments">
+                  <div class="comment-header">
+                    <div class="commenter-info">
+                      <div class="commenter-avatar">
+                        <i class="fas fa-user-circle"></i>
+                      </div>
+                      <div class="comment-meta">
+                        <h6 class="commenter-name">{{ comment.userName }}</h6>
+                        <span class="comment-date">
+                          {{ formatDate(comment.datePosted) }} at {{ formatTime(comment.datePosted) }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="comment-content">
+                    <p>{{ comment.content }}</p>
+                  </div>
+                </div>
+
+                <!-- No Comments Message -->
+                <div class="no-comments" *ngIf="!event.comments || event.comments.length === 0">
+                  <div class="text-center text-muted">
+                    <i class="fas fa-comment-slash fa-3x mb-3"></i>
+                    <p>No comments yet. Be the first to share your thoughts!</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

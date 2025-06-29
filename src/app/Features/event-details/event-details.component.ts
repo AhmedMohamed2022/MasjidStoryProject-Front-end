@@ -1,15 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { EventViewModel } from '../../Core/Models/event.model';
 import { EventService } from '../../Core/Services/event.service';
 import { AuthService } from '../../Core/Services/auth.service';
 import { UserRegistrationService } from '../../Core/Services/user-registration.service';
+import { CommentService } from '../../Core/Services/comment.service';
+import { LikeService } from '../../Core/Services/like.service';
+import { CommentViewModel } from '../../Core/Models/comment.model';
 
 @Component({
   selector: 'app-event-details',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './event-details.component.html',
   styleUrls: ['./event-details.component.css'],
 })
@@ -21,10 +25,19 @@ export class EventDetailsComponent implements OnInit {
   registering = false;
   deleting = false;
 
+  // Comments and Likes properties
+  newComment = '';
+  submittingComment = false;
+  commentError = '';
+  togglingLike = false;
+  eventComments: CommentViewModel[] = [];
+
   constructor(
     private eventService: EventService,
     private authService: AuthService,
     private userRegistrationService: UserRegistrationService,
+    private commentService: CommentService,
+    private likeService: LikeService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
@@ -51,6 +64,10 @@ export class EventDetailsComponent implements OnInit {
         );
         this.event = event;
         this.loading = false;
+
+        // Load comments and likes after event is loaded
+        this.loadComments();
+        this.loadLikeStatus();
       },
       error: (error) => {
         this.error = 'Failed to load event details';
@@ -216,5 +233,92 @@ export class EventDetailsComponent implements OnInit {
     } else {
       return 'Upcoming';
     }
+  }
+
+  // Comments and Likes Methods
+  loadComments(): void {
+    if (!this.event) return;
+
+    this.commentService.getCommentsByContent(this.event.id, 'Event').subscribe({
+      next: (comments) => {
+        this.eventComments = comments;
+        if (this.event) {
+          this.event.comments = comments;
+        }
+      },
+      error: (error) => {
+        console.error('Error loading comments:', error);
+      },
+    });
+  }
+
+  addComment(): void {
+    if (!this.event || !this.newComment.trim() || this.submittingComment)
+      return;
+
+    this.submittingComment = true;
+    this.commentError = '';
+
+    const commentData = {
+      contentId: this.event.id,
+      contentType: 'Event',
+      content: this.newComment.trim(),
+    };
+
+    this.commentService.addComment(commentData).subscribe({
+      next: (newComment) => {
+        this.eventComments.unshift(newComment);
+        if (this.event) {
+          this.event.comments = this.eventComments;
+        }
+        this.newComment = '';
+        this.submittingComment = false;
+      },
+      error: (error) => {
+        this.commentError = error.message || 'Failed to add comment';
+        this.submittingComment = false;
+      },
+    });
+  }
+
+  toggleLike(): void {
+    if (!this.event || this.togglingLike) return;
+
+    this.togglingLike = true;
+    this.likeService.toggleLike(this.event.id, 'Event').subscribe({
+      next: (response) => {
+        if (this.event) {
+          this.event.isLikedByCurrentUser = response.liked;
+          // Update like count
+          this.likeService.getLikeCount(this.event.id, 'Event').subscribe({
+            next: (countResponse) => {
+              if (this.event) {
+                this.event.likeCount = countResponse.count;
+              }
+            },
+          });
+        }
+        this.togglingLike = false;
+      },
+      error: (error) => {
+        console.error('Error toggling like:', error);
+        this.togglingLike = false;
+      },
+    });
+  }
+
+  loadLikeStatus(): void {
+    if (!this.event || !this.isAuthenticated) return;
+
+    this.likeService.getLikeStatus(this.event.id, 'Event').subscribe({
+      next: (response) => {
+        if (this.event) {
+          this.event.isLikedByCurrentUser = response.isLiked;
+        }
+      },
+      error: (error) => {
+        console.error('Error loading like status:', error);
+      },
+    });
   }
 }

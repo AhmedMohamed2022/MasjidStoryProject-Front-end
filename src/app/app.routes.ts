@@ -130,6 +130,14 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'my-communities',
+    loadComponent: () =>
+      import('./Features/my-communities/my-communities.component').then(
+        (m) => m.MyCommunitiesComponent
+      ),
+    canActivate: [authGuard],
+  },
+  {
     path: 'user-profile',
     loadComponent: () =>
       import('./Features/user-profile/user-profile.component').then(
@@ -142,6 +150,23 @@ export const routes: Routes = [
       import('./Features/create-story/create-story.component').then(
         (m) => m.CreateStoryComponent
       ),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'edit-story/:id',
+    loadComponent: () =>
+      import('./Features/edit-story/edit-story.component').then(
+        (m) => m.EditStoryComponent
+      ),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'my-stories',
+    loadComponent: () =>
+      import('./Features/my-stories/my-stories.component').then(
+        (m) => m.MyStoriesComponent
+      ),
+    canActivate: [authGuard],
   },
   {
     path: 'admin-dashboard',

@@ -1,26 +1,27 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { CountryViewModel } from '../Models/masjid.model';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ApiResponse } from '../Models/api-response.model';
+import { environment } from '../environments/environment';
+
+export interface CountryViewModel {
+  id: number;
+  name: string;
+  code: string;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class CountryService {
-  // Seeded data matching the backend database
-  private readonly seededCountries: CountryViewModel[] = [
-    { id: 1, name: 'Egypt', code: 'EG' },
-    { id: 2, name: 'Iraq', code: 'IR' },
-  ];
+  private apiUrl = `${environment.apiUrl}/api/country`;
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   getAllCountries(): Observable<CountryViewModel[]> {
-    // Return seeded data directly without API call
-    return of(this.seededCountries);
-  }
-
-  getCountryById(id: number): Observable<CountryViewModel | null> {
-    const country = this.seededCountries.find((c) => c.id === id);
-    return of(country || null);
+    return this.http
+      .get<ApiResponse<CountryViewModel[]>>(`${this.apiUrl}/all`)
+      .pipe(map((response) => response.data));
   }
 }

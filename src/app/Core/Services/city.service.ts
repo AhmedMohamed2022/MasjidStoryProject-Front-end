@@ -1,34 +1,36 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { CityViewModel } from '../Models/masjid.model';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ApiResponse } from '../Models/api-response.model';
+import { environment } from '../environments/environment';
+
+export interface CityViewModel {
+  id: number;
+  name: string;
+  countryId: number;
+  countryName: string;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class CityService {
-  // Seeded data matching the backend database
-  private readonly seededCities: CityViewModel[] = [
-    { id: 1, name: 'Cairo', countryId: 1 },
-    { id: 2, name: 'Bagdad', countryId: 2 },
-  ];
+  private apiUrl = `${environment.apiUrl}/api/city`;
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   getAllCities(): Observable<CityViewModel[]> {
-    // Return seeded data directly without API call
-    return of(this.seededCities);
+    return this.http
+      .get<ApiResponse<CityViewModel[]>>(`${this.apiUrl}/all`)
+      .pipe(map((response) => response.data));
   }
 
   getCitiesByCountry(countryId: number): Observable<CityViewModel[]> {
-    // Filter cities by country ID
-    const cities = this.seededCities.filter(
-      (city) => city.countryId === countryId
-    );
-    return of(cities);
-  }
-
-  getCityById(id: number): Observable<CityViewModel | null> {
-    const city = this.seededCities.find((c) => c.id === id);
-    return of(city || null);
+    return this.http
+      .get<ApiResponse<CityViewModel[]>>(
+        `${this.apiUrl}/bycountry/${countryId}`
+      )
+      .pipe(map((response) => response.data));
   }
 }

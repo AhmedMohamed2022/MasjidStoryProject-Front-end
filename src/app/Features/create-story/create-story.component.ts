@@ -23,7 +23,7 @@ export class CreateStoryComponent implements OnInit {
     content: '',
     tags: [],
     storyImages: [],
-    masjidId: undefined,
+    masjidId: 0,
     languageId: undefined,
   };
 
@@ -138,8 +138,8 @@ export class CreateStoryComponent implements OnInit {
       this.error = 'Content is required';
       return false;
     }
-    if (this.story.storyImages.length === 0) {
-      this.error = 'At least one image is required';
+    if (!this.story.masjidId || this.story.masjidId === 0) {
+      this.error = 'Please select a masjid';
       return false;
     }
     return true;

@@ -32,7 +32,20 @@ export interface StoryViewModel {
   isLikedByCurrentUser: boolean;
   comments: CommentViewModel[];
   tags: string[];
+  mediaItems: MediaViewModel[];
   imageUrls: string[];
+  changeReason?: string;
+}
+
+export interface MediaViewModel {
+  id: number;
+  fileUrl: string;
+  fileName: string;
+  fileSize: number;
+  contentType: string;
+  masjidId?: number;
+  storyId?: number;
+  uploadDate: string;
 }
 
 export interface CommentViewModel {
@@ -40,16 +53,19 @@ export interface CommentViewModel {
   content: string;
   datePosted: string;
   userName: string;
-  storyId: number;
+  contentId: number;
+  contentType: string;
 }
 
 export interface CommentCreateViewModel {
-  storyId: number;
+  contentId: number;
+  contentType: string; // "Story", "Event", "Community"
   content: string;
 }
 
 export interface LikeCreateViewModel {
-  storyId: number;
+  contentId: number;
+  contentType: string; // "Story", "Event", "Community"
 }
 
 export interface StoryCreateViewModel {
@@ -57,6 +73,22 @@ export interface StoryCreateViewModel {
   content: string;
   tags: string[];
   storyImages: File[];
-  masjidId?: number;
+  masjidId: number;
   languageId?: number;
+}
+
+export interface StoryEditViewModel {
+  id: number;
+  title: string;
+  content: string;
+  masjidId: number;
+  languageId?: number;
+  isApproved: boolean;
+  newStoryImages?: File[];
+  keepMediaIds?: number[];
+  removeMediaIds?: number[];
+  originalTitle?: string;
+  originalContent?: string;
+  requiresReapproval?: boolean;
+  changeReason?: string;
 }

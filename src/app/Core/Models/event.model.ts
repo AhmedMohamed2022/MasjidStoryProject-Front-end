@@ -1,3 +1,5 @@
+import { CommentViewModel } from './comment.model';
+
 export interface EventViewModel {
   id: number;
   title: string;
@@ -7,6 +9,9 @@ export interface EventViewModel {
   masjidId?: number;
   createdByName: string;
   isUserRegistered: boolean;
+  comments?: any[];
+  isLikedByCurrentUser?: boolean;
+  likeCount?: number;
 }
 
 export interface EventCreateViewModel {

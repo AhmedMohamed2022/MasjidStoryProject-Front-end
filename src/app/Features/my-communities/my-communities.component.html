@@ -1,0 +1,130 @@
+<div class="my-communities-section">
+  <!-- Section Header -->
+  <div class="section-header">
+    <h1 class="section-title">
+      <i class="fas fa-users section-icon"></i>
+      My Communities
+    </h1>
+    <p class="section-subtitle">Manage and view the communities you've created</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="islamic-spinner">
+      <div class="spinner-circle"></div>
+    </div>
+    <p class="loading-text">Loading your communities...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-container">
+    <div class="error-card">
+      <i class="fas fa-exclamation-triangle error-icon"></i>
+      <h4>Unable to Load Communities</h4>
+      <p>{{ error }}</p>
+      <button class="btn btn-primary" (click)="refreshCommunities()">
+        <i class="fas fa-refresh"></i> Try Again
+      </button>
+    </div>
+  </div>
+
+  <!-- No Communities State -->
+  <div *ngIf="!loading && !error && communities.length === 0" class="no-communities-container">
+    <div class="no-communities-card">
+      <i class="fas fa-users no-communities-icon"></i>
+      <h4>No Communities Created Yet</h4>
+      <p>You haven't created any communities yet. Start building your first community to connect with others!</p>
+      <div class="action-buttons">
+        <button class="btn btn-primary" (click)="navigateToCreateCommunity()">
+          <i class="fas fa-plus-circle"></i>
+          Create Community
+        </button>
+        <button class="btn btn-outline" (click)="navigateToAllCommunities()">
+          <i class="fas fa-search"></i>
+          Browse Communities
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Communities Grid -->
+  <div *ngIf="!loading && !error && communities.length > 0" class="communities-grid">
+    <div *ngFor="let community of communities" class="community-card" (click)="navigateToCommunity(community.id)">
+      <div class="community-header">
+        <h3 class="community-title">{{ community.title }}</h3>
+        <div class="community-meta">
+          <span class="community-masjid">
+            <i class="fas fa-mosque"></i>
+            {{ community.masjidName }}
+          </span>
+          <span class="community-date">
+            <i class="fas fa-calendar"></i>
+            {{ community.dateCreated ? formatDate(community.dateCreated) : 'N/A' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="community-content">
+        <p class="community-description">{{ community.content }}</p>
+      </div>
+
+      <div class="community-stats">
+        <span class="community-members">
+          <i class="fas fa-users"></i>
+          {{ getMemberCountText(community.memberCount || 0) }}
+        </span>
+        <span class="community-language">
+          <i class="fas fa-language"></i>
+          {{ getLanguageDisplayName(community.languageCode || 'en') }}
+        </span>
+      </div>
+
+      <div class="community-actions">
+        <button class="btn btn-read-more">
+          <i class="fas fa-arrow-right"></i>
+          View Community
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div *ngIf="!loading && !error && communities.length > 0" class="action-section">
+    <div class="section-divider">
+      <div class="divider-line"></div>
+      <div class="divider-content">
+        <i class="fas fa-plus divider-icon"></i>
+      </div>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="action-buttons">
+      <button class="btn btn-primary" (click)="navigateToCreateCommunity()">
+        <i class="fas fa-plus-circle"></i>
+        Create New Community
+      </button>
+      <button class="btn btn-outline" (click)="navigateToAllCommunities()">
+        <i class="fas fa-search"></i>
+        Browse All Communities
+      </button>
+    </div>
+  </div>
+
+  <!-- Back to Home -->
+  <div *ngIf="!loading && !error" class="back-section">
+    <div class="section-divider">
+      <div class="divider-line"></div>
+      <div class="divider-content">
+        <i class="fas fa-home divider-icon"></i>
+      </div>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="back-content">
+      <button class="btn btn-outline" routerLink="/">
+        <i class="fas fa-arrow-left"></i>
+        Back to Home
+      </button>
+    </div>
+  </div>
+</div>

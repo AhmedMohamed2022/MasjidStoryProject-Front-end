@@ -26,14 +26,6 @@
             </a>
           </li>
 
-          <!-- Explore -->
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/search-masjid" routerLinkActive="active" (click)="closeAllMenus()">
-              <i class="fas fa-search"></i>
-              <span>Explore</span>
-            </a>
-          </li>
-
           <!-- Masjids -->
           <li class="nav-item">
             <a class="nav-link" routerLink="/search-masjid" routerLinkActive="active" (click)="closeAllMenus()">
@@ -59,7 +51,7 @@
           </li>
 
           <!-- Events Dropdown -->
-          <li class="nav-item dropdown" (mouseenter)="openEventsDropdown()" (mouseleave)="closeEventsDropdown()">
+          <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" (click)="toggleEventsDropdown()">
               <i class="fas fa-calendar-alt"></i>
               <span>Events</span>
@@ -110,25 +102,29 @@
                 </a>
               </li>
               <li>
-                <a class="dropdown-item" routerLink="/admin-dashboard" (click)="closeAllMenus()">
+                <a class="dropdown-item" routerLink="/admin-dashboard" [queryParams]="{tab: '1'}"
+                  (click)="closeAllMenus()">
                   <i class="fas fa-book"></i>
                   <span>Manage Stories</span>
                 </a>
               </li>
               <li>
-                <a class="dropdown-item" routerLink="/admin-dashboard" (click)="closeAllMenus()">
+                <a class="dropdown-item" routerLink="/admin-dashboard" [queryParams]="{tab: '2'}"
+                  (click)="closeAllMenus()">
                   <i class="fas fa-mosque"></i>
                   <span>Manage Masjids</span>
                 </a>
               </li>
               <li>
-                <a class="dropdown-item" routerLink="/admin-dashboard" (click)="closeAllMenus()">
+                <a class="dropdown-item" routerLink="/admin-dashboard" [queryParams]="{tab: '3'}"
+                  (click)="closeAllMenus()">
                   <i class="fas fa-calendar"></i>
                   <span>Manage Events</span>
                 </a>
               </li>
               <li>
-                <a class="dropdown-item" routerLink="/admin-dashboard" (click)="closeAllMenus()">
+                <a class="dropdown-item" routerLink="/admin-dashboard" [queryParams]="{tab: '4'}"
+                  (click)="closeAllMenus()">
                   <i class="fas fa-users"></i>
                   <span>Manage Communities</span>
                 </a>
@@ -154,6 +150,9 @@
 
         <!-- Authenticated User -->
         <div class="user-actions" *ngIf="isAuthenticated">
+          <!-- Notification Dropdown -->
+          <app-notification-dropdown></app-notification-dropdown>
+
           <!-- User Dropdown (top right, always for logged-in users) -->
           <div class="user-dropdown">
             <button class="user-toggle" (click)="toggleUserDropdown()">
@@ -178,6 +177,24 @@
                 </a>
               </li>
               <li>
+                <a class="dropdown-item" routerLink="/my-stories" (click)="closeAllMenus()">
+                  <i class="fas fa-book-open"></i>
+                  <span>My Stories</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" routerLink="/my-communities" (click)="closeAllMenus()">
+                  <i class="fas fa-users"></i>
+                  <span>My Communities</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" routerLink="/create-story" (click)="closeAllMenus()">
+                  <i class="fas fa-plus-circle"></i>
+                  <span>Create Story</span>
+                </a>
+              </li>
+              <li>
                 <a class="dropdown-item" routerLink="/my-events" (click)="closeAllMenus()">
                   <i class="fas fa-calendar-check"></i>
                   <span>My Events</span>
@@ -191,7 +208,8 @@
               </li>
               <li *ngIf="isAdmin">
                 <hr class="dropdown-divider" />
-                <a class="dropdown-item admin-link" routerLink="/admin-dashboard" (click)="closeAllMenus()">
+                <a class="dropdown-item admin-link" routerLink="/admin-dashboard" [queryParams]="{tab: '0'}"
+                  (click)="closeAllMenus()">
                   <i class="fas fa-shield-alt"></i>
                   <span>Admin Dashboard</span>
                 </a>

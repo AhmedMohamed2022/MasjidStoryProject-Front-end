@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../../Core/Services/auth.service';
 import { UserRegistrationService } from '../../../Core/Services/user-registration.service';
+import { NotificationDropdownComponent } from '../NotificationDropdown/notification-dropdown.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, NotificationDropdownComponent],
   templateUrl: './Header.component.html',
   styleUrls: ['./Header.component.css'],
 })
@@ -38,6 +39,7 @@ export class HeaderComponent {
 
   toggleMenu(): void {
     this.isMenuCollapsed = !this.isMenuCollapsed;
+    this.toggleBodyScroll();
   }
 
   closeAllMenus(): void {
@@ -45,26 +47,7 @@ export class HeaderComponent {
     this.isEventsDropdownCollapsed = true;
     this.isUserDropdownCollapsed = true;
     this.isAdminDropdownCollapsed = true;
-  }
-
-  openEventsDropdown(): void {
-    this.isEventsDropdownCollapsed = false;
-    this.isUserDropdownCollapsed = true;
-    this.isAdminDropdownCollapsed = true;
-  }
-
-  closeEventsDropdown(): void {
-    this.isEventsDropdownCollapsed = true;
-  }
-
-  openAdminDropdown(): void {
-    this.isAdminDropdownCollapsed = false;
-    this.isEventsDropdownCollapsed = true;
-    this.isUserDropdownCollapsed = true;
-  }
-
-  closeAdminDropdown(): void {
-    this.isAdminDropdownCollapsed = true;
+    this.enableBodyScroll();
   }
 
   toggleEventsDropdown(): void {
@@ -91,5 +74,19 @@ export class HeaderComponent {
     this.userRegistrationService.clearRegistrations();
     this.closeAllMenus();
     this.router.navigate(['/']);
+  }
+
+  private toggleBodyScroll(): void {
+    if (!this.isMenuCollapsed) {
+      // Menu is opening
+      document.body.classList.add('mobile-menu-open');
+    } else {
+      // Menu is closing
+      this.enableBodyScroll();
+    }
+  }
+
+  private enableBodyScroll(): void {
+    document.body.classList.remove('mobile-menu-open');
   }
 }

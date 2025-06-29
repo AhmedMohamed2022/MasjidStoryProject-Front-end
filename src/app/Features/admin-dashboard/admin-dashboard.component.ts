@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
@@ -40,6 +40,7 @@ import {
   CommunityViewModel,
   CommunityCreateViewModel,
 } from '../../Core/Models/community.model';
+import { environment } from '../../Core/environments/environment';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -81,6 +82,11 @@ export class AdminDashboardComponent implements OnInit {
   allStoriesLoading = false;
   pendingError = '';
   allStoriesError = '';
+
+  // Bulk operations state
+  selectedStories: number[] = [];
+  allSelected = false;
+  someSelected = false;
 
   // Masjids state
   masjids: MasjidViewModel[] = [];
@@ -127,7 +133,8 @@ export class AdminDashboardComponent implements OnInit {
     private eventService: EventService,
     private communityService: CommunityService,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {
     this.masjidForm = this.fb.group({
       shortName: ['', Validators.required],
@@ -158,6 +165,19 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Handle query parameters for tab navigation
+    this.activatedRoute.queryParams.subscribe((params) => {
+      const tabParam = params['tab'];
+      if (tabParam) {
+        const tabIndex = parseInt(tabParam);
+        if (tabIndex >= 0 && tabIndex < this.tabs.length) {
+          this.selectedTab = tabIndex;
+          this.onTabChange(tabIndex);
+        }
+      }
+    });
+
+    // Load initial data
     this.loadCountries();
     this.loadMasjids();
     this.loadPendingStories();
@@ -224,17 +244,125 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   async deleteStory(story: StoryViewModel) {
-    if (!confirm(`Delete story "${story.title}"? This cannot be undone.`))
-      return;
     try {
       await this.storyService.deleteStory(story.id);
-      this.snackBar.open('Story deleted.', 'Close', { duration: 2000 });
-      if (this.selectedTab === 0) this.loadPendingStories();
-      if (this.selectedTab === 1) this.loadAllStories();
-    } catch (err) {
-      this.snackBar.open('Failed to delete story.', 'Close', {
+      this.snackBar.open('Story deleted successfully', 'Close', {
         duration: 3000,
       });
+      this.loadPendingStories();
+      this.loadAllStories();
+    } catch (error) {
+      this.snackBar.open('Failed to delete story', 'Close', {
+        duration: 3000,
+      });
+    }
+  }
+
+  // Helper method to parse change reasons
+  getChangeReasons(changeReason: string): string[] {
+    if (!changeReason) return [];
+    return changeReason.split(',').map((reason) => reason.trim());
+  }
+
+  // Navigate to story details
+  viewStory(story: StoryViewModel) {
+    this.router.navigate(['/story-details', story.id]);
+  }
+
+  // Bulk operations methods
+  toggleStorySelection(storyId: number, event: any) {
+    if (event.checked) {
+      this.selectedStories.push(storyId);
+    } else {
+      this.selectedStories = this.selectedStories.filter(
+        (id) => id !== storyId
+      );
+    }
+    this.updateSelectionState();
+  }
+
+  isStorySelected(storyId: number): boolean {
+    return this.selectedStories.includes(storyId);
+  }
+
+  toggleAllStories(event: any) {
+    if (event.checked) {
+      this.selectedStories = this.pendingStories.map((story) => story.id);
+    } else {
+      this.selectedStories = [];
+    }
+    this.updateSelectionState();
+  }
+
+  updateSelectionState() {
+    const totalStories = this.pendingStories.length;
+    const selectedCount = this.selectedStories.length;
+
+    this.allSelected = selectedCount === totalStories && totalStories > 0;
+    this.someSelected = selectedCount > 0 && selectedCount < totalStories;
+  }
+
+  async bulkApproveStories() {
+    if (this.selectedStories.length === 0) return;
+
+    if (confirm(`Approve ${this.selectedStories.length} stories?`)) {
+      try {
+        const promises = this.selectedStories.map((storyId) =>
+          this.storyService.approveStory(storyId)
+        );
+        await Promise.all(promises);
+
+        this.snackBar.open(
+          `${this.selectedStories.length} stories approved successfully`,
+          'Close',
+          {
+            duration: 3000,
+          }
+        );
+
+        this.selectedStories = [];
+        this.updateSelectionState();
+        this.loadPendingStories();
+        this.loadAllStories();
+      } catch (error) {
+        this.snackBar.open('Failed to approve some stories', 'Close', {
+          duration: 3000,
+        });
+      }
+    }
+  }
+
+  async bulkDeleteStories() {
+    if (this.selectedStories.length === 0) return;
+
+    if (
+      confirm(
+        `Delete ${this.selectedStories.length} stories? This cannot be undone.`
+      )
+    ) {
+      try {
+        const promises = this.selectedStories.map((storyId) =>
+          this.storyService.deleteStory(storyId)
+        );
+        await Promise.all(promises);
+
+        this.snackBar.open(
+          `${this.selectedStories.length} stories deleted successfully`,
+          'Close',
+          {
+            duration: 3000,
+          }
+        );
+
+        this.selectedStories = [];
+        this.updateSelectionState();
+        this.loadPendingStories();
+        this.loadAllStories();
+      } catch (error) {
+        this.snackBar.open('Failed to delete some stories', 'Close', {
+          duration: 3000,
+        });
+      }
     }
   }
 
@@ -727,5 +855,11 @@ export class AdminDashboardComponent implements OnInit {
 
   navigateToCreateCommunity(): void {
     this.router.navigate(['/community-create']);
+  }
+
+  getFullImageUrl(url: string): string {
+    if (!url) return 'public/default-story.png';
+    if (url.startsWith('http')) return url;
+    return environment.apiUrl.replace(/\/$/, '') + url;
   }
 }

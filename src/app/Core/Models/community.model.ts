@@ -15,6 +15,9 @@ export interface CommunityViewModel {
   dateCreated: Date;
   isUserMember: boolean;
   memberCount: number;
+  comments?: any[];
+  isLikedByCurrentUser?: boolean;
+  likeCount?: number;
 }
 
 export interface CommunityCreateViewModel {

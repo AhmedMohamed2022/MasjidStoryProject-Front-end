@@ -27,9 +27,9 @@ export class MasjidDetailComponent implements OnInit, OnDestroy {
     private router: Router,
     private masjidService: MasjidDetailService
   ) {}
-  public test() {
-    console.log('Masjid details loaded:', this.masjid?.stories);
-  }
+  // public test() {
+  //   console.log('Masjid details loaded:', this.masjid?.stories);
+  // }
   ngOnInit(): void {
     this.route.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
       const id = +params['id'];

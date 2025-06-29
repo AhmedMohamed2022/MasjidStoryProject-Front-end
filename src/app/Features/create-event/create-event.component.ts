@@ -174,9 +174,9 @@ export class CreateEventComponent implements OnInit {
         this.success = 'Event created successfully!';
         this.loading = false;
 
-        // Redirect to events page after 2 seconds
+        // Redirect to upcoming events page after 2 seconds
         setTimeout(() => {
-          this.router.navigate(['/events']);
+          this.router.navigate(['/upcoming-events']);
         }, 2000);
       },
       error: (error) => {
@@ -215,7 +215,7 @@ export class CreateEventComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.router.navigate(['/events']);
+    this.router.navigate(['/upcoming-events']);
   }
 
   clearError(): void {

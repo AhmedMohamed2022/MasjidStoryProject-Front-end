@@ -1,0 +1,143 @@
+<div class="my-stories-container">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+
+                <!-- Page Header -->
+                <div class="page-header text-center mb-5">
+                    <h1 class="page-title">My Stories</h1>
+                    <p class="page-subtitle">Manage and view your published stories</p>
+                </div>
+
+                <!-- Success Message -->
+                <div class="alert alert-success alert-dismissible" *ngIf="success" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>
+                    {{ success }}
+                    <button type="button" class="btn-close" (click)="clearSuccess()"></button>
+                </div>
+
+                <!-- Error Message -->
+                <div class="alert alert-danger alert-dismissible" *ngIf="error" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    {{ error }}
+                    <button type="button" class="btn-close" (click)="clearError()"></button>
+                </div>
+
+                <!-- Create New Story Button -->
+                <div class="text-center mb-4">
+                    <button class="btn btn-gold" (click)="onCreateNewStory()">
+                        <i class="fas fa-plus-circle me-2"></i>
+                        Create New Story
+                    </button>
+                </div>
+
+                <!-- Loading State -->
+                <div *ngIf="loading" class="text-center py-5">
+                    <div class="spinner-border text-emerald" role="status">
+                        <span class="visually-hidden">Loading stories...</span>
+                    </div>
+                    <p class="mt-3">Loading your stories...</p>
+                </div>
+
+                <!-- Empty State -->
+                <div *ngIf="!loading && stories.length === 0" class="text-center py-5">
+                    <div class="empty-state">
+                        <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
+                        <h3 class="text-muted">No Stories Yet</h3>
+                        <p class="text-muted mb-4">You haven't created any stories yet. Start sharing your experiences!
+                        </p>
+                        <button class="btn btn-gold" (click)="onCreateNewStory()">
+                            <i class="fas fa-plus-circle me-2"></i>
+                            Create Your First Story
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stories Grid -->
+                <div *ngIf="!loading && stories.length > 0" class="stories-grid">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6 mb-4" *ngFor="let story of stories">
+                            <div class="story-card">
+                                <!-- Story Image -->
+                                <div class="story-image">
+                                    <img *ngIf="story.imageUrls && story.imageUrls.length > 0"
+                                        [src]="story.imageUrls[0]" [alt]="story.title" class="img-fluid" />
+                                    <div *ngIf="!story.imageUrls || story.imageUrls.length === 0" class="no-image">
+                                        <i class="fas fa-image"></i>
+                                    </div>
+
+                                    <!-- Status Badge -->
+                                    <div class="status-badge"
+                                        [ngClass]="getStatusBadgeClass(story.isApproved ? 'approved' : 'pending')">
+                                        <i [class]="getStatusIcon(story.isApproved ? 'approved' : 'pending')"></i>
+                                        <span>{{ story.isApproved ? 'Approved' : 'Pending' }}</span>
+                                    </div>
+                                </div>
+
+                                <!-- Story Content -->
+                                <div class="story-content">
+                                    <h5 class="story-title">{{ story.title }}</h5>
+                                    <p class="story-excerpt">{{ story.content | slice:0:150 }}{{ story.content.length >
+                                        150 ? '...' : '' }}</p>
+
+                                    <!-- Story Meta -->
+                                    <div class="story-meta">
+                                        <div class="meta-item">
+                                            <i class="fas fa-calendar-alt"></i>
+                                            <span>{{ story.datePublished | date:'MMM dd, yyyy' }}</span>
+                                        </div>
+                                        <div class="meta-item" *ngIf="story.masjidName">
+                                            <i class="fas fa-mosque"></i>
+                                            <span>{{ story.masjidName }}</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Story Tags -->
+                                    <div class="story-tags" *ngIf="story.tags && story.tags.length > 0">
+                                        <span class="badge rounded-pill bg-light text-dark me-1 mb-1"
+                                            *ngFor="let tag of story.tags.slice(0, 3)">
+                                            {{ tag }}
+                                        </span>
+                                        <span *ngIf="story.tags.length > 3"
+                                            class="badge rounded-pill bg-light text-dark">
+                                            +{{ story.tags.length - 3 }} more
+                                        </span>
+                                    </div>
+
+                                    <!-- Story Stats -->
+                                    <div class="story-stats">
+                                        <div class="stat-item">
+                                            <i class="fas fa-heart"></i>
+                                            <span>{{ story.likeCount || 0 }}</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <i class="fas fa-comment"></i>
+                                            <span>{{ story.comments.length || 0 }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Story Actions -->
+                                <div class="story-actions">
+                                    <button class="btn btn-outline-primary btn-sm" (click)="onViewStory(story.id)">
+                                        <i class="fas fa-eye"></i>
+                                        View
+                                    </button>
+                                    <button class="btn btn-outline-secondary btn-sm" (click)="onEditStory(story.id)">
+                                        <i class="fas fa-edit"></i>
+                                        Edit
+                                    </button>
+                                    <button class="btn btn-outline-danger btn-sm" (click)="onDeleteStory(story.id)">
+                                        <i class="fas fa-trash"></i>
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

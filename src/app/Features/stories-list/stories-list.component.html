@@ -29,7 +29,7 @@
     </div>
 
     <!-- No Stories State -->
-    <div *ngIf="!loading && !error && stories.length === 0" class="no-stories-container">
+    <div *ngIf="!loading && !error && stories && stories.length === 0" class="no-stories-container">
         <div class="no-stories-card">
             <i class="fas fa-book-open no-stories-icon"></i>
             <h4>No Stories Available</h4>
@@ -38,7 +38,7 @@
     </div>
 
     <!-- Stories Grid -->
-    <div *ngIf="!loading && !error && stories.length > 0" class="stories-grid">
+    <div *ngIf="!loading && !error && stories && stories.length > 0" class="stories-grid">
         <div *ngFor="let story of stories; trackBy: trackByStoryId" class="story-card"
             (click)="navigateToStory(story.id)">
             <div class="story-thumbnail mb-2" *ngIf="story.imageUrls && story.imageUrls.length">
@@ -99,6 +99,31 @@
                     </button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div *ngIf="!loading && !error && totalPages >= 1" class="pagination-container">
+        <div class="pagination-info">
+            <span>Showing {{ (currentPage - 1) * pageSize + 1 }} to {{ Math.min(currentPage * pageSize, totalCount) }}
+                of {{ totalCount }} stories</span>
+        </div>
+        <div class="pagination-controls">
+            <button class="btn btn-outline-primary" [disabled]="!hasPreviousPage"
+                (click)="onPageChange(currentPage - 1)">
+                <i class="fas fa-chevron-left"></i> Previous
+            </button>
+
+            <div class="page-numbers">
+                <button *ngFor="let page of getPageNumbers()" class="btn" [class.btn-primary]="page === currentPage"
+                    [class.btn-outline-primary]="page !== currentPage" (click)="onPageChange(page)">
+                    {{ page }}
+                </button>
+            </div>
+
+            <button class="btn btn-outline-primary" [disabled]="!hasNextPage" (click)="onPageChange(currentPage + 1)">
+                Next <i class="fas fa-chevron-right"></i>
+            </button>
         </div>
     </div>
 

@@ -12,6 +12,46 @@
     </div>
   </div>
 
+  <!-- Dashboard Statistics -->
+  <div class="dashboard-stats" *ngIf="!pendingLoading && !allStoriesLoading">
+    <div class="stat-card">
+      <div class="stat-icon pending">
+        <mat-icon>hourglass_empty</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">{{ pendingStories.length }}</div>
+        <div class="stat-label">Pending Stories</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon published">
+        <mat-icon>library_books</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">{{ allStories.length }}</div>
+        <div class="stat-label">Published Stories</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon masjids">
+        <mat-icon>mosque</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">{{ masjids.length }}</div>
+        <div class="stat-label">Total Masjids</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon events">
+        <mat-icon>event</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">{{ events.length }}</div>
+        <div class="stat-label">Total Events</div>
+      </div>
+    </div>
+  </div>
+
   <!-- Tab Navigation -->
   <div class="dashboard-container">
     <mat-tab-group (selectedTabChange)="onTabChange($event.index)" [selectedIndex]="selectedTab" class="dashboard-tabs">
@@ -28,6 +68,25 @@
               <div class="stat-item">
                 <span class="stat-number">{{ pendingStories.length }}</span>
                 <span class="stat-label">Pending</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bulk Operations -->
+          <div *ngIf="!pendingLoading && !pendingError && pendingStories.length > 0" class="bulk-operations">
+            <div class="bulk-header">
+              <mat-checkbox [checked]="allSelected" [indeterminate]="someSelected" (change)="toggleAllStories($event)">
+                Select All
+              </mat-checkbox>
+              <div class="bulk-actions" *ngIf="selectedStories.length > 0">
+                <button mat-raised-button color="primary" (click)="bulkApproveStories()">
+                  <mat-icon>check_circle</mat-icon>
+                  Approve Selected ({{ selectedStories.length }})
+                </button>
+                <button mat-raised-button color="warn" (click)="bulkDeleteStories()">
+                  <mat-icon>delete</mat-icon>
+                  Delete Selected ({{ selectedStories.length }})
+                </button>
               </div>
             </div>
           </div>
@@ -61,7 +120,11 @@
           <div *ngIf="!pendingLoading && !pendingError && pendingStories.length > 0" class="stories-grid admin-grid">
             <div *ngFor="let story of pendingStories" class="story-card admin-card">
               <div class="card-header">
-                <h3>{{ story.title }}</h3>
+                <div class="card-header-left">
+                  <mat-checkbox [checked]="isStorySelected(story.id)" (change)="toggleStorySelection(story.id, $event)">
+                  </mat-checkbox>
+                  <h3>{{ story.title }}</h3>
+                </div>
                 <div class="card-badge pending">Pending Review</div>
               </div>
               <div class="card-body">
@@ -79,8 +142,33 @@
                     <span>{{ story.datePublished | date:'mediumDate' }}</span>
                   </div>
                 </div>
+
+                <!-- Change History Section -->
+                <div class="change-history" *ngIf="story.changeReason">
+                  <div class="change-header">
+                    <mat-icon class="change-icon">history</mat-icon>
+                    <span class="change-title">Changes Requiring Review</span>
+                  </div>
+                  <div class="change-reasons">
+                    <span class="change-reason" *ngFor="let reason of getChangeReasons(story.changeReason)">
+                      {{ reason }}
+                    </span>
+                  </div>
+                </div>
+
                 <div class="story-content content-text">
                   <p>{{ story.content | slice:0:200 }}...</p>
+                </div>
+
+                <!-- Story Images Preview -->
+                <div class="story-images" *ngIf="story.imageUrls && story.imageUrls.length > 0">
+                  <div class="images-preview">
+                    <img *ngFor="let imageUrl of story.imageUrls.slice(0, 3)" [src]="getFullImageUrl(imageUrl)"
+                      [alt]="'Story image'" class="story-thumbnail">
+                    <div *ngIf="story.imageUrls.length > 3" class="more-images">
+                      +{{ story.imageUrls.length - 3 }} more
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="card-actions">
@@ -91,6 +179,10 @@
                 <button mat-raised-button color="warn" class="btn-delete" (click)="deleteStory(story)">
                   <mat-icon>delete</mat-icon>
                   Delete
+                </button>
+                <button mat-raised-button color="accent" class="btn-view" (click)="viewStory(story)">
+                  <mat-icon>visibility</mat-icon>
+                  View
                 </button>
               </div>
             </div>
@@ -278,7 +370,7 @@
                   <h4>Existing Media</h4>
                   <div class="media-grid">
                     <div *ngFor="let media of editingMasjid.mediaItems" class="media-item">
-                      <img [src]="media.fileUrl" [alt]="media.fileName" class="media-preview">
+                      <img [src]="getFullImageUrl(media.fileUrl)" [alt]="media.fileName" class="media-preview">
                       <div class="media-actions">
                         <mat-checkbox (change)="onMediaDeleteSelect(media.id, $event)">
                           Delete
