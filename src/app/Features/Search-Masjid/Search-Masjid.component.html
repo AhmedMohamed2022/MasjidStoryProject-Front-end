@@ -1,27 +1,181 @@
-<p>
-  Search-Masjid works!
-</p>
-<div class="container mt-5">
-  <div class="search-header text-center mb-5">
-    <h1>Explore Masjids and Stories</h1>
-    <div class="search-box mt-4">
-      <div class="input-group">
-        <input type="text" class="form-control" [(ngModel)]="searchTerm"
-          placeholder="Search for masjids, stories, or events...">
-        <button class="btn btn-gold" (click)="onSearch()">
-          <i class="fas fa-search"></i> Search
-        </button>
+<div class="search-container">
+  <!-- Search Header -->
+  <section class="search-header bg-light-emerald">
+    <div class="container">
+      <div class="row align-items-center min-vh-25">
+        <div class="col-lg-8 mx-auto text-center">
+          <h1 class="search-title">Explore All Masjids</h1>
+          <p class="search-subtitle">
+            Discover masjids from around the world and learn about their history and architecture
+          </p>
+
+          <!-- Search Box -->
+          <div class="search-box mt-4">
+            <div class="input-group input-group-lg">
+              <input type="text" class="form-control" [(ngModel)]="searchTerm" (keyup.enter)="onSearch()"
+                placeholder="Search by name, location, or architectural style...">
+              <button class="btn btn-gold" (click)="onSearch()">
+                <i class="fas fa-search"></i> Search
+              </button>
+            </div>
+          </div>
+
+          <!-- Filter Options -->
+          <div class="filter-options mt-4">
+            <div class="row justify-content-center">
+              <div class="col-md-3 mb-2">
+                <select class="form-select" [(ngModel)]="selectedCountry" (change)="onFilterChange()">
+                  <option value="">All Countries</option>
+                  <option *ngFor="let country of countries" [value]="country.id">
+                    {{ country.name }}
+                  </option>
+                </select>
+              </div>
+              <div class="col-md-3 mb-2">
+                <select class="form-select" [(ngModel)]="selectedCity" (change)="onFilterChange()">
+                  <option value="">All Cities</option>
+                  <option *ngFor="let city of cities" [value]="city.id">
+                    {{ city.name }}
+                  </option>
+                </select>
+              </div>
+              <div class="col-md-3 mb-2">
+                <select class="form-select" [(ngModel)]="selectedArchStyle" (change)="onFilterChange()">
+                  <option value="">All Styles</option>
+                  <option value="Ottoman">Ottoman</option>
+                  <option value="Mamluk">Mamluk</option>
+                  <option value="Fatimid">Fatimid</option>
+                  <option value="Modern">Modern</option>
+                  <option value="Traditional">Traditional</option>
+                </select>
+              </div>
+              <div class="col-md-3 mb-2">
+                <button class="btn btn-outline-emerald w-100" (click)="clearFilters()">
+                  <i class="fas fa-times"></i> Clear Filters
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <div *ngIf="loading" class="text-center">
-    <div class="spinner-border text-emerald" role="status">
-      <span class="visually-hidden">Loading...</span>
+  <!-- Results Section -->
+  <section class="results-section section-padding">
+    <div class="container">
+      <!-- Results Header -->
+      <div class="results-header d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h3 class="results-title">
+            {{ loading ? 'Loading...' : (searchTerm || selectedCountry || selectedCity || selectedArchStyle ? 'Search
+            Results' : 'All Masjids') }}
+          </h3>
+          <p class="results-count" *ngIf="!loading">
+            {{ masjids.length }} masjid{{ masjids.length !== 1 ? 's' : '' }} found
+          </p>
+        </div>
+
+        <!-- Sort Options -->
+        <div class="sort-options">
+          <select class="form-select" [(ngModel)]="sortBy" (change)="onSortChange()">
+            <option value="name">Sort by Name</option>
+            <option value="country">Sort by Country</option>
+            <option value="city">Sort by City</option>
+            <option value="year">Sort by Year</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-emerald" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-3">Loading masjids...</p>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="error && !loading" class="alert alert-danger text-center">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        {{ error }}
+        <button class="btn btn-outline-danger ms-3" (click)="loadMasjids()">
+          <i class="fas fa-redo"></i> Try Again
+        </button>
+      </div>
+
+      <!-- No Results -->
+      <div *ngIf="!loading && !error && masjids.length === 0" class="text-center py-5">
+        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+        <h4>No masjids found</h4>
+        <p class="text-muted">
+          Try adjusting your search terms or filters to find what you're looking for.
+        </p>
+        <button class="btn btn-outline-emerald" (click)="clearFilters()">
+          <i class="fas fa-times"></i> Clear All Filters
+        </button>
+      </div>
+
+      <!-- Masjids Grid -->
+      <div class="row" *ngIf="!loading && !error && masjids.length > 0">
+        <div class="col-lg-4 col-md-6 mb-4" *ngFor="let masjid of masjids">
+          <div class="masjid-card" (click)="navigateToMasjid(masjid.id)">
+            <div class="card-header">
+              <h5 class="card-title">{{ masjid.shortName }}</h5>
+              <span class="badge badge-emerald" *ngIf="masjid.archStyle">{{ masjid.archStyle }}</span>
+            </div>
+            <div class="card-body">
+              <p class="card-location">
+                <i class="fas fa-map-marker-alt"></i>
+                {{ masjid.cityName }}, {{ masjid.countryName }}
+              </p>
+              <p class="card-address" *ngIf="masjid.address">
+                <i class="fas fa-home"></i>
+                {{ masjid.address }}
+              </p>
+              <p class="card-year" *ngIf="masjid.yearOfEstablishment">
+                <i class="fas fa-calendar-alt"></i>
+                Est. {{ masjid.yearOfEstablishment }}
+              </p>
+              <div class="card-actions">
+                <button class="btn btn-sm btn-outline-emerald me-2"
+                  (click)="navigateToMasjid(masjid.id); $event.stopPropagation()">
+                  <i class="fas fa-info-circle me-1"></i>
+                  View Details
+                </button>
+                <button class="btn btn-sm btn-outline-primary"
+                  (click)="navigateToMasjidEvents(masjid.id); $event.stopPropagation()">
+                  <i class="fas fa-calendar me-1"></i>
+                  Events
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination-wrapper text-center mt-4" *ngIf="!loading && !error && masjids.length > 0">
+        <nav aria-label="Masjids pagination">
+          <ul class="pagination justify-content-center">
+            <li class="page-item" [class.disabled]="currentPage === 1">
+              <button class="page-link" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
+                <i class="fas fa-chevron-left"></i> Previous
+              </button>
+            </li>
+
+            <li class="page-item" *ngFor="let page of getPageNumbers()" [class.active]="page === currentPage">
+              <button class="page-link" (click)="changePage(page)">{{ page }}</button>
+            </li>
+
+            <li class="page-item" [class.disabled]="currentPage === totalPages">
+              <button class="page-link" (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">
+                Next <i class="fas fa-chevron-right"></i>
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
     </div>
-  </div>
-
-  <div class="search-results mt-4">
-    <!-- Add search results display here -->
-  </div>
+  </section>
 </div>

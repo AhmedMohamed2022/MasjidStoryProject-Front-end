@@ -1,101 +1,219 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-emerald fixed-top">
-  <div class="container">
-    <a class="navbar-brand" routerLink="/">
-      <i class="fas fa-mosque me-2"></i>
-      MasjidStory
-    </a>
+<header class="header">
+  <nav class="navbar">
+    <div class="nav-container">
+      <!-- Logo/Brand -->
+      <div class="nav-brand">
+        <a routerLink="/" class="brand-link">
+          <div class="brand-icon">
+            <i class="fas fa-mosque"></i>
+          </div>
+          <div class="brand-text">
+            <span class="brand-name">MasjidStory</span>
+            <span class="brand-tagline">Connect • Share • Inspire</span>
+          </div>
+        </a>
+      </div>
 
-    <button class="navbar-toggler" type="button" (click)="toggleMenu()" [attr.aria-expanded]="!isMenuCollapsed">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+      <!-- Desktop Navigation -->
+      <div class="nav-menu" [class.active]="!isMenuCollapsed">
+        <ul class="nav-list">
+          <!-- Home -->
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+              (click)="closeAllMenus()">
+              <i class="fas fa-home"></i>
+              <span>Home</span>
+            </a>
+          </li>
 
-    <div class="collapse navbar-collapse" [class.show]="!isMenuCollapsed" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
-            (click)="isMenuCollapsed = true">
-            Home
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/search" routerLinkActive="active" (click)="isMenuCollapsed = true">
-            Explore
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/stories" routerLinkActive="active" (click)="isMenuCollapsed = true">
-            Stories
-          </a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" role="button" (click)="toggleEventsDropdown()"
-            [attr.aria-expanded]="!isEventsDropdownCollapsed">
-            Events
-          </a>
-          <ul class="dropdown-menu" [class.show]="!isEventsDropdownCollapsed">
-            <li>
-              <a class="dropdown-item" routerLink="/upcoming-events"
-                (click)="isMenuCollapsed = true; isEventsDropdownCollapsed = true">
-                <i class="fas fa-calendar-alt me-2"></i>All Events
-              </a>
-            </li>
-            <li *ngIf="isAuthenticated">
-              <a class="dropdown-item" routerLink="/my-events"
-                (click)="isMenuCollapsed = true; isEventsDropdownCollapsed = true">
-                <i class="fas fa-user-check me-2"></i>My Events
-              </a>
-            </li>
-            <li *ngIf="isAuthenticated">
-              <a class="dropdown-item" routerLink="/create-event"
-                (click)="isMenuCollapsed = true; isEventsDropdownCollapsed = true">
-                <i class="fas fa-plus me-2"></i>Create Event
-              </a>
-            </li>
-          </ul>
-        </li>
+          <!-- Explore -->
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/search-masjid" routerLinkActive="active" (click)="closeAllMenus()">
+              <i class="fas fa-search"></i>
+              <span>Explore</span>
+            </a>
+          </li>
 
-        <!-- Guest Menu Items -->
-        <li class="nav-item" *ngIf="!isAuthenticated">
-          <a class="nav-link" routerLink="/register" routerLinkActive="active" (click)="isMenuCollapsed = true">
-            SignUp
-          </a>
-        </li>
-        <li class="nav-item" *ngIf="!isAuthenticated">
-          <a class="nav-link" routerLink="/login" routerLinkActive="active" (click)="isMenuCollapsed = true">
-            Login
-          </a>
-        </li>
+          <!-- Masjids -->
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/search-masjid" routerLinkActive="active" (click)="closeAllMenus()">
+              <i class="fas fa-mosque"></i>
+              <span>Masjids</span>
+            </a>
+          </li>
 
-        <!-- Authenticated User Menu -->
-        <li class="nav-item dropdown" *ngIf="isAuthenticated">
-          <a class="nav-link dropdown-toggle" role="button" (click)="toggleUserDropdown()"
-            [attr.aria-expanded]="!isUserDropdownCollapsed">
-            <i class="fas fa-user me-1"></i>{{ currentUser?.email }}
+          <!-- Stories -->
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/stories" routerLinkActive="active" (click)="closeAllMenus()">
+              <i class="fas fa-book-open"></i>
+              <span>Stories</span>
+            </a>
+          </li>
+
+          <!-- Communities -->
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/communities" routerLinkActive="active" (click)="closeAllMenus()">
+              <i class="fas fa-users"></i>
+              <span>Communities</span>
+            </a>
+          </li>
+
+          <!-- Events Dropdown -->
+          <li class="nav-item dropdown" (mouseenter)="openEventsDropdown()" (mouseleave)="closeEventsDropdown()">
+            <a class="nav-link dropdown-toggle" (click)="toggleEventsDropdown()">
+              <i class="fas fa-calendar-alt"></i>
+              <span>Events</span>
+              <i class="fas fa-chevron-down dropdown-arrow"></i>
+            </a>
+            <ul class="dropdown-menu" [class.show]="!isEventsDropdownCollapsed">
+              <li class="dropdown-header">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Event Management</span>
+              </li>
+              <li>
+                <a class="dropdown-item" routerLink="/upcoming-events" (click)="closeAllMenus()">
+                  <i class="fas fa-calendar-check"></i>
+                  <span>All Events</span>
+                </a>
+              </li>
+              <li *ngIf="isAuthenticated">
+                <a class="dropdown-item" routerLink="/my-events" (click)="closeAllMenus()">
+                  <i class="fas fa-user-check"></i>
+                  <span>My Events</span>
+                </a>
+              </li>
+              <li *ngIf="isAuthenticated">
+                <a class="dropdown-item" routerLink="/create-event" (click)="closeAllMenus()">
+                  <i class="fas fa-plus-circle"></i>
+                  <span>Create Event</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Admin Dropdown (navbar, only for admin, only admin links) -->
+          <li class="nav-item dropdown admin-dropdown" *ngIf="isAdmin">
+            <a class="nav-link dropdown-toggle admin-toggle" (click)="toggleAdminDropdown()">
+              <i class="fas fa-shield-alt"></i>
+              <span>Admin</span>
+              <i class="fas fa-chevron-down dropdown-arrow"></i>
+            </a>
+            <ul class="dropdown-menu admin-menu" [class.show]="!isAdminDropdownCollapsed">
+              <li class="dropdown-header">
+                <i class="fas fa-shield-alt"></i>
+                <span>Administration</span>
+              </li>
+              <li>
+                <a class="dropdown-item" routerLink="/admin-dashboard" (click)="closeAllMenus()">
+                  <i class="fas fa-tachometer-alt"></i>
+                  <span>Dashboard</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" routerLink="/admin-dashboard" (click)="closeAllMenus()">
+                  <i class="fas fa-book"></i>
+                  <span>Manage Stories</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" routerLink="/admin-dashboard" (click)="closeAllMenus()">
+                  <i class="fas fa-mosque"></i>
+                  <span>Manage Masjids</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" routerLink="/admin-dashboard" (click)="closeAllMenus()">
+                  <i class="fas fa-calendar"></i>
+                  <span>Manage Events</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" routerLink="/admin-dashboard" (click)="closeAllMenus()">
+                  <i class="fas fa-users"></i>
+                  <span>Manage Communities</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <!-- User Actions -->
+      <div class="nav-actions">
+        <!-- Guest Actions -->
+        <div class="guest-actions" *ngIf="!isAuthenticated">
+          <a class="btn btn-outline" routerLink="/login">
+            <i class="fas fa-sign-in-alt"></i>
+            <span>Login</span>
           </a>
-          <ul class="dropdown-menu" [class.show]="!isUserDropdownCollapsed">
-            <li>
-              <a class="dropdown-item" routerLink="/my-events"
-                (click)="isMenuCollapsed = true; isUserDropdownCollapsed = true">
-                <i class="fas fa-calendar-check me-2"></i>My Events
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" routerLink="/create-event"
-                (click)="isMenuCollapsed = true; isUserDropdownCollapsed = true">
-                <i class="fas fa-plus me-2"></i>Create Event
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li>
-              <a class="dropdown-item" href="javascript:void(0)" (click)="logout()">
-                <i class="fas fa-sign-out-alt me-2"></i>Logout
-              </a>
-            </li>
-          </ul>
-        </li>
-      </ul>
+          <a class="btn btn-primary" routerLink="/register">
+            <i class="fas fa-user-plus"></i>
+            <span>Sign Up</span>
+          </a>
+        </div>
+
+        <!-- Authenticated User -->
+        <div class="user-actions" *ngIf="isAuthenticated">
+          <!-- User Dropdown (top right, always for logged-in users) -->
+          <div class="user-dropdown">
+            <button class="user-toggle" (click)="toggleUserDropdown()">
+              <div class="user-avatar">
+                <i class="fas fa-user"></i>
+              </div>
+              <div class="user-info">
+                <span class="user-name">{{ currentUser?.email?.split('@')[0] || 'User' }}</span>
+                <span class="user-role">{{ isAdmin ? 'Admin' : 'Member' }}</span>
+              </div>
+              <i class="fas fa-chevron-down dropdown-arrow"></i>
+            </button>
+            <ul class="dropdown-menu user-menu" [class.show]="!isUserDropdownCollapsed">
+              <li class="dropdown-header">
+                <i class="fas fa-user-circle"></i>
+                <span>My Account</span>
+              </li>
+              <li>
+                <a class="dropdown-item" routerLink="/user-profile" (click)="closeAllMenus()">
+                  <i class="fas fa-user-circle"></i>
+                  <span>My Profile</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" routerLink="/my-events" (click)="closeAllMenus()">
+                  <i class="fas fa-calendar-check"></i>
+                  <span>My Events</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" routerLink="/create-event" (click)="closeAllMenus()">
+                  <i class="fas fa-plus-circle"></i>
+                  <span>Create Event</span>
+                </a>
+              </li>
+              <li *ngIf="isAdmin">
+                <hr class="dropdown-divider" />
+                <a class="dropdown-item admin-link" routerLink="/admin-dashboard" (click)="closeAllMenus()">
+                  <i class="fas fa-shield-alt"></i>
+                  <span>Admin Dashboard</span>
+                </a>
+              </li>
+              <li class="dropdown-divider"></li>
+              <li>
+                <a class="dropdown-item logout-item" href="javascript:void(0)" (click)="logout()">
+                  <i class="fas fa-sign-out-alt"></i>
+                  <span>Logout</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Menu Toggle -->
+      <button class="mobile-toggle" (click)="toggleMenu()" [attr.aria-expanded]="!isMenuCollapsed">
+        <span class="hamburger-line" [class.active]="!isMenuCollapsed"></span>
+        <span class="hamburger-line" [class.active]="!isMenuCollapsed"></span>
+        <span class="hamburger-line" [class.active]="!isMenuCollapsed"></span>
+      </button>
     </div>
-  </div>
-</nav>
+  </nav>
+</header>

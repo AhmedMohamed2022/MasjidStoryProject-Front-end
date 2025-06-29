@@ -31,6 +31,8 @@ export interface StoryViewModel {
   likeCount: number;
   isLikedByCurrentUser: boolean;
   comments: CommentViewModel[];
+  tags: string[];
+  imageUrls: string[];
 }
 
 export interface CommentViewModel {
@@ -48,4 +50,13 @@ export interface CommentCreateViewModel {
 
 export interface LikeCreateViewModel {
   storyId: number;
+}
+
+export interface StoryCreateViewModel {
+  title: string;
+  content: string;
+  tags: string[];
+  storyImages: File[];
+  masjidId?: number;
+  languageId?: number;
 }

@@ -27,6 +27,9 @@
           <div class="col-12">
             <div class="story-header">
               <h1 class="story-title">{{ story.title }}</h1>
+              <div class="story-tags mb-2" *ngIf="story.tags && story.tags.length">
+                <span class="badge bg-emerald me-2" *ngFor="let tag of story.tags">{{ tag }}</span>
+              </div>
               <div class="story-meta">
                 <div class="meta-item">
                   <i class="fas fa-mosque me-2"></i>
@@ -42,6 +45,13 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+        <!-- Story Images Carousel/Grid -->
+        <div class="row story-image-carousel mb-4" *ngIf="story.imageUrls && story.imageUrls.length">
+          <div class="col-auto mb-2" *ngFor="let url of story.imageUrls">
+            <img [src]="getFullImageUrl(url)" class="img-fluid rounded shadow story-image"
+              style="max-height: 300px; max-width: 100%; object-fit: cover;" alt="Story image" />
           </div>
         </div>
       </div>

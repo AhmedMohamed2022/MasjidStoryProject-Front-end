@@ -39,22 +39,22 @@
     <div class="community-header">
       <div class="header-main">
         <div class="title-section">
-          <h1 class="community-title">{{ community?.title }}</h1>
+          <h1 class="community-title">{{ community.title }}</h1>
           <div class="community-meta">
             <div class="meta-item">
               <i class="fas fa-mosque"></i>
-              <span class="masjid-link" (click)="goToMasjid()">{{ community?.masjidName }}</span>
+              <span class="masjid-link" (click)="goToMasjid()">{{ community.masjidName }}</span>
             </div>
             <div class="meta-item">
               <i class="fas fa-language"></i>
               <span class="language-info">
-                <span class="flag">{{ getLanguageFlag(community?.languageCode || 'en') }}</span>
-                {{ getLanguageName(community?.languageCode || 'en') }}
+                <span class="flag">{{ getLanguageFlag(community.languageCode || 'en') }}</span>
+                {{ getLanguageName(community.languageCode || 'en') }}
               </span>
             </div>
             <div class="meta-item">
               <i class="fas fa-users"></i>
-              <span>{{ community?.memberCount || 0 }} member{{ (community?.memberCount || 0) !== 1 ? 's' : '' }}</span>
+              <span>{{ community.memberCount || 0 }} member{{ (community.memberCount || 0) !== 1 ? 's' : '' }}</span>
             </div>
           </div>
         </div>
@@ -65,12 +65,12 @@
             <span>You're a member</span>
           </div>
 
-          <button *ngIf="isAuthenticated" class="membership-btn" [class.join]="!community?.isUserMember"
-            [class.leave]="community?.isUserMember" [disabled]="membershipLoading" (click)="toggleMembership()">
+          <button *ngIf="isAuthenticated" class="membership-btn" [class.join]="!community.isUserMember"
+            [class.leave]="community.isUserMember" [disabled]="membershipLoading" (click)="toggleMembership()">
             <div *ngIf="membershipLoading" class="btn-spinner"></div>
-            <i *ngIf="!membershipLoading" class="fas" [class.fa-plus]="!community?.isUserMember"
-              [class.fa-minus]="community?.isUserMember"></i>
-            {{ membershipLoading ? 'Processing...' : (community?.isUserMember ? 'Leave Community' : 'Join Community') }}
+            <i *ngIf="!membershipLoading" class="fas" [class.fa-plus]="!community.isUserMember"
+              [class.fa-minus]="community.isUserMember"></i>
+            {{ membershipLoading ? 'Processing...' : (community.isUserMember ? 'Leave Community' : 'Join Community') }}
           </button>
 
           <button *ngIf="!isAuthenticated" class="login-required-btn" routerLink="/login">
@@ -130,8 +130,8 @@
       <div class="join-cta" *ngIf="!community?.isUserMember && isAuthenticated">
         <div class="cta-content">
           <h3>Join Our Community</h3>
-          <p>Connect with {{ community?.memberCount || 0 }} other members who share your interest in {{
-            community?.masjidName
+          <p>Connect with {{ community.memberCount || 0 }} other members who share your interest in {{
+            community.masjidName
             }}</p>
           <button class="cta-btn" (click)="toggleMembership()" [disabled]="membershipLoading">
             <div *ngIf="membershipLoading" class="btn-spinner"></div>

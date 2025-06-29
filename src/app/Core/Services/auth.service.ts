@@ -70,6 +70,11 @@ export class AuthService {
     return this.isAuthenticatedSubject.value;
   }
 
+  isAdmin(): boolean {
+    const user = this.getCurrentUser();
+    return user?.roles?.includes('Admin') || false;
+  }
+
   private setAuthData(response: AuthResponse): void {
     const user: User = {
       email: response.email,

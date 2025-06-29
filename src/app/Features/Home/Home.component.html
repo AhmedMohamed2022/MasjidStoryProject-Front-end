@@ -139,6 +139,18 @@
       <div class="alert alert-danger" *ngIf="masjidError">
         {{ masjidError }}
       </div>
+
+      <!-- View All Masjids Button -->
+      <div class="text-center mt-4" *ngIf="!loadingMasjids && !masjidError">
+        <button class="btn btn-outline-emerald btn-lg me-3" (click)="navigateToAllMasjids()">
+          <i class="fas fa-mosque me-2"></i>
+          View All Masjids
+        </button>
+        <button class="btn btn-gold btn-lg" (click)="navigateToSearch()">
+          <i class="fas fa-search me-2"></i>
+          Search Masjids
+        </button>
+      </div>
     </div>
   </section>
 

@@ -1,0 +1,702 @@
+<div class="admin-dashboard">
+  <!-- Dashboard Header -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <div class="header-text">
+        <h1>Admin Dashboard</h1>
+        <p>Manage stories, masjids, events, and communities</p>
+      </div>
+      <div class="header-icon">
+        <mat-icon>admin_panel_settings</mat-icon>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Navigation -->
+  <div class="dashboard-container">
+    <mat-tab-group (selectedTabChange)="onTabChange($event.index)" [selectedIndex]="selectedTab" class="dashboard-tabs">
+      <mat-tab *ngFor="let tab of tabs; let i = index" [label]="tab.label">
+
+        <!-- Pending Stories Tab -->
+        <div *ngIf="i === 0" class="tab-content">
+          <div class="content-header">
+            <div class="header-info">
+              <h2>Pending Stories</h2>
+              <p>Stories waiting for approval</p>
+            </div>
+            <div class="header-stats" *ngIf="!pendingLoading && !pendingError">
+              <div class="stat-item">
+                <span class="stat-number">{{ pendingStories.length }}</span>
+                <span class="stat-label">Pending</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Loading State -->
+          <div *ngIf="pendingLoading" class="loading-state">
+            <div class="loading-content">
+              <mat-spinner diameter="40"></mat-spinner>
+              <p>Loading pending stories...</p>
+            </div>
+          </div>
+
+          <!-- Error State -->
+          <div *ngIf="pendingError" class="error-state">
+            <div class="error-content">
+              <mat-icon>error_outline</mat-icon>
+              <p>{{ pendingError }}</p>
+            </div>
+          </div>
+
+          <!-- Empty State -->
+          <div *ngIf="!pendingLoading && !pendingError && pendingStories.length === 0" class="empty-state">
+            <div class="empty-content">
+              <mat-icon>inbox</mat-icon>
+              <h3>No Pending Stories</h3>
+              <p>All stories have been reviewed and approved.</p>
+            </div>
+          </div>
+
+          <!-- Stories List -->
+          <div *ngIf="!pendingLoading && !pendingError && pendingStories.length > 0" class="stories-grid admin-grid">
+            <div *ngFor="let story of pendingStories" class="story-card admin-card">
+              <div class="card-header">
+                <h3>{{ story.title }}</h3>
+                <div class="card-badge pending">Pending Review</div>
+              </div>
+              <div class="card-body">
+                <div class="story-meta meta-grid">
+                  <div class="meta-item">
+                    <mat-icon>person</mat-icon>
+                    <span>{{ story.authorFullName }}</span>
+                  </div>
+                  <div class="meta-item">
+                    <mat-icon>mosque</mat-icon>
+                    <span>{{ story.masjidName }}</span>
+                  </div>
+                  <div class="meta-item">
+                    <mat-icon>schedule</mat-icon>
+                    <span>{{ story.datePublished | date:'mediumDate' }}</span>
+                  </div>
+                </div>
+                <div class="story-content content-text">
+                  <p>{{ story.content | slice:0:200 }}...</p>
+                </div>
+              </div>
+              <div class="card-actions">
+                <button mat-raised-button color="primary" class="btn-approve" (click)="approveStory(story)">
+                  <mat-icon>check_circle</mat-icon>
+                  Approve
+                </button>
+                <button mat-raised-button color="warn" class="btn-delete" (click)="deleteStory(story)">
+                  <mat-icon>delete</mat-icon>
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- All Stories Tab -->
+        <div *ngIf="i === 1" class="tab-content">
+          <div class="content-header">
+            <div class="header-info">
+              <h2>All Stories</h2>
+              <p>All published stories in the system</p>
+            </div>
+            <div class="header-stats" *ngIf="!allStoriesLoading && !allStoriesError">
+              <div class="stat-item">
+                <span class="stat-number">{{ allStories.length }}</span>
+                <span class="stat-label">Total Stories</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Loading State -->
+          <div *ngIf="allStoriesLoading" class="loading-state">
+            <div class="loading-content">
+              <mat-spinner diameter="40"></mat-spinner>
+              <p>Loading all stories...</p>
+            </div>
+          </div>
+
+          <!-- Error State -->
+          <div *ngIf="allStoriesError" class="error-state">
+            <div class="error-content">
+              <mat-icon>error_outline</mat-icon>
+              <p>{{ allStoriesError }}</p>
+            </div>
+          </div>
+
+          <!-- Empty State -->
+          <div *ngIf="!allStoriesLoading && !allStoriesError && allStories.length === 0" class="empty-state">
+            <div class="empty-content">
+              <mat-icon>article</mat-icon>
+              <h3>No Stories Found</h3>
+              <p>There are no stories in the system yet.</p>
+            </div>
+          </div>
+
+          <!-- Stories List -->
+          <div *ngIf="!allStoriesLoading && !allStoriesError && allStories.length > 0" class="stories-grid admin-grid">
+            <div *ngFor="let story of allStories" class="story-card admin-card">
+              <div class="card-header">
+                <h3>{{ story.title }}</h3>
+                <div class="card-badge published">Published</div>
+              </div>
+              <div class="card-body">
+                <div class="story-meta meta-grid">
+                  <div class="meta-item">
+                    <mat-icon>person</mat-icon>
+                    <span>{{ story.authorFullName }}</span>
+                  </div>
+                  <div class="meta-item">
+                    <mat-icon>mosque</mat-icon>
+                    <span>{{ story.masjidName }}</span>
+                  </div>
+                  <div class="meta-item">
+                    <mat-icon>schedule</mat-icon>
+                    <span>{{ story.datePublished | date:'mediumDate' }}</span>
+                  </div>
+                  <div class="meta-item">
+                    <mat-icon>favorite</mat-icon>
+                    <span>{{ story.likeCount }} likes</span>
+                  </div>
+                </div>
+                <div class="story-content content-text">
+                  <p>{{ story.content | slice:0:200 }}...</p>
+                </div>
+              </div>
+              <div class="card-actions">
+                <button mat-raised-button color="warn" class="btn-delete" (click)="deleteStory(story)">
+                  <mat-icon>delete</mat-icon>
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Masjids Tab -->
+        <div *ngIf="i === 2" class="tab-content">
+          <div class="content-header">
+            <div class="header-info">
+              <h2>Masjids</h2>
+              <p>Manage masjids and their media</p>
+            </div>
+            <div class="header-actions">
+              <button mat-raised-button color="primary" class="btn-create" (click)="showCreateMasjidForm()">
+                <mat-icon>add</mat-icon>
+                Create New Masjid
+              </button>
+            </div>
+          </div>
+
+          <!-- Create/Edit Masjid Form -->
+          <div *ngIf="showCreateForm || showEditForm" class="form-container">
+            <div class="form-card">
+              <div class="form-header">
+                <h3>{{ showCreateForm ? 'Create New Masjid' : 'Edit Masjid' }}</h3>
+                <button mat-icon-button class="btn-close" (click)="cancelForm()">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+
+              <form [formGroup]="masjidForm" (ngSubmit)="onSubmit()" class="masjid-form form-content">
+                <div class="form-grid">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Short Name *</mat-label>
+                    <input matInput formControlName="shortName" placeholder="Masjid Name">
+                    <mat-error *ngIf="masjidForm.get('shortName')?.hasError('required')">
+                      Short name is required
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Address</mat-label>
+                    <input matInput formControlName="address" placeholder="Masjid Address">
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Architectural Style</mat-label>
+                    <input matInput formControlName="archStyle" placeholder="Architectural Style">
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Year of Establishment</mat-label>
+                    <input matInput type="number" formControlName="yearOfEstablishment" placeholder="Year">
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Country *</mat-label>
+                    <mat-select formControlName="countryId" (selectionChange)="onCountryChange()">
+                      <mat-option *ngFor="let country of countries" [value]="country.id">
+                        {{ country.name }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="masjidForm.get('countryId')?.hasError('required')">
+                      Country is required
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>City *</mat-label>
+                    <mat-select formControlName="cityId" [disabled]="!cities.length">
+                      <mat-option *ngFor="let city of cities" [value]="city.id">
+                        {{ city.name }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="masjidForm.get('cityId')?.hasError('required')">
+                      City is required
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Latitude</mat-label>
+                    <input matInput type="number" step="0.000001" formControlName="latitude" placeholder="Latitude">
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Longitude</mat-label>
+                    <input matInput type="number" step="0.000001" formControlName="longitude" placeholder="Longitude">
+                  </mat-form-field>
+                </div>
+
+                <!-- Media Upload -->
+                <div class="media-section">
+                  <div class="file-upload">
+                    <label for="mediaFiles">Upload Media Files</label>
+                    <input type="file" id="mediaFiles" multiple accept="image/*" (change)="onFileSelect($event)">
+                    <p class="file-info">Selected files: {{ selectedFiles.length }}</p>
+                  </div>
+                </div>
+
+                <!-- Existing Media (for edit mode) -->
+                <div
+                  *ngIf="showEditForm && editingMasjid && editingMasjid.mediaItems && editingMasjid.mediaItems.length > 0"
+                  class="existing-media">
+                  <h4>Existing Media</h4>
+                  <div class="media-grid">
+                    <div *ngFor="let media of editingMasjid.mediaItems" class="media-item">
+                      <img [src]="media.fileUrl" [alt]="media.fileName" class="media-preview">
+                      <div class="media-actions">
+                        <mat-checkbox (change)="onMediaDeleteSelect(media.id, $event)">
+                          Delete
+                        </mat-checkbox>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button type="button" mat-button class="btn-cancel" (click)="cancelForm()">Cancel</button>
+                  <button type="submit" mat-raised-button color="primary" class="btn-submit"
+                    [disabled]="!masjidForm.valid || isSubmitting">
+                    <mat-spinner *ngIf="isSubmitting" diameter="20"></mat-spinner>
+                    {{ showCreateForm ? 'Create Masjid' : 'Update Masjid' }}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Masjids List -->
+          <div *ngIf="!showCreateForm && !showEditForm">
+            <!-- Loading State -->
+            <div *ngIf="masjidsLoading" class="loading-state">
+              <div class="loading-content">
+                <mat-spinner diameter="40"></mat-spinner>
+                <p>Loading masjids...</p>
+              </div>
+            </div>
+
+            <!-- Error State -->
+            <div *ngIf="masjidsError" class="error-state">
+              <div class="error-content">
+                <mat-icon>error_outline</mat-icon>
+                <p>{{ masjidsError }}</p>
+              </div>
+            </div>
+
+            <!-- Empty State -->
+            <div *ngIf="!masjidsLoading && !masjidsError && masjids.length === 0" class="empty-state">
+              <div class="empty-content">
+                <mat-icon>mosque</mat-icon>
+                <h3>No Masjids Found</h3>
+                <p>Create your first masjid to get started.</p>
+              </div>
+            </div>
+
+            <!-- Masjids List -->
+            <div *ngIf="!masjidsLoading && !masjidsError && masjids.length > 0" class="masjids-grid admin-grid">
+              <div *ngFor="let masjid of masjids" class="masjid-card admin-card">
+                <div class="card-header">
+                  <h3>{{ masjid.shortName }}</h3>
+                  <div class="card-badge masjid">Masjid</div>
+                </div>
+                <div class="card-body">
+                  <div class="masjid-meta meta-grid">
+                    <div class="meta-item" *ngIf="masjid.address">
+                      <mat-icon>location_on</mat-icon>
+                      <span>{{ masjid.address }}</span>
+                    </div>
+                    <div class="meta-item">
+                      <mat-icon>location_city</mat-icon>
+                      <span>{{ masjid.cityName }}, {{ masjid.countryName }}</span>
+                    </div>
+                    <div class="meta-item" *ngIf="masjid.archStyle">
+                      <mat-icon>architecture</mat-icon>
+                      <span>{{ masjid.archStyle }}</span>
+                    </div>
+                    <div class="meta-item" *ngIf="masjid.yearOfEstablishment">
+                      <mat-icon>calendar_today</mat-icon>
+                      <span>Est. {{ masjid.yearOfEstablishment }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-actions">
+                  <button mat-raised-button color="primary" class="btn-edit" (click)="showEditMasjidForm(masjid)">
+                    <mat-icon>edit</mat-icon>
+                    Edit
+                  </button>
+                  <button mat-raised-button color="warn" class="btn-delete" (click)="deleteMasjid(masjid)">
+                    <mat-icon>delete</mat-icon>
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Events Tab -->
+        <div *ngIf="i === 3" class="tab-content">
+          <div class="content-header">
+            <div class="header-info">
+              <h2>Events</h2>
+              <p>Manage events and activities</p>
+            </div>
+            <div class="header-actions">
+              <button mat-raised-button color="primary" class="btn-create" (click)="openCreateEventForm()">
+                <mat-icon>add</mat-icon>
+                Create Event
+              </button>
+            </div>
+          </div>
+
+          <!-- Create/Edit Event Form -->
+          <div *ngIf="showCreateEventForm || showEditEventForm" class="form-container">
+            <div class="form-card">
+              <div class="form-header">
+                <h3>{{ showCreateEventForm ? 'Create New Event' : 'Edit Event' }}</h3>
+                <button mat-icon-button class="btn-close" (click)="cancelEventForm()">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+
+              <form [formGroup]="eventForm" (ngSubmit)="onSubmitEvent()" class="event-form form-content">
+                <div class="form-grid">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Title *</mat-label>
+                    <input matInput formControlName="title" placeholder="Event Title">
+                    <mat-error *ngIf="eventForm.get('title')?.hasError('required')">
+                      Title is required
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Event Date *</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="eventDate" placeholder="Event Date">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error *ngIf="eventForm.get('eventDate')?.hasError('required')">
+                      Event date is required
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Event Time *</mat-label>
+                    <input matInput type="time" formControlName="eventTime" placeholder="Event Time">
+                    <mat-error *ngIf="eventForm.get('eventTime')?.hasError('required')">
+                      Event time is required
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Masjid (Optional)</mat-label>
+                    <mat-select formControlName="masjidId">
+                      <mat-option [value]="null">General Event</mat-option>
+                      <mat-option *ngFor="let masjid of masjids" [value]="masjid.id">
+                        {{ masjid.shortName }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Language (Optional)</mat-label>
+                    <mat-select formControlName="languageId">
+                      <mat-option [value]="null">Default</mat-option>
+                      <mat-option [value]="1">Arabic</mat-option>
+                      <mat-option [value]="2">English</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-row">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Description *</mat-label>
+                    <textarea matInput formControlName="description" placeholder="Event Description"
+                      rows="4"></textarea>
+                    <mat-error *ngIf="eventForm.get('description')?.hasError('required')">
+                      Description is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-actions">
+                  <button type="button" mat-button class="btn-cancel" (click)="cancelEventForm()">Cancel</button>
+                  <button type="submit" mat-raised-button color="primary" class="btn-submit"
+                    [disabled]="!eventForm.valid || isSubmitting">
+                    <mat-spinner *ngIf="isSubmitting" diameter="20"></mat-spinner>
+                    {{ showCreateEventForm ? 'Create Event' : 'Update Event' }}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Events List -->
+          <div *ngIf="!showCreateEventForm && !showEditEventForm">
+            <!-- Loading State -->
+            <div *ngIf="eventsLoading" class="loading-state">
+              <div class="loading-content">
+                <mat-spinner diameter="40"></mat-spinner>
+                <p>Loading events...</p>
+              </div>
+            </div>
+
+            <!-- Error State -->
+            <div *ngIf="eventsError" class="error-state">
+              <div class="error-content">
+                <mat-icon>error_outline</mat-icon>
+                <p>{{ eventsError }}</p>
+              </div>
+            </div>
+
+            <!-- Empty State -->
+            <div *ngIf="!eventsLoading && !eventsError && events.length === 0" class="empty-state">
+              <div class="empty-content">
+                <mat-icon>event</mat-icon>
+                <h3>No Events Found</h3>
+                <p>Create your first event to get started.</p>
+              </div>
+            </div>
+
+            <!-- Events List -->
+            <div *ngIf="!eventsLoading && !eventsError && events.length > 0" class="events-grid admin-grid">
+              <div *ngFor="let event of events" class="event-card admin-card">
+                <div class="card-header">
+                  <h3>{{ event.title }}</h3>
+                  <div class="card-badge event">Event</div>
+                </div>
+                <div class="card-body">
+                  <div class="event-meta meta-grid">
+                    <div class="meta-item">
+                      <mat-icon>schedule</mat-icon>
+                      <span>{{ event.eventDate | date:'medium' }}</span>
+                    </div>
+                    <div class="meta-item">
+                      <mat-icon>mosque</mat-icon>
+                      <span>{{ event.masjidName || 'General Event' }}</span>
+                    </div>
+                    <div class="meta-item">
+                      <mat-icon>person</mat-icon>
+                      <span>{{ event.createdByName }}</span>
+                    </div>
+                    <div class="meta-item">
+                      <mat-icon>how_to_reg</mat-icon>
+                      <span>{{ event.isUserRegistered ? 'Registered' : 'Not Registered' }}</span>
+                    </div>
+                  </div>
+                  <div class="event-content content-text">
+                    <p>{{ event.description | slice:0:150 }}{{ event.description.length > 150 ? '...' : '' }}</p>
+                  </div>
+                </div>
+                <div class="card-actions">
+                  <button mat-raised-button color="primary" class="btn-edit" (click)="openEditEventForm(event)">
+                    <mat-icon>edit</mat-icon>
+                    Edit
+                  </button>
+                  <button mat-raised-button color="warn" class="btn-delete" (click)="deleteEvent(event)">
+                    <mat-icon>delete</mat-icon>
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Communities Tab -->
+        <div *ngIf="i === 4" class="tab-content">
+          <div class="content-header">
+            <div class="header-info">
+              <h2>Communities</h2>
+              <p>Manage communities and groups</p>
+            </div>
+            <div class="header-actions">
+              <button mat-raised-button color="primary" class="btn-create" (click)="openCreateCommunityForm()">
+                <mat-icon>add</mat-icon>
+                Create Community
+              </button>
+            </div>
+          </div>
+
+          <!-- Create/Edit Community Form -->
+          <div *ngIf="showCreateCommunityForm || showEditCommunityForm" class="form-container">
+            <div class="form-card">
+              <div class="form-header">
+                <h3>{{ showCreateCommunityForm ? 'Create New Community' : 'Edit Community' }}</h3>
+                <button mat-icon-button class="btn-close" (click)="cancelCommunityForm()">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+
+              <form [formGroup]="communityForm" (ngSubmit)="onSubmitCommunity()" class="community-form form-content">
+                <div class="form-grid">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Title *</mat-label>
+                    <input matInput formControlName="title" placeholder="Community Title">
+                    <mat-error *ngIf="communityForm.get('title')?.hasError('required')">
+                      Title is required
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Masjid *</mat-label>
+                    <mat-select formControlName="masjidId">
+                      <mat-option *ngFor="let masjid of masjids" [value]="masjid.id">
+                        {{ masjid.shortName }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="communityForm.get('masjidId')?.hasError('required')">
+                      Masjid is required
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Language *</mat-label>
+                    <mat-select formControlName="languageId">
+                      <mat-option [value]="1">Arabic</mat-option>
+                      <mat-option [value]="2">English</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="communityForm.get('languageId')?.hasError('required')">
+                      Language is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-row">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Content *</mat-label>
+                    <textarea matInput formControlName="content" placeholder="Community Description"
+                      rows="4"></textarea>
+                    <mat-error *ngIf="communityForm.get('content')?.hasError('required')">
+                      Content is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-actions">
+                  <button type="button" mat-button class="btn-cancel" (click)="cancelCommunityForm()">Cancel</button>
+                  <button type="submit" mat-raised-button color="primary" class="btn-submit"
+                    [disabled]="!communityForm.valid || isSubmitting">
+                    <mat-spinner *ngIf="isSubmitting" diameter="20"></mat-spinner>
+                    {{ showCreateCommunityForm ? 'Create Community' : 'Update Community' }}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Communities List -->
+          <div *ngIf="!showCreateCommunityForm && !showEditCommunityForm">
+            <!-- Loading State -->
+            <div *ngIf="communitiesLoading" class="loading-state">
+              <div class="loading-content">
+                <mat-spinner diameter="40"></mat-spinner>
+                <p>Loading communities...</p>
+              </div>
+            </div>
+
+            <!-- Error State -->
+            <div *ngIf="communitiesError" class="error-state">
+              <div class="error-content">
+                <mat-icon>error_outline</mat-icon>
+                <p>{{ communitiesError }}</p>
+              </div>
+            </div>
+
+            <!-- Empty State -->
+            <div *ngIf="!communitiesLoading && !communitiesError && communities.length === 0" class="empty-state">
+              <div class="empty-content">
+                <mat-icon>group</mat-icon>
+                <h3>No Communities Found</h3>
+                <p>Create your first community to get started.</p>
+              </div>
+            </div>
+
+            <!-- Communities List -->
+            <div *ngIf="!communitiesLoading && !communitiesError && communities.length > 0"
+              class="communities-grid admin-grid">
+              <div *ngFor="let community of communities" class="community-card admin-card">
+                <div class="card-header">
+                  <h3>{{ community.title }}</h3>
+                  <div class="card-badge community">Community</div>
+                </div>
+                <div class="card-body">
+                  <div class="community-meta meta-grid">
+                    <div class="meta-item">
+                      <mat-icon>mosque</mat-icon>
+                      <span>{{ community.masjidName }}</span>
+                    </div>
+                    <div class="meta-item">
+                      <mat-icon>language</mat-icon>
+                      <span>{{ community.languageCode.toUpperCase() }}</span>
+                    </div>
+                    <div class="meta-item">
+                      <mat-icon>person</mat-icon>
+                      <span>{{ community.createdByName }}</span>
+                    </div>
+                    <div class="meta-item">
+                      <mat-icon>group</mat-icon>
+                      <span>{{ community.memberCount }} members</span>
+                    </div>
+                    <div class="meta-item">
+                      <mat-icon>schedule</mat-icon>
+                      <span>{{ community.dateCreated | date:'mediumDate' }}</span>
+                    </div>
+                  </div>
+                  <div class="community-content content-text">
+                    <p>{{ community.content | slice:0:150 }}{{ community.content.length > 150 ? '...' : '' }}</p>
+                  </div>
+                </div>
+                <div class="card-actions">
+                  <button mat-raised-button color="primary" class="btn-edit" (click)="openEditCommunityForm(community)">
+                    <mat-icon>edit</mat-icon>
+                    Edit
+                  </button>
+                  <button mat-raised-button color="warn" class="btn-delete" (click)="deleteCommunity(community)">
+                    <mat-icon>delete</mat-icon>
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

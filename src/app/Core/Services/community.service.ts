@@ -134,4 +134,43 @@ export class CommunityService {
         catchError(this.handleError)
       );
   }
+
+  // Update community
+  updateCommunity(
+    id: number,
+    community: CommunityCreateViewModel
+  ): Observable<string> {
+    return this.http
+      .put<ApiResponse<string>>(`${this.apiUrl}/update/${id}`, community, {
+        headers: this.getHeaders(),
+      })
+      .pipe(
+        map((response) => response.data || 'Community updated successfully'),
+        catchError(this.handleError)
+      );
+  }
+
+  // Delete community
+  deleteCommunity(id: number): Observable<string> {
+    return this.http
+      .delete<ApiResponse<string>>(`${this.apiUrl}/delete/${id}`, {
+        headers: this.getHeaders(),
+      })
+      .pipe(
+        map((response) => response.data || 'Community deleted successfully'),
+        catchError(this.handleError)
+      );
+  }
+
+  // Get all communities (for admin)
+  getAllCommunities(): Observable<CommunityViewModel[]> {
+    return this.http
+      .get<ApiResponse<CommunityViewModel[]>>(`${this.apiUrl}/all`, {
+        headers: this.getHeaders(),
+      })
+      .pipe(
+        map((response) => response.data || []),
+        catchError(this.handleError)
+      );
+  }
 }

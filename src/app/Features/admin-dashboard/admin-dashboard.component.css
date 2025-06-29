@@ -1,0 +1,396 @@
+/* Admin Dashboard Component Specific Styles */
+
+/* Tab Content */
+.tab-content {
+  background: var(--primary-white);
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  margin-top: 1rem;
+  overflow: hidden;
+  padding: 2rem;
+}
+
+/* Grid Layouts */
+.stories-grid,
+.masjids-grid,
+.events-grid,
+.communities-grid {
+  display: grid;
+  gap: 1.5rem;
+  padding: 0; /* Remove grid padding, handled by .tab-content */
+}
+
+/* Cards */
+.story-card,
+.masjid-card,
+.event-card,
+.community-card {
+  background: var(--primary-white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  /* No outer margin or padding here, only internal padding in .card-body */
+}
+
+.story-card:hover,
+.masjid-card:hover,
+.event-card:hover,
+.community-card:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Card Header - Using Bootstrap 5 variables */
+.card-header {
+  padding: var(--bs-card-cap-padding-y, 1.5rem)
+    var(--bs-card-cap-padding-x, 1.5rem);
+  margin-bottom: 0;
+  color: var(--bs-card-cap-color, var(--midnight-emerald));
+  background-color: var(
+    --bs-card-cap-bg,
+    linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)
+  );
+  border-bottom: var(--bs-card-border-width, 1px) solid
+    var(--bs-card-border-color, var(--border-color));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-header h3 {
+  color: var(--midnight-emerald);
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0;
+  flex: 1;
+}
+
+.card-body {
+  padding: 1rem 1.5rem 1.5rem 1.5rem;
+}
+
+/* Meta Information */
+.story-meta,
+.masjid-meta,
+.event-meta,
+.community-meta {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+/* Content */
+.story-content,
+.event-content,
+.community-content {
+  color: var(--text-dark);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.story-content p,
+.event-content p,
+.community-content p {
+  margin: 0;
+}
+
+/* Form Styles */
+.masjid-form,
+.event-form,
+.community-form {
+  padding: 2rem;
+}
+
+/* Button Styles - Override Material Design */
+.btn-approve,
+.btn-edit,
+.btn-delete,
+.btn-create {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: var(--border-radius) !important;
+  font-weight: 500 !important;
+  font-size: 0.875rem !important;
+  transition: all 0.3s ease !important;
+  min-width: 100px !important;
+  justify-content: center !important;
+  border: none !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+}
+
+.btn-approve {
+  background: linear-gradient(
+    135deg,
+    var(--success-color) 0%,
+    #28a745 100%
+  ) !important;
+  color: var(--primary-white) !important;
+}
+
+.btn-approve:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3) !important;
+}
+
+.btn-edit {
+  background: linear-gradient(
+    135deg,
+    var(--rich-gold) 0%,
+    var(--warm-gold) 100%
+  ) !important;
+  color: var(--primary-white) !important;
+}
+
+.btn-edit:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(194, 162, 93, 0.3) !important;
+}
+
+.btn-delete {
+  background: linear-gradient(
+    135deg,
+    var(--danger-color) 0%,
+    #c82333 100%
+  ) !important;
+  color: var(--primary-white) !important;
+}
+
+.btn-delete:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3) !important;
+}
+
+.btn-create {
+  background: linear-gradient(
+    135deg,
+    var(--rich-gold) 0%,
+    var(--warm-gold) 100%
+  ) !important;
+  color: var(--primary-white) !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 600 !important;
+}
+
+.btn-create:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(194, 162, 93, 0.3) !important;
+}
+
+.btn-cancel {
+  color: var(--text-muted) !important;
+  border: 1px solid var(--border-color) !important;
+  background: transparent !important;
+}
+
+.btn-cancel:hover {
+  background: var(--light-gray) !important;
+}
+
+.btn-submit {
+  background: linear-gradient(
+    135deg,
+    var(--rich-gold) 0%,
+    var(--warm-gold) 100%
+  ) !important;
+  color: var(--primary-white) !important;
+  border: none !important;
+  padding: 0.75rem 2rem !important;
+  font-weight: 600 !important;
+}
+
+.btn-submit:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(194, 162, 93, 0.3) !important;
+}
+
+/* Material Design Button Overrides */
+::ng-deep .mat-mdc-raised-button.btn-approve {
+  --mdc-protected-button-container-color: linear-gradient(
+    135deg,
+    var(--success-color) 0%,
+    #28a745 100%
+  ) !important;
+  --mdc-protected-button-label-text-color: var(--primary-white) !important;
+  background: linear-gradient(
+    135deg,
+    var(--success-color) 0%,
+    #28a745 100%
+  ) !important;
+  color: var(--primary-white) !important;
+  border: none !important;
+}
+
+::ng-deep .mat-mdc-raised-button.btn-approve .mat-button-wrapper {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .mat-mdc-raised-button.btn-approve mat-icon {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .mat-mdc-raised-button.btn-edit {
+  --mdc-protected-button-container-color: linear-gradient(
+    135deg,
+    var(--rich-gold) 0%,
+    var(--warm-gold) 100%
+  ) !important;
+  --mdc-protected-button-label-text-color: var(--primary-white) !important;
+  background: linear-gradient(
+    135deg,
+    var(--rich-gold) 0%,
+    var(--warm-gold) 100%
+  ) !important;
+  color: var(--primary-white) !important;
+  border: none !important;
+}
+
+::ng-deep .mat-mdc-raised-button.btn-edit .mat-button-wrapper {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .mat-mdc-raised-button.btn-edit mat-icon {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .mat-mdc-raised-button.btn-delete {
+  --mdc-protected-button-container-color: linear-gradient(
+    135deg,
+    var(--danger-color) 0%,
+    #c82333 100%
+  ) !important;
+  --mdc-protected-button-label-text-color: var(--primary-white) !important;
+  background: linear-gradient(
+    135deg,
+    var(--danger-color) 0%,
+    #c82333 100%
+  ) !important;
+  color: var(--primary-white) !important;
+  border: none !important;
+}
+
+::ng-deep .mat-mdc-raised-button.btn-delete .mat-button-wrapper {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .mat-mdc-raised-button.btn-delete mat-icon {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .mat-mdc-raised-button.btn-create {
+  --mdc-protected-button-container-color: linear-gradient(
+    135deg,
+    var(--rich-gold) 0%,
+    var(--warm-gold) 100%
+  ) !important;
+  --mdc-protected-button-label-text-color: var(--primary-white) !important;
+  background: linear-gradient(
+    135deg,
+    var(--rich-gold) 0%,
+    var(--warm-gold) 100%
+  ) !important;
+  color: var(--primary-white) !important;
+  border: none !important;
+}
+
+::ng-deep .mat-mdc-raised-button.btn-create .mat-button-wrapper {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .mat-mdc-raised-button.btn-create mat-icon {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .mat-mdc-raised-button.btn-submit {
+  --mdc-protected-button-container-color: linear-gradient(
+    135deg,
+    var(--rich-gold) 0%,
+    var(--warm-gold) 100%
+  ) !important;
+  --mdc-protected-button-label-text-color: var(--primary-white) !important;
+  background: linear-gradient(
+    135deg,
+    var(--rich-gold) 0%,
+    var(--warm-gold) 100%
+  ) !important;
+  color: var(--primary-white) !important;
+  border: none !important;
+}
+
+::ng-deep .mat-mdc-raised-button.btn-submit .mat-button-wrapper {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .mat-mdc-raised-button.btn-submit mat-icon {
+  color: var(--primary-white) !important;
+}
+
+/* Material Design Overrides */
+::ng-deep .mat-tab-group {
+  background: transparent;
+}
+
+::ng-deep .mat-tab-header {
+  background: var(--primary-white);
+  border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+::ng-deep .mat-tab-body-content {
+  background: transparent;
+}
+
+::ng-deep .mat-form-field {
+  width: 100%;
+}
+
+::ng-deep .mat-raised-button {
+  border-radius: var(--border-radius);
+}
+
+::ng-deep .mat-spinner {
+  margin: 0 auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .tab-content {
+    padding: 1rem;
+  }
+  .stories-grid,
+  .masjids-grid,
+  .events-grid,
+  .communities-grid {
+    gap: 1rem;
+    padding: 0;
+  }
+  .card-body {
+    padding: 1rem;
+  }
+  .card-header {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tab-content {
+    padding: 0.5rem;
+  }
+  .stories-grid,
+  .masjids-grid,
+  .events-grid,
+  .communities-grid {
+    gap: 0.75rem;
+    padding: 0;
+  }
+  .card-body {
+    padding: 0.75rem;
+  }
+  .card-header {
+    padding: 0.75rem;
+  }
+}

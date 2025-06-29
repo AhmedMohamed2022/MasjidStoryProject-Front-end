@@ -3,9 +3,15 @@
     <div class="title-section">
       <h2 class="section-title">
         <i class="fas fa-users"></i>
-        Communities at {{ masjidName }}
+        <span *ngIf="isFilteredByMasjid">Communities at {{ masjidName }}</span>
+        <span *ngIf="!isFilteredByMasjid">All Communities</span>
       </h2>
-      <p class="section-subtitle">Join discussions and connect with others interested in this masjid</p>
+      <p class="section-subtitle" *ngIf="isFilteredByMasjid">
+        Join discussions and connect with others interested in this masjid
+      </p>
+      <p class="section-subtitle" *ngIf="!isFilteredByMasjid">
+        Discover and join communities across all masjids
+      </p>
     </div>
 
     <button *ngIf="isAuthenticated" class="create-btn" (click)="createCommunity()">
@@ -33,7 +39,8 @@
       <i class="fas fa-users-slash"></i>
     </div>
     <h3>No Communities Yet</h3>
-    <p>Be the first to create a community for {{ masjidName }}</p>
+    <p *ngIf="isFilteredByMasjid">Be the first to create a community for {{ masjidName }}</p>
+    <p *ngIf="!isFilteredByMasjid">No communities have been created yet. Be the first to start one!</p>
     <button *ngIf="isAuthenticated" class="create-first-btn" (click)="createCommunity()">
       Create First Community
     </button>
@@ -80,6 +87,10 @@
           <div class="meta-item">
             <i class="fas fa-users"></i>
             <span>{{ community.memberCount }} member{{ community.memberCount !== 1 ? 's' : '' }}</span>
+          </div>
+          <div class="meta-item" *ngIf="!isFilteredByMasjid">
+            <i class="fas fa-mosque"></i>
+            <span>{{ community.masjidName }}</span>
           </div>
         </div>
 

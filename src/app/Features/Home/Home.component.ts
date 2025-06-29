@@ -101,7 +101,7 @@ export class HomeComponent implements OnInit {
   }
 
   navigateToExplore(): void {
-    this.router.navigate(['/search']);
+    this.router.navigate(['/search-masjid']);
   }
 
   navigateToMasjid(id: number): void {
@@ -150,6 +150,14 @@ export class HomeComponent implements OnInit {
 
   navigateToRegister(): void {
     this.router.navigate(['/register']);
+  }
+
+  navigateToAllMasjids(): void {
+    this.router.navigate(['/search-masjid']);
+  }
+
+  navigateToSearch(): void {
+    this.router.navigate(['/search-masjid']);
   }
 
   getStoryExcerpt(content: string): string {

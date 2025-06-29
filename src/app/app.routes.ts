@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './Core/Services/auth.guard';
+import { adminGuard } from './Core/Services/admin.guard';
 
 export const routes: Routes = [
   {
@@ -100,6 +101,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'communities',
+    loadComponent: () =>
+      import('./Features/community-list/community-list.component').then(
+        (m) => m.CommunityListComponent
+      ),
+  },
+  {
     path: 'communities/:masjidId',
     loadComponent: () =>
       import('./Features/community-list/community-list.component').then(
@@ -120,6 +128,28 @@ export const routes: Routes = [
         (m) => m.CreateCommunityComponent
       ),
     canActivate: [authGuard],
+  },
+  {
+    path: 'user-profile',
+    loadComponent: () =>
+      import('./Features/user-profile/user-profile.component').then(
+        (m) => m.UserProfileComponent
+      ),
+  },
+  {
+    path: 'create-story',
+    loadComponent: () =>
+      import('./Features/create-story/create-story.component').then(
+        (m) => m.CreateStoryComponent
+      ),
+  },
+  {
+    path: 'admin-dashboard',
+    loadComponent: () =>
+      import('./Features/admin-dashboard/admin-dashboard.component').then(
+        (m) => m.AdminDashboardComponent
+      ),
+    canActivate: [adminGuard],
   },
   {
     path: '**',

@@ -1,0 +1,463 @@
+/* Admin Theme - Shared Material Design Overrides */
+
+/* MDC Button Theme Overrides - Material Design v15+ */
+::ng-deep .mat-mdc-raised-button.mat-primary {
+  --mdc-protected-button-container-color: linear-gradient(
+    135deg,
+    var(--rich-gold) 0%,
+    var(--warm-gold) 100%
+  ) !important;
+  --mdc-protected-button-label-text-color: var(--primary-white) !important;
+  --mat-sys-primary: var(--rich-gold) !important;
+  background: linear-gradient(
+    135deg,
+    var(--rich-gold) 0%,
+    var(--warm-gold) 100%
+  ) !important;
+  color: var(--primary-white) !important;
+  border: none !important;
+}
+
+::ng-deep .mat-mdc-raised-button.mat-primary .mat-button-wrapper {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .mat-mdc-raised-button.mat-primary mat-icon {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .mat-mdc-raised-button.mat-primary:hover {
+  --mdc-protected-button-container-color: linear-gradient(
+    135deg,
+    var(--warm-gold) 0%,
+    #9a7a3a 100%
+  ) !important;
+  background: linear-gradient(
+    135deg,
+    var(--warm-gold) 0%,
+    #9a7a3a 100%
+  ) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(194, 162, 93, 0.3) !important;
+}
+
+::ng-deep .mat-mdc-raised-button.mat-accent {
+  --mdc-protected-button-container-color: linear-gradient(
+    135deg,
+    var(--success-color) 0%,
+    #28a745 100%
+  ) !important;
+  --mdc-protected-button-label-text-color: var(--primary-white) !important;
+  --mat-sys-accent: var(--success-color) !important;
+  background: linear-gradient(
+    135deg,
+    var(--success-color) 0%,
+    #28a745 100%
+  ) !important;
+  color: var(--primary-white) !important;
+  border: none !important;
+}
+
+::ng-deep .mat-mdc-raised-button.mat-accent .mat-button-wrapper {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .mat-mdc-raised-button.mat-accent mat-icon {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .mat-mdc-raised-button.mat-accent:hover {
+  --mdc-protected-button-container-color: linear-gradient(
+    135deg,
+    #28a745 0%,
+    #218838 100%
+  ) !important;
+  background: linear-gradient(135deg, #28a745 0%, #218838 100%) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3) !important;
+}
+
+::ng-deep .mat-mdc-raised-button.mat-warn {
+  --mdc-protected-button-container-color: linear-gradient(
+    135deg,
+    var(--danger-color) 0%,
+    #c82333 100%
+  ) !important;
+  --mdc-protected-button-label-text-color: var(--primary-white) !important;
+  --mat-sys-error: var(--danger-color) !important;
+  background: linear-gradient(
+    135deg,
+    var(--danger-color) 0%,
+    #c82333 100%
+  ) !important;
+  color: var(--primary-white) !important;
+  border: none !important;
+}
+
+::ng-deep .mat-mdc-raised-button.mat-warn .mat-button-wrapper {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .mat-mdc-raised-button.mat-warn mat-icon {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .mat-mdc-raised-button.mat-warn:hover {
+  --mdc-protected-button-container-color: linear-gradient(
+    135deg,
+    #c82333 0%,
+    #a71e2a 100%
+  ) !important;
+  background: linear-gradient(135deg, #c82333 0%, #a71e2a 100%) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3) !important;
+}
+
+/* MDC Flat button overrides */
+::ng-deep .mat-mdc-button {
+  --mdc-text-button-label-text-color: var(--text-muted) !important;
+  --mat-sys-primary: var(--text-muted) !important;
+  color: var(--text-muted) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+::ng-deep .mat-mdc-button .mat-button-wrapper {
+  color: var(--text-muted) !important;
+}
+
+::ng-deep .mat-mdc-button:hover {
+  --mdc-text-button-label-text-color: var(--text-dark) !important;
+  background: var(--light-gray) !important;
+  color: var(--text-dark) !important;
+}
+
+::ng-deep .mat-mdc-button:hover .mat-button-wrapper {
+  color: var(--text-dark) !important;
+}
+
+/* MDC Icon button overrides */
+::ng-deep .mat-mdc-icon-button {
+  --mdc-icon-button-icon-color: var(--text-muted) !important;
+  color: var(--text-muted) !important;
+}
+
+::ng-deep .mat-mdc-icon-button mat-icon {
+  color: var(--text-muted) !important;
+}
+
+::ng-deep .mat-mdc-icon-button:hover {
+  --mdc-icon-button-icon-color: var(--danger-color) !important;
+  color: var(--danger-color) !important;
+  background: rgba(220, 53, 69, 0.1) !important;
+}
+
+::ng-deep .mat-mdc-icon-button:hover mat-icon {
+  color: var(--danger-color) !important;
+}
+
+/* Custom Button Class Overrides */
+::ng-deep .btn-approve.mat-mdc-raised-button {
+  --mdc-protected-button-container-color: linear-gradient(
+    135deg,
+    var(--success-color) 0%,
+    #28a745 100%
+  ) !important;
+  --mdc-protected-button-label-text-color: var(--primary-white) !important;
+  background: linear-gradient(
+    135deg,
+    var(--success-color) 0%,
+    #28a745 100%
+  ) !important;
+  color: var(--primary-white) !important;
+  border: none !important;
+}
+
+::ng-deep .btn-approve.mat-mdc-raised-button .mat-button-wrapper {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .btn-approve.mat-mdc-raised-button mat-icon {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .btn-edit.mat-mdc-raised-button {
+  --mdc-protected-button-container-color: linear-gradient(
+    135deg,
+    var(--rich-gold) 0%,
+    var(--warm-gold) 100%
+  ) !important;
+  --mdc-protected-button-label-text-color: var(--primary-white) !important;
+  background: linear-gradient(
+    135deg,
+    var(--rich-gold) 0%,
+    var(--warm-gold) 100%
+  ) !important;
+  color: var(--primary-white) !important;
+  border: none !important;
+}
+
+::ng-deep .btn-edit.mat-mdc-raised-button .mat-button-wrapper {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .btn-edit.mat-mdc-raised-button mat-icon {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .btn-delete.mat-mdc-raised-button {
+  --mdc-protected-button-container-color: linear-gradient(
+    135deg,
+    var(--danger-color) 0%,
+    #c82333 100%
+  ) !important;
+  --mdc-protected-button-label-text-color: var(--primary-white) !important;
+  background: linear-gradient(
+    135deg,
+    var(--danger-color) 0%,
+    #c82333 100%
+  ) !important;
+  color: var(--primary-white) !important;
+  border: none !important;
+}
+
+::ng-deep .btn-delete.mat-mdc-raised-button .mat-button-wrapper {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .btn-delete.mat-mdc-raised-button mat-icon {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .btn-create.mat-mdc-raised-button {
+  --mdc-protected-button-container-color: linear-gradient(
+    135deg,
+    var(--rich-gold) 0%,
+    var(--warm-gold) 100%
+  ) !important;
+  --mdc-protected-button-label-text-color: var(--primary-white) !important;
+  background: linear-gradient(
+    135deg,
+    var(--rich-gold) 0%,
+    var(--warm-gold) 100%
+  ) !important;
+  color: var(--primary-white) !important;
+  border: none !important;
+}
+
+::ng-deep .btn-create.mat-mdc-raised-button .mat-button-wrapper {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .btn-create.mat-mdc-raised-button mat-icon {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .btn-submit.mat-mdc-raised-button {
+  --mdc-protected-button-container-color: linear-gradient(
+    135deg,
+    var(--rich-gold) 0%,
+    var(--warm-gold) 100%
+  ) !important;
+  --mdc-protected-button-label-text-color: var(--primary-white) !important;
+  background: linear-gradient(
+    135deg,
+    var(--rich-gold) 0%,
+    var(--warm-gold) 100%
+  ) !important;
+  color: var(--primary-white) !important;
+  border: none !important;
+}
+
+::ng-deep .btn-submit.mat-mdc-raised-button .mat-button-wrapper {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .btn-submit.mat-mdc-raised-button mat-icon {
+  color: var(--primary-white) !important;
+}
+
+/* Legacy Button Theme Overrides (for backward compatibility) */
+::ng-deep .mat-raised-button.mat-primary {
+  background: linear-gradient(
+    135deg,
+    var(--rich-gold) 0%,
+    var(--warm-gold) 100%
+  ) !important;
+  color: var(--primary-white) !important;
+  border: none !important;
+}
+
+::ng-deep .mat-raised-button.mat-primary .mat-button-wrapper {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .mat-raised-button.mat-primary mat-icon {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .mat-raised-button.mat-primary:hover {
+  background: linear-gradient(
+    135deg,
+    var(--warm-gold) 0%,
+    #9a7a3a 100%
+  ) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(194, 162, 93, 0.3) !important;
+}
+
+::ng-deep .mat-raised-button.mat-accent {
+  background: linear-gradient(
+    135deg,
+    var(--success-color) 0%,
+    #28a745 100%
+  ) !important;
+  color: var(--primary-white) !important;
+  border: none !important;
+}
+
+::ng-deep .mat-raised-button.mat-accent .mat-button-wrapper {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .mat-raised-button.mat-accent mat-icon {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .mat-raised-button.mat-accent:hover {
+  background: linear-gradient(135deg, #28a745 0%, #218838 100%) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3) !important;
+}
+
+::ng-deep .mat-raised-button.mat-warn {
+  background: linear-gradient(
+    135deg,
+    var(--danger-color) 0%,
+    #c82333 100%
+  ) !important;
+  color: var(--primary-white) !important;
+  border: none !important;
+}
+
+::ng-deep .mat-raised-button.mat-warn .mat-button-wrapper {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .mat-raised-button.mat-warn mat-icon {
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .mat-raised-button.mat-warn:hover {
+  background: linear-gradient(135deg, #c82333 0%, #a71e2a 100%) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3) !important;
+}
+
+/* Legacy Flat button overrides */
+::ng-deep .mat-button {
+  color: var(--text-muted) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+::ng-deep .mat-button .mat-button-wrapper {
+  color: var(--text-muted) !important;
+}
+
+::ng-deep .mat-button:hover {
+  background: var(--light-gray) !important;
+  color: var(--text-dark) !important;
+}
+
+::ng-deep .mat-button:hover .mat-button-wrapper {
+  color: var(--text-dark) !important;
+}
+
+/* Legacy Icon button overrides */
+::ng-deep .mat-icon-button {
+  color: var(--text-muted) !important;
+}
+
+::ng-deep .mat-icon-button mat-icon {
+  color: var(--text-muted) !important;
+}
+
+::ng-deep .mat-icon-button:hover {
+  color: var(--danger-color) !important;
+  background: rgba(220, 53, 69, 0.1) !important;
+}
+
+::ng-deep .mat-icon-button:hover mat-icon {
+  color: var(--danger-color) !important;
+}
+
+/* Tab overrides */
+::ng-deep .mat-tab-label {
+  color: var(--text-muted) !important;
+  font-weight: 500 !important;
+}
+
+::ng-deep .mat-tab-label.mat-tab-label-active {
+  color: var(--midnight-emerald) !important;
+  font-weight: 600 !important;
+}
+
+::ng-deep .mat-ink-bar {
+  background: linear-gradient(
+    135deg,
+    var(--rich-gold) 0%,
+    var(--warm-gold) 100%
+  ) !important;
+}
+
+/* Form field overrides */
+::ng-deep .mat-form-field.mat-focused .mat-form-field-label {
+  color: var(--rich-gold) !important;
+}
+
+::ng-deep .mat-form-field.mat-focused .mat-form-field-outline-thick {
+  color: var(--rich-gold) !important;
+}
+
+::ng-deep .mat-form-field.mat-focused .mat-form-field-ripple {
+  background-color: var(--rich-gold) !important;
+}
+
+/* Select overrides */
+::ng-deep .mat-select-value {
+  color: var(--text-dark) !important;
+}
+
+::ng-deep .mat-select-arrow {
+  color: var(--text-muted) !important;
+}
+
+/* Checkbox overrides */
+::ng-deep .mat-checkbox-checked .mat-checkbox-background {
+  background: linear-gradient(
+    135deg,
+    var(--rich-gold) 0%,
+    var(--warm-gold) 100%
+  ) !important;
+}
+
+::ng-deep .mat-checkbox-checked .mat-checkbox-checkmark {
+  color: var(--primary-white) !important;
+}
+
+/* Date picker overrides */
+::ng-deep .mat-datepicker-toggle {
+  color: var(--text-muted) !important;
+}
+
+::ng-deep .mat-calendar-body-selected {
+  background: linear-gradient(
+    135deg,
+    var(--rich-gold) 0%,
+    var(--warm-gold) 100%
+  ) !important;
+  color: var(--primary-white) !important;
+}
+
+::ng-deep .mat-calendar-body-today:not(.mat-calendar-body-selected) {
+  border-color: var(--rich-gold) !important;
+}

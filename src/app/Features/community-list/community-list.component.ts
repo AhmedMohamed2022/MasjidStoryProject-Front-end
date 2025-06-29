@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CommunityService } from '../../Core/Services/community.service';
 import { AuthService } from '../../Core/Services/auth.service';
 import { CommunityViewModel } from '../../Core/Models/community.model';
@@ -13,38 +13,65 @@ import { CommunityViewModel } from '../../Core/Models/community.model';
   imports: [CommonModule],
 })
 export class CommunityListComponent implements OnInit {
-  @Input() masjidId!: number;
+  @Input() masjidId?: number;
   @Input() masjidName: string = '';
 
   communities: CommunityViewModel[] = [];
   loading = false;
   error = '';
   isAuthenticated = false;
+  isFilteredByMasjid = false;
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private communityService: CommunityService,
     private authService: AuthService
   ) {}
 
   ngOnInit() {
     this.isAuthenticated = this.authService.isAuthenticated();
+
+    // Check if masjidId is provided via route parameter
+    this.route.params.subscribe((params) => {
+      if (params['masjidId']) {
+        this.masjidId = +params['masjidId'];
+        this.isFilteredByMasjid = true;
+      }
+    });
+
     this.loadCommunities();
   }
 
   loadCommunities() {
     this.loading = true;
     this.error = '';
-    this.communityService.getMasjidCommunities(this.masjidId).subscribe({
-      next: (communities) => {
-        this.communities = communities;
-        this.loading = false;
-      },
-      error: (err) => {
-        this.error = err.message || 'Failed to load communities';
-        this.loading = false;
-      },
-    });
+
+    if (this.masjidId) {
+      // Load communities for specific masjid
+      this.communityService.getMasjidCommunities(this.masjidId).subscribe({
+        next: (communities) => {
+          this.communities = communities;
+          this.loading = false;
+        },
+        error: (err) => {
+          this.error = err.message || 'Failed to load communities';
+          this.loading = false;
+        },
+      });
+    } else {
+      // Load all communities
+      this.communityService.getAllCommunities().subscribe({
+        next: (communities) => {
+          this.communities = communities;
+          this.loading = false;
+        },
+        error: (err) => {
+          this.error = err.message || 'Failed to load communities';
+          this.loading = false;
+        },
+      });
+    }
   }
 
   toggleMembership(community: CommunityViewModel) {
@@ -75,9 +102,13 @@ export class CommunityListComponent implements OnInit {
       this.router.navigate(['/login']);
       return;
     }
-    this.router.navigate(['/community/create'], {
-      queryParams: { masjidId: this.masjidId },
-    });
+
+    const queryParams: any = {};
+    if (this.masjidId) {
+      queryParams.masjidId = this.masjidId;
+    }
+
+    this.router.navigate(['/community/create'], { queryParams });
   }
 
   formatDate(dateString: string): string {

@@ -41,8 +41,10 @@
     <div *ngIf="!loading && !error && stories.length > 0" class="stories-grid">
         <div *ngFor="let story of stories; trackBy: trackByStoryId" class="story-card"
             (click)="navigateToStory(story.id)">
-
-            <!-- Story Content -->
+            <div class="story-thumbnail mb-2" *ngIf="story.imageUrls && story.imageUrls.length">
+                <img [src]="getFullImageUrl(story.imageUrls[0])" class="img-fluid rounded story-thumbnail-img"
+                    style="max-height: 180px; object-fit: cover; width: 100%;" alt="Story thumbnail" />
+            </div>
             <div class="story-content">
                 <!-- Story Header -->
                 <div class="story-header">
@@ -57,6 +59,11 @@
                             {{ formatDate(story.datePublished) }}
                         </span>
                     </div>
+                </div>
+
+                <!-- Story Tags -->
+                <div class="story-tags mb-2" *ngIf="story.tags && story.tags.length">
+                    <span class="badge bg-emerald me-2" *ngFor="let tag of story.tags">{{ tag }}</span>
                 </div>
 
                 <!-- Story Description -->

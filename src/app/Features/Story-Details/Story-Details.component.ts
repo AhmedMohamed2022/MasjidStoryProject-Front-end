@@ -11,6 +11,7 @@ import {
 } from '../../Core/Models/story.model';
 import { AuthService } from '../../Core/Services/auth.service';
 import { StoryService } from '../../Core/Services/story-detail.service';
+import { environment } from '../../Core/environments/environment';
 
 @Component({
   selector: 'app-story-detail',
@@ -196,5 +197,11 @@ export class StoryDetailComponent implements OnInit {
         })
         .catch((err) => console.error('Failed to copy URL', err));
     }
+  }
+
+  getFullImageUrl(url: string): string {
+    if (!url) return 'assets/default-story.png';
+    if (url.startsWith('http')) return url;
+    return environment.apiUrl.replace(/\/$/, '') + url;
   }
 }

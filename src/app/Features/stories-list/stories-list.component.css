@@ -1,7 +1,9 @@
 .stories-list-section {
-  padding: 2rem 0;
-  min-height: calc(100vh - 80px);
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--light-gray);
+  padding: 4rem 0;
 }
 
 /* Section Header */
@@ -12,25 +14,28 @@
 }
 
 .section-title {
-  font-size: 2.5rem;
+  font-size: 3.5rem;
   font-weight: 700;
-  color: #2c5530;
-  margin-bottom: 0.5rem;
+  color: var(--midnight-emerald);
+  margin-bottom: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  line-height: 1.2;
 }
 
 .section-icon {
-  color: #4a7c59;
-  font-size: 2rem;
+  color: var(--rich-gold);
+  font-size: 2.5rem;
 }
 
 .section-subtitle {
-  font-size: 1.1rem;
-  color: #666;
+  font-size: 1.3rem;
+  color: var(--deep-emerald);
   margin: 0;
+  opacity: 0.8;
+  line-height: 1.6;
 }
 
 /* Loading State */
@@ -45,8 +50,8 @@
 .islamic-spinner {
   width: 60px;
   height: 60px;
-  border: 4px solid #e3e3e3;
-  border-top: 4px solid #4a7c59;
+  border: 4px solid var(--border-color);
+  border-top: 4px solid var(--rich-gold);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 1rem;
@@ -63,7 +68,7 @@
 
 .loading-text {
   font-size: 1.1rem;
-  color: #666;
+  color: var(--deep-emerald);
   margin: 0;
 }
 
@@ -75,27 +80,29 @@
 }
 
 .error-card {
-  background: white;
-  border-radius: 12px;
+  background: var(--primary-white);
+  border-radius: 15px;
   padding: 2rem;
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-color);
   max-width: 400px;
 }
 
 .error-icon {
   font-size: 3rem;
-  color: #dc3545;
+  color: var(--danger-color);
   margin-bottom: 1rem;
 }
 
 .error-card h4 {
-  color: #2c5530;
+  color: var(--midnight-emerald);
   margin-bottom: 0.5rem;
+  font-weight: 600;
 }
 
 .error-card p {
-  color: #666;
+  color: var(--deep-emerald);
   margin-bottom: 1.5rem;
 }
 
@@ -107,27 +114,29 @@
 }
 
 .no-stories-card {
-  background: white;
-  border-radius: 12px;
+  background: var(--primary-white);
+  border-radius: 15px;
   padding: 3rem 2rem;
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-color);
   max-width: 400px;
 }
 
 .no-stories-icon {
   font-size: 4rem;
-  color: #ccc;
+  color: var(--border-color);
   margin-bottom: 1rem;
 }
 
 .no-stories-card h4 {
-  color: #2c5530;
+  color: var(--midnight-emerald);
   margin-bottom: 0.5rem;
+  font-weight: 600;
 }
 
 .no-stories-card p {
-  color: #666;
+  color: var(--deep-emerald);
   margin: 0;
 }
 
@@ -142,17 +151,36 @@
 }
 
 .story-card {
-  background: white;
-  border-radius: 12px;
+  background: var(--primary-white);
+  border-radius: 15px;
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
   cursor: pointer;
+  height: 100%;
 }
 
 .story-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* Story Thumbnail */
+.story-thumbnail {
+  position: relative;
+  overflow: hidden;
+}
+
+.story-thumbnail-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.story-card:hover .story-thumbnail-img {
+  transform: scale(1.05);
 }
 
 /* Story Content */
@@ -167,7 +195,7 @@
 .story-title {
   font-size: 1.3rem;
   font-weight: 600;
-  color: #2c5530;
+  color: var(--midnight-emerald);
   margin-bottom: 0.5rem;
   line-height: 1.3;
 }
@@ -176,7 +204,8 @@
   display: flex;
   gap: 1rem;
   font-size: 0.9rem;
-  color: #666;
+  color: var(--deep-emerald);
+  flex-wrap: wrap;
 }
 
 .story-masjid,
@@ -188,7 +217,27 @@
 
 .story-masjid i,
 .story-date i {
-  color: #4a7c59;
+  color: var(--rich-gold);
+  width: 14px;
+}
+
+/* Story Tags */
+.story-tags {
+  margin-bottom: 1rem;
+}
+
+.badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-right: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.bg-emerald {
+  background: linear-gradient(135deg, var(--rich-gold), var(--warm-gold));
+  color: var(--primary-white);
 }
 
 /* Story Description */
@@ -197,7 +246,7 @@
 }
 
 .story-description p {
-  color: #555;
+  color: var(--deep-emerald);
   line-height: 1.6;
   margin: 0;
 }
@@ -208,7 +257,7 @@
   gap: 1rem;
   margin-bottom: 1rem;
   font-size: 0.9rem;
-  color: #666;
+  color: var(--deep-emerald);
 }
 
 .story-likes,
@@ -219,16 +268,18 @@
 }
 
 .story-likes i {
-  color: #e74c3c;
+  color: var(--danger-color);
 }
 
 .story-comments i {
-  color: #3498db;
+  color: var(--info-color);
 }
 
 /* Story Author */
 .story-author {
   margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .author-name {
@@ -236,11 +287,13 @@
   align-items: center;
   gap: 0.25rem;
   font-size: 0.9rem;
-  color: #666;
+  color: var(--deep-emerald);
+  font-weight: 500;
 }
 
 .author-name i {
-  color: #4a7c59;
+  color: var(--rich-gold);
+  width: 14px;
 }
 
 /* Story Actions */
@@ -250,27 +303,30 @@
 }
 
 .btn-read-more {
-  background: #4a7c59;
-  color: white;
+  background: linear-gradient(135deg, var(--rich-gold), var(--warm-gold));
+  color: var(--primary-white);
   border: none;
   padding: 0.5rem 1rem;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 0.9rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  display: flex;
+  font-weight: 600;
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .btn-read-more:hover {
-  background: #3a5f47;
+  background: linear-gradient(135deg, var(--warm-gold), var(--rich-gold));
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(194, 162, 93, 0.3);
 }
 
 /* Back Section */
 .back-section {
   margin-top: 4rem;
-  padding: 0 1rem;
+  text-align: center;
 }
 
 .section-divider {
@@ -281,8 +337,8 @@
 
 .divider-line {
   flex: 1;
-  height: 1px;
-  background: #ddd;
+  height: 2px;
+  background: var(--border-color);
 }
 
 .divider-content {
@@ -290,44 +346,92 @@
 }
 
 .divider-icon {
-  color: #4a7c59;
-  font-size: 1.2rem;
+  color: var(--rich-gold);
+  font-size: 1.5rem;
 }
 
 .back-content {
-  text-align: center;
+  margin-bottom: 2rem;
 }
 
 .btn-outline {
   background: transparent;
-  color: #4a7c59;
-  border: 2px solid #4a7c59;
+  color: var(--deep-emerald);
+  border: 2px solid var(--deep-emerald);
   padding: 0.75rem 1.5rem;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  font-weight: 600;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
   text-decoration: none;
 }
 
 .btn-outline:hover {
-  background: #4a7c59;
-  color: white;
+  background: var(--deep-emerald);
+  color: var(--primary-white);
+  transform: translateY(-1px);
+}
+
+/* Button Styles - Matching Home Page */
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: linear-gradient(
+    135deg,
+    var(--midnight-emerald),
+    var(--deep-emerald)
+  );
+  color: var(--primary-white);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(
+    135deg,
+    var(--deep-emerald),
+    var(--midnight-emerald)
+  );
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(5, 52, 38, 0.3);
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  .stories-list-section {
+    padding: 2rem 0;
+  }
+
   .section-title {
+    font-size: 2.5rem;
+  }
+
+  .section-icon {
     font-size: 2rem;
+  }
+
+  .section-subtitle {
+    font-size: 1.1rem;
   }
 
   .stories-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
-    padding: 0 0.5rem;
+    padding: 0 1rem;
   }
 
   .story-content {
@@ -342,7 +446,7 @@
 
 @media (max-width: 480px) {
   .section-title {
-    font-size: 1.8rem;
+    font-size: 2rem;
   }
 
   .section-subtitle {
@@ -351,5 +455,18 @@
 
   .story-title {
     font-size: 1.2rem;
+  }
+
+  .story-card {
+    margin: 0 0.5rem;
+  }
+
+  .story-content {
+    padding: 1rem;
+  }
+
+  .story-stats {
+    flex-direction: column;
+    gap: 0.5rem;
   }
 }

@@ -1,13 +1,14 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { StoryViewModel } from '../../Core/Models/story.model';
 import { StoryService } from '../../Core/Services/story-detail.service';
+import { environment } from '../../Core/environments/environment';
 
 @Component({
   selector: 'app-stories-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './stories-list.component.html',
   styleUrls: ['./stories-list.component.css'],
 })
@@ -60,5 +61,11 @@ export class StoriesListComponent implements OnInit {
 
   trackByStoryId(index: number, story: StoryViewModel): number {
     return story.id;
+  }
+
+  getFullImageUrl(url: string): string {
+    if (!url) return 'assets/default-story.png';
+    if (url.startsWith('http')) return url;
+    return environment.apiUrl.replace(/\/$/, '') + url;
   }
 }
