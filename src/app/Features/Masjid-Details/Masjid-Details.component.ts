@@ -3,15 +3,23 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MasjidDetailService } from '../../Core/Services/masjid-details.service';
 import { MasjidDetailsViewModel } from '../../Core/Models/masjid-details.model';
 import { MasjidEventsComponent } from '../masjid-events/masjid-events.component';
 import { CommunityListComponent } from '../community-list/community-list.component';
+import { MapPickerComponent } from '../../Shared/Components/map-picker/map-picker.component';
 
 @Component({
   selector: 'app-masjid-detail',
   standalone: true,
-  imports: [CommonModule, MasjidEventsComponent, CommunityListComponent],
+  imports: [
+    CommonModule,
+    TranslateModule,
+    MasjidEventsComponent,
+    CommunityListComponent,
+    MapPickerComponent,
+  ],
   templateUrl: './Masjid-Details.component.html',
   styleUrls: ['./Masjid-Details.component.css'],
 })
@@ -25,7 +33,8 @@ export class MasjidDetailComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private masjidService: MasjidDetailService
+    private masjidService: MasjidDetailService,
+    private translate: TranslateService
   ) {}
   // public test() {
   //   console.log('Masjid details loaded:', this.masjid?.stories);
@@ -58,12 +67,20 @@ export class MasjidDetailComponent implements OnInit, OnDestroy {
             console.log('Masjid details loaded:', response.data);
             this.masjid = response.data;
           } else {
-            this.error = response.message || 'Failed to load masjid details';
+            this.translate
+              .get('MASJID_DETAILS_ERROR_GENERAL')
+              .subscribe((text: string) => {
+                this.error = response.message || text;
+              });
           }
           this.loading = false;
         },
         error: (err) => {
-          this.error = 'Failed to load masjid details. Please try again.';
+          this.translate
+            .get('MASJID_DETAILS_ERROR_GENERAL')
+            .subscribe((text: string) => {
+              this.error = text;
+            });
           this.loading = false;
           console.error('Error loading masjid details:', err);
         },
@@ -98,6 +115,13 @@ export class MasjidDetailComponent implements OnInit, OnDestroy {
     this.router.navigate(['/story-details', storyId]);
   }
 
+  onStoryKeyPress(event: KeyboardEvent, storyId: number): void {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.navigateToStory(storyId);
+    }
+  }
+
   formatDate(dateString: string): string {
     if (!dateString) return '';
 
@@ -108,7 +132,11 @@ export class MasjidDetailComponent implements OnInit, OnDestroy {
         return '';
       }
 
-      return date.toLocaleDateString('en-US', {
+      // Get current language for proper localization
+      const currentLang = this.translate.currentLang || 'en';
+      const locale = currentLang === 'ar' ? 'ar-SA' : 'en-US';
+
+      return date.toLocaleDateString(locale, {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
@@ -119,5 +147,20 @@ export class MasjidDetailComponent implements OnInit, OnDestroy {
       console.error('Error formatting date:', error);
       return '';
     }
+  }
+
+  getDisplayDescription(): string {
+    if (!this.masjid) return '';
+
+    const description = this.masjid.localizedDescription?.trim();
+
+    // If no description or description is just the address, provide a fallback
+    if (!description || description === this.masjid.address) {
+      return this.translate.instant('MASJID_DETAILS_FALLBACK_DESCRIPTION', {
+        address: this.masjid.address,
+      });
+    }
+
+    return description;
   }
 }

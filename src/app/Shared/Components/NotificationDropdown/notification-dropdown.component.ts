@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Subscription, interval } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   NotificationService,
   NotificationViewModel,
@@ -13,7 +14,7 @@ import { AuthService } from '../../../Core/Services/auth.service';
   templateUrl: './notification-dropdown.component.html',
   styleUrls: ['./notification-dropdown.component.css'],
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
 })
 export class NotificationDropdownComponent implements OnInit, OnDestroy {
   notifications: NotificationViewModel[] = [];

@@ -4,7 +4,7 @@
   <div class="back-navigation" *ngIf="!masjidName">
     <button class="btn-back" (click)="goBack()">
       <i class="fas fa-arrow-left"></i>
-      <span>Back to Masjid</span>
+      <span>{{ 'MASJID_EVENTS_BACK_TO_MASJID' | translate }}</span>
     </button>
   </div>
 
@@ -12,10 +12,11 @@
   <div class="section-header">
     <h2 class="section-title">
       <i class="fas fa-calendar-check section-icon"></i>
-      Events at {{ masjidName || 'This Masjid' }}
+      <span *ngIf="masjidName">{{ 'MASJID_EVENTS_TITLE' | translate: {masjidName: masjidName} }}</span>
+      <span *ngIf="!masjidName">{{ 'MASJID_EVENTS_TITLE_DEFAULT' | translate }}</span>
     </h2>
     <button class="btn-view-all" (click)="navigateToAllEvents()" *ngIf="events.length > 0">
-      <span>View All Events</span>
+      <span>{{ 'MASJID_EVENTS_VIEW_ALL' | translate }}</span>
       <i class="fas fa-arrow-right"></i>
     </button>
   </div>
@@ -25,17 +26,17 @@
     <div class="islamic-spinner">
       <div class="spinner-circle"></div>
     </div>
-    <p class="loading-text">Loading events...</p>
+    <p class="loading-text">{{ 'MASJID_EVENTS_LOADING' | translate }}</p>
   </div>
 
   <!-- Error State -->
   <div *ngIf="error && !loading" class="error-container">
     <div class="error-card">
       <i class="fas fa-exclamation-triangle error-icon"></i>
-      <h4>Unable to Load Events</h4>
+      <h4>{{ 'MASJID_EVENTS_ERROR_TITLE' | translate }}</h4>
       <p>{{ error }}</p>
       <button class="btn btn-primary" (click)="loadMasjidEvents(masjidId!)" [disabled]="!masjidId">
-        <i class="fas fa-refresh"></i> Try Again
+        <i class="fas fa-refresh"></i> {{ 'MASJID_EVENTS_TRY_AGAIN' | translate }}
       </button>
     </div>
   </div>
@@ -44,10 +45,10 @@
   <div *ngIf="!loading && !error && events.length === 0" class="no-events-container">
     <div class="no-events-card">
       <i class="fas fa-calendar-times no-events-icon"></i>
-      <h4>No Upcoming Events</h4>
-      <p>There are currently no upcoming events scheduled for this masjid.</p>
+      <h4>{{ 'MASJID_EVENTS_NO_EVENTS_TITLE' | translate }}</h4>
+      <p>{{ 'MASJID_EVENTS_NO_EVENTS_DESCRIPTION' | translate }}</p>
       <button class="btn btn-outline" (click)="navigateToAllEvents()">
-        <i class="fas fa-search"></i> Browse All Events
+        <i class="fas fa-search"></i> {{ 'MASJID_EVENTS_BROWSE_ALL' | translate }}
       </button>
     </div>
   </div>
@@ -89,7 +90,7 @@
         <!-- Event Creator -->
         <div class="event-creator" *ngIf="event.createdByName">
           <i class="fas fa-user-circle creator-icon"></i>
-          <span>Organized by {{ event.createdByName }}</span>
+          <span>{{ 'MASJID_EVENTS_ORGANIZED_BY' | translate: {name: event.createdByName} }}</span>
         </div>
 
         <!-- Event Actions -->
@@ -99,33 +100,33 @@
             class="btn btn-register" [disabled]="registering[event.id]" (click)="registerForEvent(event.id)">
             <i class="fas fa-spinner fa-spin" *ngIf="registering[event.id]"></i>
             <i class="fas fa-calendar-plus" *ngIf="!registering[event.id]"></i>
-            <span *ngIf="!registering[event.id]">Register</span>
-            <span *ngIf="registering[event.id]">Registering...</span>
+            <span *ngIf="!registering[event.id]">{{ 'MASJID_EVENTS_REGISTER' | translate }}</span>
+            <span *ngIf="registering[event.id]">{{ 'MASJID_EVENTS_REGISTERING' | translate }}</span>
           </button>
 
           <!-- Already Registered -->
           <button *ngIf="!isEventPast(event.eventDate) && event.isUserRegistered" class="btn btn-registered" disabled>
             <i class="fas fa-check-circle"></i>
-            Registered
+            {{ 'MASJID_EVENTS_REGISTERED' | translate }}
           </button>
 
           <!-- Login Required -->
           <button *ngIf="!isEventPast(event.eventDate) && !isAuthenticated()" class="btn btn-login-required"
             (click)="registerForEvent(event.id)">
             <i class="fas fa-sign-in-alt"></i>
-            Login to Register
+            {{ 'MASJID_EVENTS_LOGIN_TO_REGISTER' | translate }}
           </button>
 
           <!-- Past Event -->
           <button *ngIf="isEventPast(event.eventDate)" class="btn btn-past" disabled>
             <i class="fas fa-history"></i>
-            Event Passed
+            {{ 'MASJID_EVENTS_EVENT_PASSED' | translate }}
           </button>
 
           <!-- Details Button -->
           <button class="btn btn-details" (click)="navigateToEventDetails(event.id)">
             <i class="fas fa-info-circle"></i>
-            Details
+            {{ 'MASJID_EVENTS_DETAILS' | translate }}
           </button>
         </div>
       </div>
@@ -148,11 +149,11 @@
     </div>
 
     <div class="view-more-content">
-      <h4>Looking for More Events?</h4>
-      <p>Discover events happening across all masjids in our platform</p>
+      <h4>{{ 'MASJID_EVENTS_LOOKING_FOR_MORE' | translate }}</h4>
+      <p>{{ 'MASJID_EVENTS_DISCOVER_DESCRIPTION' | translate }}</p>
       <button class="btn btn-primary-outline" (click)="navigateToAllEvents()">
         <i class="fas fa-calendar-week"></i>
-        Browse All Events
+        {{ 'MASJID_EVENTS_BROWSE_ALL_EVENTS' | translate }}
       </button>
     </div>
   </div>

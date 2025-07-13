@@ -5,11 +5,17 @@ import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../../Core/Services/auth.service';
 import { UserRegistrationService } from '../../../Core/Services/user-registration.service';
 import { NotificationDropdownComponent } from '../NotificationDropdown/notification-dropdown.component';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule, NotificationDropdownComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    NotificationDropdownComponent,
+    TranslateModule,
+  ],
   templateUrl: './Header.component.html',
   styleUrls: ['./Header.component.css'],
 })
@@ -18,12 +24,39 @@ export class HeaderComponent {
   isEventsDropdownCollapsed = true;
   isUserDropdownCollapsed = true;
   isAdminDropdownCollapsed = true;
+  isLanguageDropdownCollapsed = true;
+  currentLang = 'en';
 
   constructor(
     private authService: AuthService,
     private userRegistrationService: UserRegistrationService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private translate: TranslateService
+  ) {
+    translate.addLangs(['en', 'ar']);
+    translate.setDefaultLang('en');
+    const browserLang = translate.getBrowserLang();
+    const lang = browserLang && browserLang.match(/en|ar/) ? browserLang : 'en';
+    this.currentLang = lang;
+    translate.use(lang);
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  }
+
+  switchLang(lang: string) {
+    this.currentLang = lang;
+    this.translate.use(lang);
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    this.closeAllMenus();
+  }
+
+  toggleLanguageDropdown(): void {
+    this.isLanguageDropdownCollapsed = !this.isLanguageDropdownCollapsed;
+    this.isEventsDropdownCollapsed = true;
+    this.isUserDropdownCollapsed = true;
+    this.isAdminDropdownCollapsed = true;
+  }
 
   get isAuthenticated(): boolean {
     return this.authService.isAuthenticated();

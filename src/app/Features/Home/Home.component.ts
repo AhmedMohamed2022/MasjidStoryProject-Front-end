@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MasjidViewModel } from '../../Core/Models/masjid.model';
 import { StoryViewModel } from '../../Core/Models/story.model';
 import { EventViewModel } from '../../Core/Models/event.model';
@@ -10,7 +11,7 @@ import { UserRegistrationService } from '../../Core/Services/user-registration.s
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './Home.component.html',
   styleUrls: ['./Home.component.css'],
 })
@@ -31,7 +32,8 @@ export class HomeComponent implements OnInit {
     private homeService: HomeService,
     private authService: AuthService,
     private userRegistrationService: UserRegistrationService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -60,7 +62,11 @@ export class HomeComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading featured masjids:', error);
-        this.masjidError = 'Failed to load featured masjids';
+        this.translate
+          .get('HOME_ERROR_LOADING_MASJIDS')
+          .subscribe((text: string) => {
+            this.masjidError = text;
+          });
         this.loadingMasjids = false;
       },
     });
@@ -74,7 +80,11 @@ export class HomeComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading latest stories:', error);
-        this.storyError = 'Failed to load latest stories';
+        this.translate
+          .get('HOME_ERROR_LOADING_STORIES')
+          .subscribe((text: string) => {
+            this.storyError = text;
+          });
         this.loadingStories = false;
       },
     });
@@ -94,7 +104,11 @@ export class HomeComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading upcoming events:', error);
-        this.eventError = 'Failed to load upcoming events';
+        this.translate
+          .get('HOME_ERROR_LOADING_EVENTS')
+          .subscribe((text: string) => {
+            this.eventError = text;
+          });
         this.loadingEvents = false;
       },
     });

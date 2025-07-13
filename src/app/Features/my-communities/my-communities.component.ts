@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommunityService } from '../../Core/Services/community.service';
 import { AuthService } from '../../Core/Services/auth.service';
 import { CommunityViewModel } from '../../Core/Models/community.model';
@@ -10,7 +11,7 @@ import { CommunityViewModel } from '../../Core/Models/community.model';
   templateUrl: './my-communities.component.html',
   styleUrls: ['./my-communities.component.css'],
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
 })
 export class MyCommunitiesComponent implements OnInit {
   communities: CommunityViewModel[] = [];
@@ -21,7 +22,8 @@ export class MyCommunitiesComponent implements OnInit {
   constructor(
     private communityService: CommunityService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {
     this.currentUser = this.authService.getCurrentUser();
   }
@@ -46,7 +48,9 @@ export class MyCommunitiesComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading my communities:', error);
-        this.error = error.message || 'Failed to load your communities.';
+        this.translate.get('MY_COMMUNITIES_ERROR').subscribe((text: string) => {
+          this.error = error.message || text;
+        });
         this.loading = false;
       },
     });
@@ -66,7 +70,11 @@ export class MyCommunitiesComponent implements OnInit {
 
   formatDate(date: Date | string): string {
     const dateObj = typeof date === 'string' ? new Date(date) : date;
-    return dateObj.toLocaleDateString('en-US', {
+    // Get current language for proper localization
+    const currentLang = this.translate.currentLang || 'en';
+    const locale = currentLang === 'ar' ? 'ar-SA' : 'en-US';
+
+    return dateObj.toLocaleDateString(locale, {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -74,9 +82,13 @@ export class MyCommunitiesComponent implements OnInit {
   }
 
   getMemberCountText(memberCount: number): string {
-    if (memberCount === 0) return 'No members';
-    if (memberCount === 1) return '1 member';
-    return `${memberCount} members`;
+    if (memberCount === 0)
+      return this.translate.instant('MY_COMMUNITIES_NO_MEMBERS');
+    if (memberCount === 1)
+      return this.translate.instant('MY_COMMUNITIES_ONE_MEMBER');
+    return this.translate.instant('MY_COMMUNITIES_MEMBERS', {
+      count: memberCount,
+    });
   }
 
   getLanguageDisplayName(languageCode: string): string {

@@ -3,6 +3,7 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { EventService } from '../../Core/Services/event.service';
 import { EventViewModel } from '../../Core/Models/event.model';
 import { AuthService } from '../../Core/Services/auth.service';
@@ -12,7 +13,7 @@ import { MasjidDetailService } from '../../Core/Services/masjid-details.service'
 @Component({
   selector: 'app-masjid-events',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './masjid-events.component.html',
   styleUrls: ['./masjid-events.component.css'],
 })
@@ -33,7 +34,8 @@ export class MasjidEventsComponent implements OnInit, OnDestroy {
     private userRegistrationService: UserRegistrationService,
     private router: Router,
     private route: ActivatedRoute,
-    private masjidService: MasjidDetailService
+    private masjidService: MasjidDetailService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -144,7 +146,11 @@ export class MasjidEventsComponent implements OnInit, OnDestroy {
       const date = new Date(dateString);
       if (isNaN(date.getTime())) return '';
 
-      return date.toLocaleDateString('en-US', {
+      // Get current language for proper localization
+      const currentLang = this.translate.currentLang || 'en';
+      const locale = currentLang === 'ar' ? 'ar-SA' : 'en-US';
+
+      return date.toLocaleDateString(locale, {
         weekday: 'short',
         year: 'numeric',
         month: 'short',
@@ -163,7 +169,11 @@ export class MasjidEventsComponent implements OnInit, OnDestroy {
       const date = new Date(dateString);
       if (isNaN(date.getTime())) return '';
 
-      return date.toLocaleTimeString('en-US', {
+      // Get current language for proper localization
+      const currentLang = this.translate.currentLang || 'en';
+      const locale = currentLang === 'ar' ? 'ar-SA' : 'en-US';
+
+      return date.toLocaleTimeString(locale, {
         hour: '2-digit',
         minute: '2-digit',
       });
@@ -191,7 +201,12 @@ export class MasjidEventsComponent implements OnInit, OnDestroy {
     try {
       const date = new Date(dateString);
       if (isNaN(date.getTime())) return '';
-      return date.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+
+      // Get current language for proper localization
+      const currentLang = this.translate.currentLang || 'en';
+      const locale = currentLang === 'ar' ? 'ar-SA' : 'en-US';
+
+      return date.toLocaleDateString(locale, { month: 'short' }).toUpperCase();
     } catch (error) {
       return '';
     }

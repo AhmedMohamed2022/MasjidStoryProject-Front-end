@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { StoryViewModel } from '../../Core/Models/story.model';
 import { StoryService } from '../../Core/Services/story-detail.service';
 import { environment } from '../../Core/environments/environment';
@@ -9,13 +10,14 @@ import { PaginatedResponse } from '../../Core/Models/paginated-response.model';
 @Component({
   selector: 'app-stories-list',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslateModule],
   templateUrl: './stories-list.component.html',
   styleUrls: ['./stories-list.component.css'],
 })
 export class StoriesListComponent implements OnInit {
   private storyService = inject(StoryService);
   private router = inject(Router);
+  private translate = inject(TranslateService);
 
   stories: StoryViewModel[] = [];
   loading = true;
@@ -56,7 +58,9 @@ export class StoriesListComponent implements OnInit {
         totalCount: this.totalCount,
       });
     } catch (error) {
-      this.error = 'Failed to load stories. Please try again.';
+      this.translate.get('STORIES_LIST_ERROR').subscribe((text: string) => {
+        this.error = text;
+      });
       console.error('Error loading stories:', error);
     } finally {
       this.loading = false;
@@ -78,7 +82,11 @@ export class StoriesListComponent implements OnInit {
   }
 
   formatDate(date: string): string {
-    return new Date(date).toLocaleDateString('en-US', {
+    // Get current language for proper localization
+    const currentLang = this.translate.currentLang || 'en';
+    const locale = currentLang === 'ar' ? 'ar-SA' : 'en-US';
+
+    return new Date(date).toLocaleDateString(locale, {
       year: 'numeric',
       month: 'short',
       day: 'numeric',

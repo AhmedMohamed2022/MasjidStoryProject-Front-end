@@ -7,8 +7,8 @@
           <!-- Header with Islamic pattern -->
           <div class="auth-header">
             <div class="islamic-pattern"></div>
-            <h2 class="auth-title">Welcome Back</h2>
-            <p class="auth-subtitle">Sign in to continue your journey</p>
+            <h2 class="auth-title">{{ 'LOGIN_WELCOME_BACK' | translate }}</h2>
+            <p class="auth-subtitle">{{ 'LOGIN_SUBTITLE' | translate }}</p>
           </div>
 
           <!-- Login Form -->
@@ -22,34 +22,34 @@
             <!-- Email Field -->
             <div class="form-group">
               <label for="email" class="form-label">
-                <i class="fas fa-envelope me-2"></i>Email Address
+                <i class="fas fa-envelope me-2"></i>{{ 'LOGIN_EMAIL_LABEL' | translate }}
               </label>
               <input type="email" id="email" formControlName="email" class="form-control"
-                [class.is-invalid]="email?.invalid && email?.touched" placeholder="Enter your email"
-                autocomplete="email">
+                [class.is-invalid]="email?.invalid && email?.touched"
+                [placeholder]="'LOGIN_EMAIL_PLACEHOLDER' | translate" autocomplete="email">
               <div *ngIf="email?.invalid && email?.touched" class="invalid-feedback">
-                <span *ngIf="email?.errors?.['required']">Email is required</span>
-                <span *ngIf="email?.errors?.['email']">Please enter a valid email</span>
+                <span *ngIf="email?.errors?.['required']">{{ 'LOGIN_ERROR_EMAIL_REQUIRED' | translate }}</span>
+                <span *ngIf="email?.errors?.['email']">{{ 'LOGIN_ERROR_EMAIL_INVALID' | translate }}</span>
               </div>
             </div>
 
             <!-- Password Field -->
             <div class="form-group">
               <label for="password" class="form-label">
-                <i class="fas fa-lock me-2"></i>Password
+                <i class="fas fa-lock me-2"></i>{{ 'LOGIN_PASSWORD_LABEL' | translate }}
               </label>
               <div class="password-input-wrapper">
                 <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password"
                   class="form-control" [class.is-invalid]="password?.invalid && password?.touched"
-                  placeholder="Enter your password" autocomplete="current-password">
+                  [placeholder]="'LOGIN_PASSWORD_PLACEHOLDER' | translate" autocomplete="current-password">
                 <button type="button" class="password-toggle" (click)="togglePasswordVisibility()"
-                  [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+                  [attr.aria-label]="showPassword ? ('LOGIN_HIDE_PASSWORD' | translate) : ('LOGIN_SHOW_PASSWORD' | translate)">
                   <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
                 </button>
               </div>
               <div *ngIf="password?.invalid && password?.touched" class="invalid-feedback">
-                <span *ngIf="password?.errors?.['required']">Password is required</span>
-                <span *ngIf="password?.errors?.['minlength']">Password must be at least 6 characters</span>
+                <span *ngIf="password?.errors?.['required']">{{ 'LOGIN_ERROR_PASSWORD_REQUIRED' | translate }}</span>
+                <span *ngIf="password?.errors?.['minlength']">{{ 'LOGIN_ERROR_PASSWORD_MIN_LENGTH' | translate }}</span>
               </div>
             </div>
 
@@ -57,15 +57,15 @@
             <button type="submit" class="btn btn-primary btn-auth" [disabled]="isLoading">
               <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status"></span>
               <i *ngIf="!isLoading" class="fas fa-sign-in-alt me-2"></i>
-              {{ isLoading ? 'Signing In...' : 'Sign In' }}
+              {{ isLoading ? ('LOGIN_SIGNING_IN' | translate) : ('LOGIN_SIGN_IN' | translate) }}
             </button>
           </form>
 
           <!-- Footer -->
           <div class="auth-footer">
             <p class="text-center">
-              Don't have an account?
-              <a routerLink="/register" class="auth-link">Create Account</a>
+              {{ 'LOGIN_NO_ACCOUNT' | translate }}
+              <a routerLink="/register" class="auth-link">{{ 'LOGIN_CREATE_ACCOUNT' | translate }}</a>
             </p>
           </div>
 

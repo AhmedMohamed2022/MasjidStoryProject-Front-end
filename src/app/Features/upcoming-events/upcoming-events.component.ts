@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { EventService } from '../../Core/Services/event.service';
 import { AuthService } from '../../Core/Services/auth.service';
 import { UserRegistrationService } from '../../Core/Services/user-registration.service';
@@ -9,7 +10,7 @@ import { EventViewModel } from '../../Core/Models/event.model';
 @Component({
   selector: 'app-upcoming-events',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslateModule],
   templateUrl: './upcoming-events.component.html',
   styleUrls: ['./upcoming-events.component.css'],
 })
@@ -22,7 +23,8 @@ export class UpcomingEventsComponent implements OnInit {
     private eventService: EventService,
     private authService: AuthService,
     private userRegistrationService: UserRegistrationService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -51,7 +53,11 @@ export class UpcomingEventsComponent implements OnInit {
         this.loading = false;
       },
       error: (error) => {
-        this.error = 'Failed to load events';
+        this.translate
+          .get('UPCOMING_EVENTS_ERROR')
+          .subscribe((text: string) => {
+            this.error = text;
+          });
         this.loading = false;
         console.error('Error loading events:', error);
       },
@@ -73,17 +79,29 @@ export class UpcomingEventsComponent implements OnInit {
         if (event) {
           event.isUserRegistered = true;
         }
-        alert('Registered successfully!');
+        this.translate
+          .get('UPCOMING_EVENTS_REGISTRATION_SUCCESS')
+          .subscribe((text: string) => {
+            alert(text);
+          });
       },
       error: (error) => {
-        alert('Registration failed. You may already be registered.');
+        this.translate
+          .get('UPCOMING_EVENTS_REGISTRATION_FAILED')
+          .subscribe((text: string) => {
+            alert(text);
+          });
         console.error('Registration error:', error);
       },
     });
   }
 
   formatDate(dateString: string): string {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    // Get current language for proper localization
+    const currentLang = this.translate.currentLang || 'en';
+    const locale = currentLang === 'ar' ? 'ar-SA' : 'en-US';
+
+    return new Date(dateString).toLocaleDateString(locale, {
       weekday: 'long',
       year: 'numeric',
       month: 'long',

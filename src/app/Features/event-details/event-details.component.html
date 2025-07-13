@@ -3,15 +3,15 @@
     <!-- Loading State -->
     <div *ngIf="loading" class="text-center py-5">
       <div class="spinner-border text-emerald" role="status">
-        <span class="visually-hidden">Loading...</span>
+        <span class="visually-hidden">{{ 'EVENT_DETAILS_LOADING' | translate }}</span>
       </div>
-      <p class="mt-2 text-muted">Loading event details...</p>
+      <p class="mt-2 text-muted">{{ 'EVENT_DETAILS_LOADING' | translate }}</p>
     </div>
 
     <!-- Error State -->
     <div *ngIf="error" class="alert alert-danger text-center" role="alert">
       <i class="fas fa-exclamation-triangle me-2"></i>
-      {{ error }}
+      {{ 'EVENT_DETAILS_ERROR' | translate }}
     </div>
 
     <!-- Event Details -->
@@ -20,7 +20,7 @@
         <!-- Back Button -->
         <div class="mb-4">
           <a routerLink="/upcoming-events" class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left me-2"></i>Back to Events
+            <i class="fas fa-arrow-left me-2"></i>{{ 'EVENT_DETAILS_BACK_TO_EVENTS' | translate }}
           </a>
         </div>
 
@@ -46,12 +46,12 @@
             <div class="event-actions" *ngIf="isEventCreator">
               <button class="btn btn-outline-primary me-2" (click)="editEvent()" [disabled]="isEventPast">
                 <i class="fas fa-edit"></i>
-                Edit
+                {{ 'EVENT_DETAILS_EDIT' | translate }}
               </button>
               <button class="btn btn-outline-danger" (click)="deleteEvent()" [disabled]="deleting">
                 <span *ngIf="deleting" class="spinner-border spinner-border-sm me-2" role="status"></span>
                 <i *ngIf="!deleting" class="fas fa-trash"></i>
-                {{ deleting ? 'Deleting...' : 'Delete' }}
+                {{ deleting ? ('EVENT_DETAILS_DELETING' | translate) : ('EVENT_DETAILS_DELETE' | translate) }}
               </button>
             </div>
           </div>
@@ -63,7 +63,7 @@
               <div class="info-item" *ngIf="event.masjidName">
                 <div class="info-label">
                   <i class="fas fa-mosque"></i>
-                  Masjid
+                  {{ 'EVENT_DETAILS_MASJID' | translate }}
                 </div>
                 <div class="info-value">
                   <a href="javascript:void(0)" (click)="navigateToMasjid(event.masjidId)" class="masjid-link">
@@ -75,7 +75,7 @@
               <div class="info-item">
                 <div class="info-label">
                   <i class="fas fa-user"></i>
-                  Organized by
+                  {{ 'EVENT_DETAILS_ORGANIZED_BY' | translate }}
                 </div>
                 <div class="info-value">{{ event.createdByName }}</div>
               </div>
@@ -83,7 +83,7 @@
               <div class="info-item">
                 <div class="info-label">
                   <i class="fas fa-clock"></i>
-                  Time
+                  {{ 'EVENT_DETAILS_TIME' | translate }}
                 </div>
                 <div class="info-value">{{ formatTime(event.eventDate) }}</div>
               </div>
@@ -91,12 +91,13 @@
               <div class="info-item">
                 <div class="info-label">
                   <i class="fas fa-users"></i>
-                  Registration Status
+                  {{ 'EVENT_DETAILS_REGISTRATION_STATUS' | translate }}
                 </div>
                 <div class="info-value">
                   <span class="registration-badge" [class]="event.isUserRegistered ? 'registered' : 'not-registered'">
                     <i class="fas" [class]="event.isUserRegistered ? 'fa-check' : 'fa-clock'"></i>
-                    {{ event.isUserRegistered ? 'Registered' : 'Not Registered' }}
+                    {{ event.isUserRegistered ? ('EVENT_DETAILS_REGISTERED' | translate) :
+                    ('EVENT_DETAILS_NOT_REGISTERED' | translate) }}
                   </span>
                 </div>
               </div>
@@ -106,7 +107,7 @@
             <div class="description-section">
               <h3 class="section-title">
                 <i class="fas fa-align-left"></i>
-                Description
+                {{ 'EVENT_DETAILS_DESCRIPTION' | translate }}
               </h3>
               <div class="description-content">
                 <p>{{ event.description }}</p>
@@ -121,15 +122,16 @@
                   (click)="registerForEvent()" [disabled]="registering">
                   <span *ngIf="registering" class="spinner-border spinner-border-sm me-2" role="status"></span>
                   <i *ngIf="!registering" class="fas fa-user-plus me-2"></i>
-                  {{ registering ? 'Registering...' : 'Register for Event' }}
+                  {{ registering ? ('EVENT_DETAILS_REGISTERING' | translate) : ('EVENT_DETAILS_REGISTER_FOR_EVENT' |
+                  translate) }}
                 </button>
 
                 <span *ngIf="event.isUserRegistered" class="btn btn-success btn-lg disabled">
-                  <i class="fas fa-check me-2"></i>Already Registered
+                  <i class="fas fa-check me-2"></i>{{ 'EVENT_DETAILS_ALREADY_REGISTERED' | translate }}
                 </span>
 
                 <span *ngIf="isEventPast" class="btn btn-secondary btn-lg disabled">
-                  <i class="fas fa-calendar-times me-2"></i>Event has passed
+                  <i class="fas fa-calendar-times me-2"></i>{{ 'EVENT_DETAILS_EVENT_HAS_PASSED' | translate }}
                 </span>
               </div>
 
@@ -137,13 +139,13 @@
                 <!-- Share Button -->
                 <button class="btn btn-outline-secondary" (click)="shareEvent()">
                   <i class="fas fa-share-alt me-2"></i>
-                  Share Event
+                  {{ 'EVENT_DETAILS_SHARE_EVENT' | translate }}
                 </button>
 
                 <!-- View Masjid Button -->
                 <a *ngIf="event.masjidId" [routerLink]="['/masjid', event.masjidId]" class="btn btn-outline-primary">
                   <i class="fas fa-mosque me-2"></i>
-                  View Masjid
+                  {{ 'EVENT_DETAILS_VIEW_MASJID' | translate }}
                 </a>
               </div>
             </div>
@@ -155,7 +157,8 @@
                   (click)="toggleLike()">
                   <i class="fas fa-heart" [class.text-danger]="event.isLikedByCurrentUser"></i>
                   <span class="like-count">{{ event.likeCount || 0 }}</span>
-                  <span class="like-text">{{ (event.likeCount || 0) === 1 ? 'Like' : 'Likes' }}</span>
+                  <span class="like-text">{{ (event.likeCount || 0) === 1 ? ('EVENT_DETAILS_LIKE' | translate) :
+                    ('EVENT_DETAILS_LIKES' | translate) }}</span>
                 </button>
               </div>
             </div>
@@ -165,7 +168,7 @@
               <div class="comments-header">
                 <h3 class="section-title">
                   <i class="fas fa-comments me-2"></i>
-                  Comments ({{ event.comments?.length || 0 }})
+                  {{ 'EVENT_DETAILS_COMMENTS' | translate }} ({{ event.comments?.length || 0 }})
                 </h3>
               </div>
 
@@ -173,9 +176,10 @@
               <div class="add-comment-form" *ngIf="isAuthenticated">
                 <div class="comment-input-card">
                   <div class="form-group">
-                    <label for="newComment" class="form-label">Share your thoughts</label>
+                    <label for="newComment" class="form-label">{{ 'EVENT_DETAILS_SHARE_THOUGHTS' | translate }}</label>
                     <textarea id="newComment" class="form-control comment-textarea" [(ngModel)]="newComment"
-                      placeholder="Write your comment here..." maxlength="500" rows="3"></textarea>
+                      [placeholder]="'EVENT_DETAILS_COMMENT_PLACEHOLDER' | translate" maxlength="500"
+                      rows="3"></textarea>
                     <div class="character-count">
                       {{ newComment.length || 0 }}/500
                     </div>
@@ -185,7 +189,8 @@
                       [disabled]="!newComment.trim() || submittingComment" (click)="addComment()">
                       <i class="fas fa-paper-plane me-2" *ngIf="!submittingComment"></i>
                       <i class="fas fa-spinner fa-spin me-2" *ngIf="submittingComment"></i>
-                      {{ submittingComment ? 'Posting...' : 'Post Comment' }}
+                      {{ submittingComment ? ('EVENT_DETAILS_POSTING' | translate) : ('EVENT_DETAILS_POST_COMMENT' |
+                      translate) }}
                     </button>
                   </div>
                 </div>
@@ -201,7 +206,8 @@
               <div class="login-prompt" *ngIf="!isAuthenticated">
                 <div class="alert alert-info">
                   <i class="fas fa-info-circle me-2"></i>
-                  Please <a href="/login" class="alert-link">log in</a> to add comments and like events.
+                  {{ 'EVENT_DETAILS_LOGIN_TO_INTERACT' | translate }} <a href="/login" class="alert-link">{{
+                    'EVENT_DETAILS_LOGIN' | translate }}</a>.
                 </div>
               </div>
 
@@ -230,7 +236,7 @@
                 <div class="no-comments" *ngIf="!event.comments || event.comments.length === 0">
                   <div class="text-center text-muted">
                     <i class="fas fa-comment-slash fa-3x mb-3"></i>
-                    <p>No comments yet. Be the first to share your thoughts!</p>
+                    <p>{{ 'EVENT_DETAILS_NO_COMMENTS' | translate }}</p>
                   </div>
                 </div>
               </div>

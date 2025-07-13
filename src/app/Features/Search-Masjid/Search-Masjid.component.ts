@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
   MasjidViewModel,
   CountryViewModel,
@@ -14,7 +15,7 @@ import { CityService } from '../../Core/Services/city.service';
 @Component({
   selector: 'app-search-masjid',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './Search-Masjid.component.html',
   styleUrls: ['./Search-Masjid.component.css'],
 })
@@ -45,7 +46,8 @@ export class SearchMasjidComponent implements OnInit {
     private masjidService: MasjidService,
     private countryService: CountryService,
     private cityService: CityService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -97,7 +99,11 @@ export class SearchMasjidComponent implements OnInit {
         },
         error: (error: any) => {
           console.error('Error loading masjids:', error);
-          this.error = 'Failed to load masjids. Please try again.';
+          this.translate
+            .get('SEARCH_MASJID_ERROR')
+            .subscribe((text: string) => {
+              this.error = text;
+            });
           this.loading = false;
         },
       });

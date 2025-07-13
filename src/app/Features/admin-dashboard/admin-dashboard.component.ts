@@ -19,6 +19,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MapPickerComponent } from '../../Shared/Components/map-picker/map-picker.component';
 
 import { MasjidService } from '../../Core/Services/masjid.service';
 import { CountryService } from '../../Core/Services/country.service';
@@ -60,6 +61,7 @@ import { environment } from '../../Core/environments/environment';
     MatCheckboxModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MapPickerComponent,
   ],
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css'],
@@ -140,6 +142,7 @@ export class AdminDashboardComponent implements OnInit {
       shortName: ['', Validators.required],
       address: [''],
       archStyle: [''],
+      description: [''],
       latitude: [null],
       longitude: [null],
       countryId: [null, Validators.required],
@@ -381,36 +384,303 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   loadCountries(): void {
-    this.countries = [
-      { id: 1, name: 'Egypt', code: 'EG' },
-      { id: 2, name: 'Saudi Arabia', code: 'SA' },
-    ];
+    this.countryService.getAllCountries().subscribe({
+      next: (countries) => {
+        this.countries = countries;
+      },
+      error: (error) => {
+        console.error('Error loading countries:', error);
+        // Fallback to basic countries if API fails
+        this.countries = [
+          { id: 1, name: 'Egypt', code: 'EG' },
+          { id: 2, name: 'Saudi Arabia', code: 'SA' },
+          { id: 3, name: 'United Arab Emirates', code: 'AE' },
+          { id: 4, name: 'Qatar', code: 'QA' },
+          { id: 5, name: 'Kuwait', code: 'KW' },
+          { id: 6, name: 'Bahrain', code: 'BH' },
+          { id: 7, name: 'Oman', code: 'OM' },
+          { id: 8, name: 'Jordan', code: 'JO' },
+          { id: 9, name: 'Lebanon', code: 'LB' },
+          { id: 10, name: 'Syria', code: 'SY' },
+          { id: 11, name: 'Iraq', code: 'IQ' },
+          { id: 12, name: 'Yemen', code: 'YE' },
+          { id: 13, name: 'Palestine', code: 'PS' },
+          { id: 14, name: 'Morocco', code: 'MA' },
+          { id: 15, name: 'Algeria', code: 'DZ' },
+          { id: 16, name: 'Tunisia', code: 'TN' },
+          { id: 17, name: 'Libya', code: 'LY' },
+          { id: 18, name: 'Sudan', code: 'SD' },
+          { id: 19, name: 'Somalia', code: 'SO' },
+          { id: 20, name: 'Djibouti', code: 'DJ' },
+          { id: 21, name: 'Comoros', code: 'KM' },
+          { id: 22, name: 'Chad', code: 'TD' },
+          { id: 23, name: 'Mauritania', code: 'MR' },
+        ];
+      },
+    });
   }
 
   loadCities(): void {
     const countryId = this.masjidForm.get('countryId')?.value;
     if (countryId) {
-      this.cities = [
-        { id: 1, name: 'Cairo', countryId: 1 },
-        { id: 2, name: 'Alexandria', countryId: 1 },
-        { id: 3, name: 'Riyadh', countryId: 2 },
-        { id: 4, name: 'Jeddah', countryId: 2 },
-      ].filter((city) => city.countryId === countryId);
+      this.cityService.getCitiesByCountry(countryId).subscribe({
+        next: (cities) => {
+          this.cities = cities;
+        },
+        error: (error) => {
+          console.error('Error loading cities:', error);
+          // Fallback to basic cities if API fails
+          this.cities = this.getFallbackCities(countryId);
+        },
+      });
     } else {
       this.cities = [];
     }
   }
 
+  private getFallbackCities(countryId: number): CityViewModel[] {
+    const fallbackCities: { [key: number]: CityViewModel[] } = {
+      1: [
+        // Egypt
+        { id: 1, name: 'Cairo', countryId: 1 },
+        { id: 2, name: 'Alexandria', countryId: 1 },
+        { id: 3, name: 'Giza', countryId: 1 },
+        { id: 4, name: 'Sharm El Sheikh', countryId: 1 },
+        { id: 5, name: 'Luxor', countryId: 1 },
+        { id: 6, name: 'Aswan', countryId: 1 },
+        { id: 7, name: 'Hurghada', countryId: 1 },
+      ],
+      2: [
+        // Saudi Arabia
+        { id: 8, name: 'Riyadh', countryId: 2 },
+        { id: 9, name: 'Jeddah', countryId: 2 },
+        { id: 10, name: 'Mecca', countryId: 2 },
+        { id: 11, name: 'Medina', countryId: 2 },
+        { id: 12, name: 'Dammam', countryId: 2 },
+        { id: 13, name: 'Taif', countryId: 2 },
+        { id: 14, name: 'Abha', countryId: 2 },
+      ],
+      3: [
+        // UAE
+        { id: 15, name: 'Dubai', countryId: 3 },
+        { id: 16, name: 'Abu Dhabi', countryId: 3 },
+        { id: 17, name: 'Sharjah', countryId: 3 },
+        { id: 18, name: 'Ajman', countryId: 3 },
+        { id: 19, name: 'Ras Al Khaimah', countryId: 3 },
+        { id: 20, name: 'Fujairah', countryId: 3 },
+      ],
+      4: [
+        // Qatar
+        { id: 21, name: 'Doha', countryId: 4 },
+        { id: 22, name: 'Al Wakrah', countryId: 4 },
+        { id: 23, name: 'Al Khor', countryId: 4 },
+        { id: 24, name: 'Lusail', countryId: 4 },
+      ],
+      5: [
+        // Kuwait
+        { id: 25, name: 'Kuwait City', countryId: 5 },
+        { id: 26, name: 'Salmiya', countryId: 5 },
+        { id: 27, name: 'Hawally', countryId: 5 },
+        { id: 28, name: 'Jahra', countryId: 5 },
+      ],
+      6: [
+        // Bahrain
+        { id: 29, name: 'Manama', countryId: 6 },
+        { id: 30, name: 'Muharraq', countryId: 6 },
+        { id: 31, name: 'Riffa', countryId: 6 },
+        { id: 32, name: 'Hamad Town', countryId: 6 },
+      ],
+      7: [
+        // Oman
+        { id: 33, name: 'Muscat', countryId: 7 },
+        { id: 34, name: 'Salalah', countryId: 7 },
+        { id: 35, name: 'Sohar', countryId: 7 },
+        { id: 36, name: 'Nizwa', countryId: 7 },
+      ],
+      8: [
+        // Jordan
+        { id: 37, name: 'Amman', countryId: 8 },
+        { id: 38, name: 'Zarqa', countryId: 8 },
+        { id: 39, name: 'Irbid', countryId: 8 },
+        { id: 40, name: 'Aqaba', countryId: 8 },
+        { id: 41, name: 'Petra', countryId: 8 },
+      ],
+      9: [
+        // Lebanon
+        { id: 42, name: 'Beirut', countryId: 9 },
+        { id: 43, name: 'Tripoli', countryId: 9 },
+        { id: 44, name: 'Sidon', countryId: 9 },
+        { id: 45, name: 'Tyre', countryId: 9 },
+        { id: 46, name: 'Baalbek', countryId: 9 },
+      ],
+      10: [
+        // Syria
+        { id: 47, name: 'Damascus', countryId: 10 },
+        { id: 48, name: 'Aleppo', countryId: 10 },
+        { id: 49, name: 'Homs', countryId: 10 },
+        { id: 50, name: 'Latakia', countryId: 10 },
+        { id: 51, name: 'Hama', countryId: 10 },
+      ],
+      11: [
+        // Iraq
+        { id: 52, name: 'Baghdad', countryId: 11 },
+        { id: 53, name: 'Basra', countryId: 11 },
+        { id: 54, name: 'Mosul', countryId: 11 },
+        { id: 55, name: 'Erbil', countryId: 11 },
+        { id: 56, name: 'Najaf', countryId: 11 },
+        { id: 57, name: 'Karbala', countryId: 11 },
+        { id: 58, name: 'Samarra', countryId: 11 },
+      ],
+      12: [
+        // Yemen
+        { id: 59, name: "Sana'a", countryId: 12 },
+        { id: 60, name: 'Aden', countryId: 12 },
+        { id: 61, name: 'Taiz', countryId: 12 },
+        { id: 62, name: 'Hodeidah', countryId: 12 },
+        { id: 63, name: 'Ibb', countryId: 12 },
+      ],
+      13: [
+        // Palestine
+        { id: 64, name: 'Jerusalem', countryId: 13 },
+        { id: 65, name: 'Gaza', countryId: 13 },
+        { id: 66, name: 'Ramallah', countryId: 13 },
+        { id: 67, name: 'Bethlehem', countryId: 13 },
+        { id: 68, name: 'Hebron', countryId: 13 },
+        { id: 69, name: 'Nablus', countryId: 13 },
+      ],
+      14: [
+        // Morocco
+        { id: 70, name: 'Casablanca', countryId: 14 },
+        { id: 71, name: 'Rabat', countryId: 14 },
+        { id: 72, name: 'Fez', countryId: 14 },
+        { id: 73, name: 'Marrakech', countryId: 14 },
+        { id: 74, name: 'Tangier', countryId: 14 },
+        { id: 75, name: 'Agadir', countryId: 14 },
+      ],
+      15: [
+        // Algeria
+        { id: 76, name: 'Algiers', countryId: 15 },
+        { id: 77, name: 'Oran', countryId: 15 },
+        { id: 78, name: 'Constantine', countryId: 15 },
+        { id: 79, name: 'Annaba', countryId: 15 },
+        { id: 80, name: 'Batna', countryId: 15 },
+      ],
+      16: [
+        // Tunisia
+        { id: 81, name: 'Tunis', countryId: 16 },
+        { id: 82, name: 'Sfax', countryId: 16 },
+        { id: 83, name: 'Sousse', countryId: 16 },
+        { id: 84, name: 'Kairouan', countryId: 16 },
+        { id: 85, name: 'Gabès', countryId: 16 },
+      ],
+      17: [
+        // Libya
+        { id: 86, name: 'Tripoli', countryId: 17 },
+        { id: 87, name: 'Benghazi', countryId: 17 },
+        { id: 88, name: 'Misrata', countryId: 17 },
+        { id: 89, name: 'Tobruk', countryId: 17 },
+        { id: 90, name: 'Sabha', countryId: 17 },
+      ],
+      18: [
+        // Sudan
+        { id: 91, name: 'Khartoum', countryId: 18 },
+        { id: 92, name: 'Omdurman', countryId: 18 },
+        { id: 93, name: 'Port Sudan', countryId: 18 },
+        { id: 94, name: 'Kassala', countryId: 18 },
+        { id: 95, name: 'El Obeid', countryId: 18 },
+      ],
+      19: [
+        // Somalia
+        { id: 96, name: 'Mogadishu', countryId: 19 },
+        { id: 97, name: 'Hargeisa', countryId: 19 },
+        { id: 98, name: 'Bosaso', countryId: 19 },
+        { id: 99, name: 'Kismayo', countryId: 19 },
+      ],
+      20: [
+        // Djibouti
+        { id: 100, name: 'Djibouti City', countryId: 20 },
+        { id: 101, name: 'Ali Sabieh', countryId: 20 },
+        { id: 102, name: 'Tadjourah', countryId: 20 },
+      ],
+      21: [
+        // Comoros
+        { id: 103, name: 'Moroni', countryId: 21 },
+        { id: 104, name: 'Mutsamudu', countryId: 21 },
+        { id: 105, name: 'Fomboni', countryId: 21 },
+      ],
+      22: [
+        // Chad
+        { id: 106, name: "N'Djamena", countryId: 22 },
+        { id: 107, name: 'Moundou', countryId: 22 },
+        { id: 108, name: 'Sarh', countryId: 22 },
+      ],
+      23: [
+        // Mauritania
+        { id: 109, name: 'Nouakchott', countryId: 23 },
+        { id: 110, name: 'Nouadhibou', countryId: 23 },
+        { id: 111, name: 'Rosso', countryId: 23 },
+      ],
+    };
+
+    return fallbackCities[countryId] || [];
+  }
+
   onCountryChange(): void {
     this.loadCities();
-    this.masjidForm.patchValue({ cityId: null });
+  }
+
+  onLocationSelected(location: { lat: number; lng: number }): void {
+    this.masjidForm.patchValue({
+      latitude: location.lat,
+      longitude: location.lng,
+    });
   }
 
   onFileSelect(event: any): void {
     const files = event.target.files;
     if (files) {
-      this.selectedFiles = Array.from(files);
+      const maxFileSize = 10 * 1024 * 1024; // 10MB
+      const validFiles: File[] = [];
+      const invalidFiles: string[] = [];
+
+      Array.from(files).forEach((file: any) => {
+        if (file.size > maxFileSize) {
+          invalidFiles.push(`${file.name} (${this.formatFileSize(file.size)})`);
+        } else {
+          validFiles.push(file);
+        }
+      });
+
+      this.selectedFiles = validFiles;
+
+      // Show feedback to user
+      if (invalidFiles.length > 0) {
+        this.snackBar.open(
+          `Some files were too large (max 10MB): ${invalidFiles.join(', ')}`,
+          'Close',
+          { duration: 5000 }
+        );
+      }
+
+      if (validFiles.length > 0) {
+        const totalSize = validFiles.reduce((sum, file) => sum + file.size, 0);
+        this.snackBar.open(
+          `${validFiles.length} file(s) selected (${this.formatFileSize(
+            totalSize
+          )})`,
+          'Close',
+          { duration: 3000 }
+        );
+      }
     }
+  }
+
+  private formatFileSize(bytes: number): string {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }
 
   showCreateMasjidForm(): void {
@@ -427,18 +697,39 @@ export class AdminDashboardComponent implements OnInit {
     this.selectedFiles = [];
     this.selectedMediaToDelete = [];
 
-    this.masjidForm.patchValue({
-      shortName: masjid.shortName,
-      address: masjid.address,
-      archStyle: masjid.archStyle,
-      latitude: masjid.latitude,
-      longitude: masjid.longitude,
-      countryId: masjid.countryId,
-      cityId: masjid.cityId,
-      yearOfEstablishment: masjid.yearOfEstablishment,
+    // Get the full masjid details including description
+    this.masjidService.getMasjidDetails(masjid.id).subscribe({
+      next: (response) => {
+        this.masjidForm.patchValue({
+          shortName: response.localizedName || masjid.shortName,
+          address: masjid.address,
+          archStyle: masjid.archStyle,
+          description: response.localizedDescription || '',
+          latitude: masjid.latitude,
+          longitude: masjid.longitude,
+          countryId: masjid.countryId,
+          cityId: masjid.cityId,
+          yearOfEstablishment: masjid.yearOfEstablishment,
+        });
+        this.loadCities();
+      },
+      error: (error) => {
+        console.error('Error loading masjid details:', error);
+        // Fallback to basic data if API call fails
+        this.masjidForm.patchValue({
+          shortName: masjid.shortName,
+          address: masjid.address,
+          archStyle: masjid.archStyle,
+          description: '',
+          latitude: masjid.latitude,
+          longitude: masjid.longitude,
+          countryId: masjid.countryId,
+          cityId: masjid.cityId,
+          yearOfEstablishment: masjid.yearOfEstablishment,
+        });
+        this.loadCities();
+      },
     });
-
-    this.loadCities();
   }
 
   onSubmit(): void {
@@ -457,8 +748,11 @@ export class AdminDashboardComponent implements OnInit {
   createMasjid(formData: any): void {
     this.masjidService.createMasjid(formData, this.selectedFiles).subscribe({
       next: (response) => {
-        this.snackBar.open('Masjid created successfully!', 'Close', {
-          duration: 2000,
+        // Show the detailed response message from backend
+        const message =
+          response.data || response.message || 'Masjid created successfully!';
+        this.snackBar.open(message, 'Close', {
+          duration: 5000, // Longer duration to read processing details
         });
         this.showCreateForm = false;
         this.masjidForm.reset();
@@ -468,8 +762,9 @@ export class AdminDashboardComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error creating masjid:', error);
-        this.snackBar.open('Failed to create masjid.', 'Close', {
-          duration: 3000,
+        const errorMessage = error.error?.message || 'Failed to create masjid.';
+        this.snackBar.open(errorMessage, 'Close', {
+          duration: 5000,
         });
         this.isSubmitting = false;
       },
@@ -488,8 +783,11 @@ export class AdminDashboardComponent implements OnInit {
       )
       .subscribe({
         next: (response) => {
-          this.snackBar.open('Masjid updated successfully!', 'Close', {
-            duration: 2000,
+          // Show the detailed response message from backend
+          const message =
+            response.data || response.message || 'Masjid updated successfully!';
+          this.snackBar.open(message, 'Close', {
+            duration: 5000, // Longer duration to read processing details
           });
           this.showEditForm = false;
           this.editingMasjid = null;
@@ -501,8 +799,10 @@ export class AdminDashboardComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error updating masjid:', error);
-          this.snackBar.open('Failed to update masjid.', 'Close', {
-            duration: 3000,
+          const errorMessage =
+            error.error?.message || 'Failed to update masjid.';
+          this.snackBar.open(errorMessage, 'Close', {
+            duration: 5000,
           });
           this.isSubmitting = false;
         },

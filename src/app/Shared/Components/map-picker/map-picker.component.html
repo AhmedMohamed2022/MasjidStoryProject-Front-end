@@ -1,0 +1,33 @@
+<div class="map-picker-container">
+    <!-- Map Style Selector -->
+    <div class="map-style-selector" *ngIf="!readonly">
+        <label>Map Style:</label>
+        <div class="style-buttons">
+            <button *ngFor="let style of mapStyles" [class.active]="selectedMapStyle.name === style.name"
+                (click)="onMapStyleChange(style)" class="style-button">
+                {{ style.name }}
+            </button>
+        </div>
+    </div>
+
+    <div #mapContainer class="map-container" [style.height]="height" [style.width]="width">
+    </div>
+
+    <div class="coordinates-display" *ngIf="!readonly">
+        <div class="coordinate-item">
+            <label>Latitude:</label>
+            <span>{{ latitude | number:'1.6-6' }}</span>
+        </div>
+        <div class="coordinate-item">
+            <label>Longitude:</label>
+            <span>{{ longitude | number:'1.6-6' }}</span>
+        </div>
+    </div>
+
+    <div class="map-instructions" *ngIf="!readonly">
+        <small class="text-muted">
+            <i class="fas fa-info-circle"></i>
+            Click on the map or drag the marker to set the masjid location
+        </small>
+    </div>
+</div>

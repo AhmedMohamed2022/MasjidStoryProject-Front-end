@@ -7,7 +7,7 @@
           MasjidStory
         </h5>
         <p class="footer-description">
-          Discover and share the rich heritage of Islamic architecture and stories from around the world.
+          {{ 'FOOTER_DESCRIPTION' | translate }}
         </p>
         <div class="social-links">
           <a href="#" class="social-link" aria-label="Facebook">
@@ -26,36 +26,36 @@
       </div>
 
       <div class="col-lg-2 col-md-6 mb-4">
-        <h6 class="footer-subtitle">Explore</h6>
+        <h6 class="footer-subtitle">{{ 'FOOTER_EXPLORE' | translate }}</h6>
         <ul class="footer-links">
-          <li><a routerLink="/home">Home</a></li>
-          <li><a routerLink="/search-masjid">Masjids</a></li>
-          <li><a routerLink="/stories">Stories</a></li>
-          <li><a routerLink="/upcoming-events">Events</a></li>
+          <li><a routerLink="/home">{{ 'HOME' | translate }}</a></li>
+          <li><a routerLink="/search-masjid">{{ 'MASJIDS' | translate }}</a></li>
+          <li><a routerLink="/stories">{{ 'STORIES' | translate }}</a></li>
+          <li><a routerLink="/upcoming-events">{{ 'EVENTS' | translate }}</a></li>
         </ul>
       </div>
 
       <div class="col-lg-2 col-md-6 mb-4">
-        <h6 class="footer-subtitle">Community</h6>
+        <h6 class="footer-subtitle">{{ 'FOOTER_COMMUNITY' | translate }}</h6>
         <ul class="footer-links">
-          <li><a routerLink="/communities">Communities</a></li>
-          <li><a routerLink="/user-profile">Profile</a></li>
-          <li><a routerLink="/create-story">Share Story</a></li>
-          <li><a routerLink="/create-event">Create Event</a></li>
+          <li><a routerLink="/communities">{{ 'COMMUNITIES' | translate }}</a></li>
+          <li><a routerLink="/user-profile">{{ 'PROFILE' | translate }}</a></li>
+          <li><a routerLink="/create-story">{{ 'FOOTER_SHARE_STORY' | translate }}</a></li>
+          <li><a routerLink="/create-event">{{ 'FOOTER_CREATE_EVENT' | translate }}</a></li>
         </ul>
       </div>
 
       <div class="col-lg-4 mb-4">
-        <h6 class="footer-subtitle">Newsletter</h6>
+        <h6 class="footer-subtitle">{{ 'FOOTER_NEWSLETTER' | translate }}</h6>
         <p class="footer-note mb-3">
-          Stay updated with the latest stories and events from our community.
+          {{ 'FOOTER_NEWSLETTER_NOTE' | translate }}
         </p>
         <div class="newsletter-form">
           <div class="input-group">
-            <input type="email" class="form-control newsletter-input" placeholder="Enter your email"
-              aria-label="Email address">
+            <input type="email" class="form-control newsletter-input"
+              [placeholder]="'FOOTER_EMAIL_PLACEHOLDER' | translate" aria-label="Email address">
             <button class="btn btn-gold" type="button">
-              Subscribe
+              {{ 'FOOTER_SUBSCRIBE' | translate }}
             </button>
           </div>
         </div>
@@ -65,13 +65,13 @@
     <div class="row border-top border-secondary pt-4">
       <div class="col-md-6">
         <p class="copyright">
-          &copy; {{ currentYear }} MasjidStory. All rights reserved.
+          &copy; {{ currentYear }} MasjidStory. {{ 'FOOTER_COPYRIGHT' | translate }}
         </p>
       </div>
       <div class="col-md-6 text-md-end">
-        <a href="#" class="footer-legal">Privacy Policy</a>
+        <a href="#" class="footer-legal">{{ 'FOOTER_PRIVACY_POLICY' | translate }}</a>
         <span class="mx-2 text-muted">|</span>
-        <a href="#" class="footer-legal">Terms of Service</a>
+        <a href="#" class="footer-legal">{{ 'FOOTER_TERMS_OF_SERVICE' | translate }}</a>
       </div>
     </div>
   </div>

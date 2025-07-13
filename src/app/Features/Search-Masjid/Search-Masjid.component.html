@@ -4,18 +4,18 @@
     <div class="container">
       <div class="row align-items-center min-vh-25">
         <div class="col-lg-8 mx-auto text-center">
-          <h1 class="search-title">Explore All Masjids</h1>
+          <h1 class="search-title">{{ 'SEARCH_MASJID_TITLE' | translate }}</h1>
           <p class="search-subtitle">
-            Discover masjids from around the world and learn about their history and architecture
+            {{ 'SEARCH_MASJID_SUBTITLE' | translate }}
           </p>
 
           <!-- Search Box -->
           <div class="search-box mt-4">
             <div class="input-group input-group-lg">
               <input type="text" class="form-control" [(ngModel)]="searchTerm" (keyup.enter)="onSearch()"
-                placeholder="Search by name, location, or architectural style...">
+                [placeholder]="'SEARCH_MASJID_PLACEHOLDER' | translate">
               <button class="btn btn-gold" (click)="onSearch()">
-                <i class="fas fa-search"></i> Search
+                <i class="fas fa-search"></i> {{ 'SEARCH_MASJID_SEARCH' | translate }}
               </button>
             </div>
           </div>
@@ -25,7 +25,7 @@
             <div class="row justify-content-center">
               <div class="col-md-3 mb-2">
                 <select class="form-select" [(ngModel)]="selectedCountry" (change)="onFilterChange()">
-                  <option value="">All Countries</option>
+                  <option value="">{{ 'SEARCH_MASJID_ALL_COUNTRIES' | translate }}</option>
                   <option *ngFor="let country of countries" [value]="country.id">
                     {{ country.name }}
                   </option>
@@ -33,7 +33,7 @@
               </div>
               <div class="col-md-3 mb-2">
                 <select class="form-select" [(ngModel)]="selectedCity" (change)="onFilterChange()">
-                  <option value="">All Cities</option>
+                  <option value="">{{ 'SEARCH_MASJID_ALL_CITIES' | translate }}</option>
                   <option *ngFor="let city of cities" [value]="city.id">
                     {{ city.name }}
                   </option>
@@ -41,7 +41,7 @@
               </div>
               <div class="col-md-3 mb-2">
                 <select class="form-select" [(ngModel)]="selectedArchStyle" (change)="onFilterChange()">
-                  <option value="">All Styles</option>
+                  <option value="">{{ 'SEARCH_MASJID_ALL_STYLES' | translate }}</option>
                   <option value="Ottoman">Ottoman</option>
                   <option value="Mamluk">Mamluk</option>
                   <option value="Fatimid">Fatimid</option>
@@ -51,7 +51,7 @@
               </div>
               <div class="col-md-3 mb-2">
                 <button class="btn btn-outline-emerald w-100" (click)="clearFilters()">
-                  <i class="fas fa-times"></i> Clear Filters
+                  <i class="fas fa-times"></i> {{ 'SEARCH_MASJID_CLEAR_FILTERS' | translate }}
                 </button>
               </div>
             </div>
@@ -68,21 +68,23 @@
       <div class="results-header d-flex justify-content-between align-items-center mb-4">
         <div>
           <h3 class="results-title">
-            {{ loading ? 'Loading...' : (searchTerm || selectedCountry || selectedCity || selectedArchStyle ? 'Search
-            Results' : 'All Masjids') }}
+            {{ loading ? ('SEARCH_MASJID_LOADING' | translate) : (searchTerm || selectedCountry || selectedCity ||
+            selectedArchStyle ? ('SEARCH_MASJID_SEARCH_RESULTS' | translate) : ('SEARCH_MASJID_ALL_MASJIDS' |
+            translate)) }}
           </h3>
           <p class="results-count" *ngIf="!loading">
-            {{ masjids.length }} masjid{{ masjids.length !== 1 ? 's' : '' }} found
+            {{ masjids.length }} {{ masjids.length === 1 ? ('SEARCH_MASJID_MASJID_FOUND' | translate) :
+            ('SEARCH_MASJID_MASJIDS_FOUND' | translate) }}
           </p>
         </div>
 
         <!-- Sort Options -->
         <div class="sort-options">
           <select class="form-select" [(ngModel)]="sortBy" (change)="onSortChange()">
-            <option value="name">Sort by Name</option>
-            <option value="country">Sort by Country</option>
-            <option value="city">Sort by City</option>
-            <option value="year">Sort by Year</option>
+            <option value="name">{{ 'SEARCH_MASJID_SORT_NAME' | translate }}</option>
+            <option value="country">{{ 'SEARCH_MASJID_SORT_COUNTRY' | translate }}</option>
+            <option value="city">{{ 'SEARCH_MASJID_SORT_CITY' | translate }}</option>
+            <option value="year">{{ 'SEARCH_MASJID_SORT_YEAR' | translate }}</option>
           </select>
         </div>
       </div>
@@ -90,9 +92,9 @@
       <!-- Loading State -->
       <div *ngIf="loading" class="text-center py-5">
         <div class="spinner-border text-emerald" role="status">
-          <span class="visually-hidden">Loading...</span>
+          <span class="visually-hidden">{{ 'SEARCH_MASJID_LOADING' | translate }}</span>
         </div>
-        <p class="mt-3">Loading masjids...</p>
+        <p class="mt-3">{{ 'SEARCH_MASJID_LOADING_MASJIDS' | translate }}</p>
       </div>
 
       <!-- Error State -->
@@ -100,19 +102,19 @@
         <i class="fas fa-exclamation-triangle me-2"></i>
         {{ error }}
         <button class="btn btn-outline-danger ms-3" (click)="loadMasjids()">
-          <i class="fas fa-redo"></i> Try Again
+          <i class="fas fa-redo"></i> {{ 'SEARCH_MASJID_TRY_AGAIN' | translate }}
         </button>
       </div>
 
       <!-- No Results -->
       <div *ngIf="!loading && !error && masjids.length === 0" class="text-center py-5">
         <i class="fas fa-search fa-3x text-muted mb-3"></i>
-        <h4>No masjids found</h4>
+        <h4>{{ 'SEARCH_MASJID_NO_RESULTS' | translate }}</h4>
         <p class="text-muted">
-          Try adjusting your search terms or filters to find what you're looking for.
+          {{ 'SEARCH_MASJID_NO_RESULTS_DESC' | translate }}
         </p>
         <button class="btn btn-outline-emerald" (click)="clearFilters()">
-          <i class="fas fa-times"></i> Clear All Filters
+          <i class="fas fa-times"></i> {{ 'SEARCH_MASJID_CLEAR_ALL_FILTERS' | translate }}
         </button>
       </div>
 
@@ -135,18 +137,18 @@
               </p>
               <p class="card-year" *ngIf="masjid.yearOfEstablishment">
                 <i class="fas fa-calendar-alt"></i>
-                Est. {{ masjid.yearOfEstablishment }}
+                {{ 'SEARCH_MASJID_ESTABLISHED' | translate }} {{ masjid.yearOfEstablishment }}
               </p>
               <div class="card-actions">
                 <button class="btn btn-sm btn-outline-emerald me-2"
                   (click)="navigateToMasjid(masjid.id); $event.stopPropagation()">
                   <i class="fas fa-info-circle me-1"></i>
-                  View Details
+                  {{ 'SEARCH_MASJID_VIEW_DETAILS' | translate }}
                 </button>
                 <button class="btn btn-sm btn-outline-primary"
                   (click)="navigateToMasjidEvents(masjid.id); $event.stopPropagation()">
                   <i class="fas fa-calendar me-1"></i>
-                  Events
+                  {{ 'SEARCH_MASJID_EVENTS' | translate }}
                 </button>
               </div>
             </div>
@@ -160,7 +162,7 @@
           <ul class="pagination justify-content-center">
             <li class="page-item" [class.disabled]="currentPage === 1">
               <button class="page-link" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
-                <i class="fas fa-chevron-left"></i> Previous
+                <i class="fas fa-chevron-left"></i> {{ 'SEARCH_MASJID_PREVIOUS' | translate }}
               </button>
             </li>
 
@@ -170,7 +172,7 @@
 
             <li class="page-item" [class.disabled]="currentPage === totalPages">
               <button class="page-link" (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">
-                Next <i class="fas fa-chevron-right"></i>
+                {{ 'SEARCH_MASJID_NEXT' | translate }} <i class="fas fa-chevron-right"></i>
               </button>
             </li>
           </ul>

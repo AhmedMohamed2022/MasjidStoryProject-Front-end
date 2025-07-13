@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { StoryService } from '../../Core/Services/story-detail.service';
 import { StoryViewModel } from '../../Core/Models/story.model';
 import { environment } from '../../Core/environments/environment';
 
 @Component({
   selector: 'app-my-stories',
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './my-stories.component.html',
   styleUrls: ['./my-stories.component.css'],
 })
@@ -17,7 +18,11 @@ export class MyStoriesComponent implements OnInit {
   error = '';
   success = '';
 
-  constructor(private router: Router, private storyService: StoryService) {}
+  constructor(
+    private router: Router,
+    private storyService: StoryService,
+    private translate: TranslateService
+  ) {}
 
   ngOnInit(): void {
     this.loadMyStories();
@@ -40,7 +45,9 @@ export class MyStoriesComponent implements OnInit {
         }
       });
     } catch (err) {
-      this.error = 'Failed to load your stories.';
+      this.translate.get('MY_STORIES_LOAD_ERROR').subscribe((text: string) => {
+        this.error = text;
+      });
       console.error('Error loading stories:', err);
     } finally {
       this.loading = false;
@@ -73,24 +80,32 @@ export class MyStoriesComponent implements OnInit {
   }
 
   async onDeleteStory(storyId: number): Promise<void> {
-    if (
-      !confirm(
-        'Are you sure you want to delete this story? This action cannot be undone.'
-      )
-    ) {
-      return;
-    }
+    this.translate
+      .get('MY_STORIES_DELETE_CONFIRM')
+      .subscribe((text: string) => {
+        if (!confirm(text)) {
+          return;
+        }
+      });
 
     try {
       await this.storyService.deleteStory(storyId);
-      this.success = 'Story deleted successfully!';
+      this.translate
+        .get('MY_STORIES_DELETE_SUCCESS')
+        .subscribe((text: string) => {
+          this.success = text;
+        });
       this.stories = this.stories.filter((story) => story.id !== storyId);
 
       setTimeout(() => {
         this.success = '';
       }, 3000);
     } catch (err) {
-      this.error = 'Failed to delete story.';
+      this.translate
+        .get('MY_STORIES_DELETE_ERROR')
+        .subscribe((text: string) => {
+          this.error = text;
+        });
       console.error('Error deleting story:', err);
 
       setTimeout(() => {

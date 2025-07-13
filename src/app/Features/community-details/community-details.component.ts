@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommunityService } from '../../Core/Services/community.service';
 import { AuthService } from '../../Core/Services/auth.service';
 import { CommunityViewModel } from '../../Core/Models/community.model';
@@ -14,7 +15,7 @@ import { CommentViewModel } from '../../Core/Models/comment.model';
   templateUrl: './community-details.component.html',
   styleUrls: ['./community-details.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
 })
 export class CommunityDetailsComponent implements OnInit {
   community: CommunityViewModel | null = null;
@@ -36,7 +37,8 @@ export class CommunityDetailsComponent implements OnInit {
     private communityService: CommunityService,
     private authService: AuthService,
     private commentService: CommentService,
-    private likeService: LikeService
+    private likeService: LikeService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit() {
@@ -47,7 +49,11 @@ export class CommunityDetailsComponent implements OnInit {
   loadCommunity() {
     const communityId = this.route.snapshot.paramMap.get('id');
     if (!communityId) {
-      this.error = 'Community ID not found';
+      this.translate
+        .get('COMMUNITY_DETAILS_ERROR')
+        .subscribe((text: string) => {
+          this.error = text;
+        });
       return;
     }
     this.loading = true;
@@ -62,7 +68,11 @@ export class CommunityDetailsComponent implements OnInit {
         this.loadLikeStatus();
       },
       error: (err) => {
-        this.error = err.message || 'Failed to load community';
+        this.translate
+          .get('COMMUNITY_DETAILS_ERROR')
+          .subscribe((text: string) => {
+            this.error = err.message || text;
+          });
         this.loading = false;
       },
     });
@@ -87,7 +97,11 @@ export class CommunityDetailsComponent implements OnInit {
         this.membershipLoading = false;
       },
       error: (err) => {
-        alert(err.message || 'Failed to update membership');
+        this.translate
+          .get('COMMUNITY_DETAILS_ERROR')
+          .subscribe((text: string) => {
+            alert(err.message || text);
+          });
         this.membershipLoading = false;
       },
     });
@@ -105,7 +119,11 @@ export class CommunityDetailsComponent implements OnInit {
 
   formatDate(dateString: string): string {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
+    // Get current language for proper localization
+    const currentLang = this.translate.currentLang || 'en';
+    const locale = currentLang === 'ar' ? 'ar-SA' : 'en-US';
+
+    return date.toLocaleDateString(locale, {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -132,7 +150,11 @@ export class CommunityDetailsComponent implements OnInit {
     } else {
       // Fallback: copy to clipboard
       navigator.clipboard.writeText(window.location.href);
-      alert('Link copied to clipboard!');
+      this.translate
+        .get('COMMUNITY_DETAILS_LINK_COPIED')
+        .subscribe((text: string) => {
+          alert(text);
+        });
     }
   }
 
@@ -178,7 +200,11 @@ export class CommunityDetailsComponent implements OnInit {
         this.submittingComment = false;
       },
       error: (error) => {
-        this.commentError = error.message || 'Failed to add comment';
+        this.translate
+          .get('COMMUNITY_DETAILS_ERROR')
+          .subscribe((text: string) => {
+            this.commentError = error.message || text;
+          });
         this.submittingComment = false;
       },
     });

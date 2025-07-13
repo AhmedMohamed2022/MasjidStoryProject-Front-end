@@ -9,13 +9,14 @@ import {
   AbstractControl,
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../Core/Services/auth.service';
 import { UserRegistrationService } from '../../../Core/Services/user-registration.service';
 import { RegisterRequest } from '../../../Core/Models/auth.models';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule],
   templateUrl: './Register.component.html',
   styleUrls: ['./Register.component.css'],
 })
@@ -30,7 +31,8 @@ export class RegisterComponent {
     private fb: FormBuilder,
     private authService: AuthService,
     private userRegistrationService: UserRegistrationService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {
     this.registerForm = this.fb.group(
       {
@@ -108,8 +110,11 @@ export class RegisterComponent {
         },
         error: (error) => {
           this.isLoading = false;
-          this.errorMessage =
-            error.error?.message || 'Registration failed. Please try again.';
+          this.translate
+            .get('REGISTER_ERROR_GENERAL')
+            .subscribe((text: string) => {
+              this.errorMessage = error.error?.message || text;
+            });
         },
       });
     } else {

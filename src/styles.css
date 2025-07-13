@@ -48,6 +48,13 @@ body {
   flex-direction: column;
 }
 
+/* RTL support for Arabic */
+[dir="rtl"] body,
+[dir="rtl"] .main-container {
+  direction: rtl;
+  text-align: right;
+}
+
 /* Main content wrapper */
 .main-content {
   flex: 1;

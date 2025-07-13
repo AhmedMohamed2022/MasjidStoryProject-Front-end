@@ -5,18 +5,18 @@
       <div class="row align-items-center min-vh-75">
         <div class="col-lg-6">
           <div class="hero-content">
-            <h1 class="hero-title">Discover Islamic Heritage</h1>
+            <h1 class="hero-title">{{ 'HOME_HERO_TITLE' | translate }}</h1>
             <p class="hero-subtitle">
-              Explore the rich history and architectural beauty of masjids around the world
+              {{ 'HOME_HERO_SUBTITLE' | translate }}
             </p>
             <div class="hero-actions">
               <button class="btn btn-gold btn-lg me-3" (click)="navigateToExplore()">
                 <i class="fas fa-search me-2"></i>
-                Start Exploring
+                {{ 'HOME_START_EXPLORING' | translate }}
               </button>
               <button class="btn btn-outline-emerald btn-lg" (click)="navigateToAllEvents()">
                 <i class="fas fa-calendar-alt me-2"></i>
-                View Events
+                {{ 'HOME_VIEW_EVENTS' | translate }}
               </button>
             </div>
           </div>
@@ -36,8 +36,8 @@
   <section class="section-padding bg-light-emerald" *ngIf="isAuthenticated">
     <div class="container">
       <div class="section-header text-center mb-4">
-        <h3 class="section-title">Quick Actions</h3>
-        <p class="section-subtitle">Manage your events and activities</p>
+        <h3 class="section-title">{{ 'HOME_QUICK_ACTIONS_TITLE' | translate }}</h3>
+        <p class="section-subtitle">{{ 'HOME_QUICK_ACTIONS_SUBTITLE' | translate }}</p>
       </div>
 
       <div class="row justify-content-center">
@@ -47,19 +47,19 @@
               <div class="col-md-4 mb-3">
                 <button class="btn btn-gold w-100 py-3" (click)="navigateToCreateEvent()">
                   <i class="fas fa-plus-circle mb-2"></i>
-                  <div>Create Event</div>
+                  <div>{{ 'HOME_CREATE_EVENT' | translate }}</div>
                 </button>
               </div>
               <div class="col-md-4 mb-3">
                 <button class="btn btn-outline-emerald w-100 py-3" (click)="navigateToMyEvents()">
                   <i class="fas fa-calendar-check mb-2"></i>
-                  <div>My Events</div>
+                  <div>{{ 'HOME_MY_EVENTS' | translate }}</div>
                 </button>
               </div>
               <div class="col-md-4 mb-3">
                 <button class="btn btn-outline-primary w-100 py-3" (click)="navigateToAllEvents()">
                   <i class="fas fa-calendar-week mb-2"></i>
-                  <div>All Events</div>
+                  <div>{{ 'HOME_ALL_EVENTS' | translate }}</div>
                 </button>
               </div>
             </div>
@@ -73,8 +73,8 @@
   <section class="section-padding bg-light-emerald" *ngIf="!isAuthenticated">
     <div class="container">
       <div class="section-header text-center mb-4">
-        <h3 class="section-title">Join Our Community</h3>
-        <p class="section-subtitle">Create events, join gatherings, and share your experiences</p>
+        <h3 class="section-title">{{ 'HOME_JOIN_COMMUNITY_TITLE' | translate }}</h3>
+        <p class="section-subtitle">{{ 'HOME_JOIN_COMMUNITY_SUBTITLE' | translate }}</p>
       </div>
 
       <div class="row justify-content-center">
@@ -82,11 +82,11 @@
           <div class="cta-actions text-center">
             <button class="btn btn-gold btn-lg me-3" (click)="navigateToRegister()">
               <i class="fas fa-user-plus me-2"></i>
-              Sign Up
+              {{ 'HOME_SIGN_UP' | translate }}
             </button>
             <button class="btn btn-outline-emerald btn-lg" (click)="navigateToLogin()">
               <i class="fas fa-sign-in-alt me-2"></i>
-              Login
+              {{ 'LOGIN' | translate }}
             </button>
           </div>
         </div>
@@ -98,8 +98,8 @@
   <section class="section-padding bg-light-emerald">
     <div class="container">
       <div class="section-header text-center mb-5">
-        <h2 class="section-title">Featured Masjids</h2>
-        <p class="section-subtitle">Discover remarkable Islamic architecture</p>
+        <h2 class="section-title">{{ 'HOME_FEATURED_MASJIDS_TITLE' | translate }}</h2>
+        <p class="section-subtitle">{{ 'HOME_FEATURED_MASJIDS_SUBTITLE' | translate }}</p>
       </div>
 
       <div class="row" *ngIf="!loadingMasjids">
@@ -116,13 +116,13 @@
               </p>
               <p class="card-year" *ngIf="masjid.yearOfEstablishment">
                 <i class="fas fa-calendar-alt"></i>
-                Est. {{ masjid.yearOfEstablishment }}
+                {{ 'HOME_ESTABLISHED' | translate }} {{ masjid.yearOfEstablishment }}
               </p>
               <div class="card-actions">
                 <button class="btn btn-sm btn-outline-emerald"
                   (click)="navigateToMasjidEvents(masjid.id); $event.stopPropagation()">
                   <i class="fas fa-calendar me-1"></i>
-                  View Events
+                  {{ 'HOME_VIEW_EVENTS_BUTTON' | translate }}
                 </button>
               </div>
             </div>
@@ -132,7 +132,7 @@
 
       <div class="text-center" *ngIf="loadingMasjids">
         <div class="spinner-border text-emerald" role="status">
-          <span class="visually-hidden">Loading...</span>
+          <span class="visually-hidden">{{ 'HOME_LOADING' | translate }}</span>
         </div>
       </div>
 
@@ -144,11 +144,11 @@
       <div class="text-center mt-4" *ngIf="!loadingMasjids && !masjidError">
         <button class="btn btn-outline-emerald btn-lg me-3" (click)="navigateToAllMasjids()">
           <i class="fas fa-mosque me-2"></i>
-          View All Masjids
+          {{ 'HOME_VIEW_ALL_MASJIDS' | translate }}
         </button>
         <button class="btn btn-gold btn-lg" (click)="navigateToSearch()">
           <i class="fas fa-search me-2"></i>
-          Search Masjids
+          {{ 'HOME_SEARCH_MASJIDS' | translate }}
         </button>
       </div>
     </div>
@@ -158,8 +158,8 @@
   <section class="section-padding">
     <div class="container">
       <div class="section-header text-center mb-5">
-        <h2 class="section-title">Latest Stories</h2>
-        <p class="section-subtitle">Read inspiring narratives and historical accounts</p>
+        <h2 class="section-title">{{ 'HOME_LATEST_STORIES_TITLE' | translate }}</h2>
+        <p class="section-subtitle">{{ 'HOME_LATEST_STORIES_SUBTITLE' | translate }}</p>
       </div>
 
       <div class="row" *ngIf="!loadingStories">
@@ -192,7 +192,7 @@
 
       <div class="text-center" *ngIf="loadingStories">
         <div class="spinner-border text-emerald" role="status">
-          <span class="visually-hidden">Loading...</span>
+          <span class="visually-hidden">{{ 'HOME_LOADING' | translate }}</span>
         </div>
       </div>
 
@@ -206,8 +206,8 @@
   <section class="section-padding bg-light-emerald">
     <div class="container">
       <div class="section-header text-center mb-5">
-        <h2 class="section-title">Upcoming Events</h2>
-        <p class="section-subtitle">Join us for special occasions and gatherings</p>
+        <h2 class="section-title">{{ 'HOME_UPCOMING_EVENTS_TITLE' | translate }}</h2>
+        <p class="section-subtitle">{{ 'HOME_UPCOMING_EVENTS_SUBTITLE' | translate }}</p>
       </div>
 
       <div class="row" *ngIf="!loadingEvents">
@@ -246,11 +246,11 @@
                 <button class="btn btn-sm btn-gold"
                   (click)="navigateToEventDetails(event.id); $event.stopPropagation()">
                   <i class="fas fa-info-circle me-1"></i>
-                  View Details
+                  {{ 'HOME_VIEW_DETAILS' | translate }}
                 </button>
                 <span class="registration-status" *ngIf="event.isUserRegistered">
                   <i class="fas fa-check-circle text-success"></i>
-                  Registered
+                  {{ 'HOME_REGISTERED' | translate }}
                 </span>
               </div>
             </div>
@@ -260,7 +260,7 @@
 
       <div class="text-center" *ngIf="loadingEvents">
         <div class="spinner-border text-emerald" role="status">
-          <span class="visually-hidden">Loading...</span>
+          <span class="visually-hidden">{{ 'HOME_LOADING' | translate }}</span>
         </div>
       </div>
 
@@ -272,11 +272,11 @@
       <div class="text-center mt-4" *ngIf="!loadingEvents && !eventError">
         <button class="btn btn-outline-emerald btn-lg me-3" (click)="navigateToAllEvents()">
           <i class="fas fa-calendar-week me-2"></i>
-          View All Events
+          {{ 'HOME_VIEW_ALL_EVENTS' | translate }}
         </button>
         <button class="btn btn-gold btn-lg" (click)="navigateToCreateEvent()" *ngIf="isAuthenticated">
           <i class="fas fa-plus me-2"></i>
-          Create Event
+          {{ 'HOME_CREATE_EVENT' | translate }}
         </button>
       </div>
     </div>

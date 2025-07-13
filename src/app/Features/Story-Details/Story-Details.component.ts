@@ -3,6 +3,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
   StoryViewModel,
   CommentViewModel,
@@ -16,7 +17,7 @@ import { environment } from '../../Core/environments/environment';
 @Component({
   selector: 'app-story-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule], // Add RouterModule
+  imports: [CommonModule, FormsModule, RouterModule, TranslateModule],
   templateUrl: './Story-Details.component.html',
   styleUrl: './Story-Details.component.css',
 })
@@ -25,6 +26,7 @@ export class StoryDetailComponent implements OnInit {
   private router = inject(Router);
   private storyService = inject(StoryService);
   private authService = inject(AuthService);
+  private translate = inject(TranslateService);
 
   story: StoryViewModel | null = null;
   relatedStories: StoryViewModel[] = [];
@@ -42,7 +44,11 @@ export class StoryDetailComponent implements OnInit {
       this.loadStory(parseInt(storyId));
     } else {
       console.error('No story ID found in route');
-      this.error = 'No story ID provided';
+      this.translate
+        .get('STORY_DETAILS_NO_STORY_ID')
+        .subscribe((text: string) => {
+          this.error = text;
+        });
       this.loading = false;
     }
   }
@@ -55,7 +61,9 @@ export class StoryDetailComponent implements OnInit {
       this.loadRelatedStories(); // Load related stories when a story is loaded
       console.log('Loaded Story:', this.story);
     } catch (error) {
-      this.error = 'Failed to load story. Please try again.';
+      this.translate.get('STORY_DETAILS_ERROR').subscribe((text: string) => {
+        this.error = text;
+      });
       console.error('Error loading story:', error);
     } finally {
       this.loading = false;
@@ -153,14 +161,22 @@ export class StoryDetailComponent implements OnInit {
       this.newComment = '';
     } catch (error) {
       console.error('Error adding comment:', error);
-      this.commentError = 'Failed to post comment. Please try again.';
+      this.translate
+        .get('STORY_DETAILS_COMMENT_ERROR')
+        .subscribe((text: string) => {
+          this.commentError = text;
+        });
     } finally {
       this.submittingComment = false;
     }
   }
 
   formatDate(date: string): string {
-    return new Date(date).toLocaleDateString('en-US', {
+    // Get current language for proper localization
+    const currentLang = this.translate.currentLang || 'en';
+    const locale = currentLang === 'ar' ? 'ar-SA' : 'en-US';
+
+    return new Date(date).toLocaleDateString(locale, {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -168,7 +184,11 @@ export class StoryDetailComponent implements OnInit {
   }
 
   formatTime(date: string): string {
-    return new Date(date).toLocaleTimeString('en-US', {
+    // Get current language for proper localization
+    const currentLang = this.translate.currentLang || 'en';
+    const locale = currentLang === 'ar' ? 'ar-SA' : 'en-US';
+
+    return new Date(date).toLocaleTimeString(locale, {
       hour: '2-digit',
       minute: '2-digit',
     });
@@ -187,7 +207,9 @@ export class StoryDetailComponent implements OnInit {
       navigator
         .share({
           title: this.story?.title,
-          text: `Check out this story about ${this.story?.masjidName}`,
+          text: this.translate.instant('STORY_DETAILS_SHARE_TEXT', {
+            masjidName: this.story?.masjidName,
+          }),
           url: window.location.href,
         })
         .catch((error) => console.log('Error sharing', error));
@@ -197,7 +219,11 @@ export class StoryDetailComponent implements OnInit {
         .writeText(window.location.href)
         .then(() => {
           // Show toast or alert that URL was copied
-          alert('Story link copied to clipboard!');
+          this.translate
+            .get('STORY_DETAILS_LINK_COPIED')
+            .subscribe((text: string) => {
+              alert(text);
+            });
         })
         .catch((err) => console.error('Failed to copy URL', err));
     }

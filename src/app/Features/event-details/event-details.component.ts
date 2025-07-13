@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { EventViewModel } from '../../Core/Models/event.model';
 import { EventService } from '../../Core/Services/event.service';
 import { AuthService } from '../../Core/Services/auth.service';
@@ -13,7 +14,7 @@ import { CommentViewModel } from '../../Core/Models/comment.model';
 @Component({
   selector: 'app-event-details',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, TranslateModule],
   templateUrl: './event-details.component.html',
   styleUrls: ['./event-details.component.css'],
 })
@@ -39,7 +40,8 @@ export class EventDetailsComponent implements OnInit {
     private commentService: CommentService,
     private likeService: LikeService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -70,7 +72,9 @@ export class EventDetailsComponent implements OnInit {
         this.loadLikeStatus();
       },
       error: (error) => {
-        this.error = 'Failed to load event details';
+        this.translate.get('EVENT_DETAILS_ERROR').subscribe((text: string) => {
+          this.error = text;
+        });
         this.loading = false;
         console.error('Error loading event:', error);
       },
@@ -94,11 +98,19 @@ export class EventDetailsComponent implements OnInit {
           this.event.isUserRegistered = true;
         }
         this.registering = false;
-        alert('Registered successfully!');
+        this.translate
+          .get('EVENT_DETAILS_REGISTRATION_SUCCESS')
+          .subscribe((text: string) => {
+            alert(text);
+          });
       },
       error: (error) => {
         this.registering = false;
-        alert('Registration failed. You may already be registered.');
+        this.translate
+          .get('EVENT_DETAILS_REGISTRATION_FAILED')
+          .subscribe((text: string) => {
+            alert(text);
+          });
         console.error('Registration error:', error);
       },
     });
@@ -112,22 +124,30 @@ export class EventDetailsComponent implements OnInit {
   deleteEvent(): void {
     if (!this.event || this.deleting) return;
 
-    if (
-      !confirm(
-        'Are you sure you want to delete this event? This action cannot be undone.'
-      )
-    ) {
-      return;
-    }
+    this.translate
+      .get('EVENT_DETAILS_DELETE_CONFIRMATION')
+      .subscribe((text: string) => {
+        if (!confirm(text)) {
+          return;
+        }
+      });
 
     this.deleting = true;
     this.eventService.deleteEvent(this.event.id).subscribe({
       next: (message) => {
-        alert('Event deleted successfully!');
+        this.translate
+          .get('EVENT_DETAILS_DELETE_SUCCESS')
+          .subscribe((text: string) => {
+            alert(text);
+          });
         this.router.navigate(['/upcoming-events']);
       },
       error: (error) => {
-        alert('Failed to delete event. You may not have permission.');
+        this.translate
+          .get('EVENT_DETAILS_DELETE_FAILED')
+          .subscribe((text: string) => {
+            alert(text);
+          });
         console.error('Delete error:', error);
         this.deleting = false;
       },
@@ -153,7 +173,13 @@ export class EventDetailsComponent implements OnInit {
       // Fallback - copy to clipboard
       navigator.clipboard
         .writeText(window.location.href)
-        .then(() => alert('Event link copied to clipboard!'))
+        .then(() => {
+          this.translate
+            .get('EVENT_DETAILS_LINK_COPIED')
+            .subscribe((text: string) => {
+              alert(text);
+            });
+        })
         .catch((err) => console.error('Failed to copy URL', err));
     }
   }
@@ -187,7 +213,11 @@ export class EventDetailsComponent implements OnInit {
   }
 
   formatDate(dateString: string): string {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    // Get current language for proper localization
+    const currentLang = this.translate.currentLang || 'en';
+    const locale = currentLang === 'ar' ? 'ar-SA' : 'en-US';
+
+    return new Date(dateString).toLocaleDateString(locale, {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
@@ -198,7 +228,11 @@ export class EventDetailsComponent implements OnInit {
   }
 
   formatTime(dateString: string): string {
-    return new Date(dateString).toLocaleTimeString('en-US', {
+    // Get current language for proper localization
+    const currentLang = this.translate.currentLang || 'en';
+    const locale = currentLang === 'ar' ? 'ar-SA' : 'en-US';
+
+    return new Date(dateString).toLocaleTimeString(locale, {
       hour: '2-digit',
       minute: '2-digit',
       hour12: true,

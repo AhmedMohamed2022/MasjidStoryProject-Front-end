@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { UserProfileService } from '../../Core/Services/user-profile.service';
 import { StoryService } from '../../Core/Services/story-detail.service';
 import { CommunityService } from '../../Core/Services/community.service';
@@ -21,7 +22,7 @@ import { environment } from '../../Core/environments/environment';
 @Component({
   selector: 'app-user-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css'],
 })
@@ -54,7 +55,8 @@ export class UserProfileComponent {
     private storyService: StoryService,
     private communityService: CommunityService,
     private eventService: EventService,
-    private userRegistrationService: UserRegistrationService
+    private userRegistrationService: UserRegistrationService,
+    private translate: TranslateService
   ) {
     this.fetchAll();
   }
@@ -106,7 +108,11 @@ export class UserProfileComponent {
         this.fetchCommunities();
       },
       error: (err) => {
-        this.error = 'Failed to load profile.';
+        this.translate
+          .get('USER_PROFILE_LOAD_ERROR')
+          .subscribe((text: string) => {
+            this.error = text;
+          });
         this.loading = false;
       },
     });

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommunityService } from '../../Core/Services/community.service';
 import { AuthService } from '../../Core/Services/auth.service';
 import { CommunityViewModel } from '../../Core/Models/community.model';
@@ -10,7 +11,7 @@ import { CommunityViewModel } from '../../Core/Models/community.model';
   templateUrl: './community-list.component.html',
   styleUrls: ['./community-list.component.css'],
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
 })
 export class CommunityListComponent implements OnInit {
   @Input() masjidId?: number;
@@ -26,7 +27,8 @@ export class CommunityListComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private communityService: CommunityService,
-    private authService: AuthService
+    private authService: AuthService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit() {
@@ -113,7 +115,12 @@ export class CommunityListComponent implements OnInit {
 
   formatDate(dateString: string): string {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
+
+    // Get current language for proper localization
+    const currentLang = this.translate.currentLang || 'en';
+    const locale = currentLang === 'ar' ? 'ar-SA' : 'en-US';
+
+    return date.toLocaleDateString(locale, {
       year: 'numeric',
       month: 'short',
       day: 'numeric',

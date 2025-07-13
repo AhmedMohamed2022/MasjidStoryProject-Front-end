@@ -8,6 +8,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../Core/Services/auth.service';
 import { UserRegistrationService } from '../../../Core/Services/user-registration.service';
 import { LoginRequest } from '../../../Core/Models/auth.models';
@@ -15,7 +16,7 @@ import { LoginRequest } from '../../../Core/Models/auth.models';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule],
   templateUrl: './Login.component.html',
   styleUrls: ['./Login.component.css'],
 })
@@ -31,7 +32,8 @@ export class LoginComponent {
     private authService: AuthService,
     private userRegistrationService: UserRegistrationService,
     private router: Router,
-    private route: ActivatedRoute // Add this
+    private route: ActivatedRoute,
+    private translate: TranslateService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -75,8 +77,11 @@ export class LoginComponent {
         },
         error: (error) => {
           this.isLoading = false;
-          this.errorMessage =
-            error.error?.message || 'Login failed. Please try again.';
+          this.translate
+            .get('LOGIN_ERROR_GENERAL')
+            .subscribe((text: string) => {
+              this.errorMessage = error.error?.message || text;
+            });
         },
       });
     } else {

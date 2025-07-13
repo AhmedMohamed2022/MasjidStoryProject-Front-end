@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { EventService } from '../../Core/Services/event.service';
 import { AuthService } from '../../Core/Services/auth.service';
 import { UserRegistrationService } from '../../Core/Services/user-registration.service';
@@ -8,7 +9,7 @@ import { EventViewModel } from '../../Core/Models/event.model';
 
 @Component({
   selector: 'app-my-events',
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './my-events.component.html',
   styleUrls: ['./my-events.component.css'],
 })
@@ -21,7 +22,8 @@ export class MyEventsComponent implements OnInit {
     private eventService: EventService,
     private authService: AuthService,
     private userRegistrationService: UserRegistrationService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -47,7 +49,9 @@ export class MyEventsComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading registered events:', error);
-        this.error = 'Failed to load your registered events';
+        this.translate.get('MY_EVENTS_ERROR').subscribe((text: string) => {
+          this.error = text;
+        });
         this.loading = false;
       },
     });
@@ -69,7 +73,11 @@ export class MyEventsComponent implements OnInit {
 
   formatEventDate(date: string): string {
     const eventDate = new Date(date);
-    return eventDate.toLocaleDateString('en-US', {
+    // Get current language for proper localization
+    const currentLang = this.translate.currentLang || 'en';
+    const locale = currentLang === 'ar' ? 'ar-SA' : 'en-US';
+
+    return eventDate.toLocaleDateString(locale, {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
@@ -79,7 +87,11 @@ export class MyEventsComponent implements OnInit {
 
   formatEventTime(date: string): string {
     const eventDate = new Date(date);
-    return eventDate.toLocaleTimeString('en-US', {
+    // Get current language for proper localization
+    const currentLang = this.translate.currentLang || 'en';
+    const locale = currentLang === 'ar' ? 'ar-SA' : 'en-US';
+
+    return eventDate.toLocaleTimeString(locale, {
       hour: '2-digit',
       minute: '2-digit',
       hour12: true,
@@ -91,7 +103,11 @@ export class MyEventsComponent implements OnInit {
   }
 
   getEventMonth(date: string): string {
-    return new Date(date).toLocaleDateString('en-US', { month: 'short' });
+    // Get current language for proper localization
+    const currentLang = this.translate.currentLang || 'en';
+    const locale = currentLang === 'ar' ? 'ar-SA' : 'en-US';
+
+    return new Date(date).toLocaleDateString(locale, { month: 'short' });
   }
 
   isEventUpcoming(date: string): boolean {
@@ -150,14 +166,16 @@ export class MyEventsComponent implements OnInit {
   getDaysUntilEventText(date: string): string {
     const days = this.getDaysUntilEvent(date);
     if (days === 0) {
-      return 'Today';
+      return this.translate.instant('MY_EVENTS_TODAY');
     } else if (days === 1) {
-      return 'Tomorrow';
+      return this.translate.instant('MY_EVENTS_TOMORROW');
     } else if (days > 1) {
-      return `In ${days} days`;
+      return this.translate.instant('MY_EVENTS_IN_DAYS', { count: days });
     } else {
       const pastDays = Math.abs(days);
-      return pastDays === 1 ? 'Yesterday' : `${pastDays} days ago`;
+      return pastDays === 1
+        ? this.translate.instant('MY_EVENTS_YESTERDAY')
+        : this.translate.instant('MY_EVENTS_DAYS_AGO', { count: pastDays });
     }
   }
 
