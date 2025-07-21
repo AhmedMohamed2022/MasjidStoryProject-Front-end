@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { MasjidViewModel } from '../../Core/Models/masjid.model';
+import {
+  MasjidViewModel,
+  getTranslatedMasjidName,
+} from '../../Core/Models/masjid.model';
 import { StoryViewModel } from '../../Core/Models/story.model';
 import { EventViewModel } from '../../Core/Models/event.model';
 import { HomeService } from '../../Core/Services/Home.service';
@@ -33,7 +36,7 @@ export class HomeComponent implements OnInit {
     private authService: AuthService,
     private userRegistrationService: UserRegistrationService,
     private router: Router,
-    private translate: TranslateService
+    public translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -58,12 +61,13 @@ export class HomeComponent implements OnInit {
     this.homeService.getFeaturedMasjids().subscribe({
       next: (masjids) => {
         this.featuredMasjids = masjids.slice(0, 6); // Show only 6
+        console.log('Loaded featured masjids:', this.featuredMasjids);
         this.loadingMasjids = false;
       },
       error: (error) => {
         console.error('Error loading featured masjids:', error);
         this.translate
-          .get('HOME_ERROR_LOADING_MASJIDS')
+          .get('HOME.ERROR_LOADING_MASJIDS')
           .subscribe((text: string) => {
             this.masjidError = text;
           });
@@ -81,7 +85,7 @@ export class HomeComponent implements OnInit {
       error: (error) => {
         console.error('Error loading latest stories:', error);
         this.translate
-          .get('HOME_ERROR_LOADING_STORIES')
+          .get('HOME.ERROR_LOADING_STORIES')
           .subscribe((text: string) => {
             this.storyError = text;
           });
@@ -105,7 +109,7 @@ export class HomeComponent implements OnInit {
       error: (error) => {
         console.error('Error loading upcoming events:', error);
         this.translate
-          .get('HOME_ERROR_LOADING_EVENTS')
+          .get('HOME.ERROR_LOADING_EVENTS')
           .subscribe((text: string) => {
             this.eventError = text;
           });
@@ -255,4 +259,7 @@ export class HomeComponent implements OnInit {
       hour12: true,
     });
   }
+
+  // Expose the helper for template
+  public getTranslatedMasjidName = getTranslatedMasjidName;
 }

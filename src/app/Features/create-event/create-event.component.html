@@ -5,8 +5,8 @@
 
         <!-- Page Header -->
         <div class="page-header text-center mb-5">
-          <h1 class="page-title">Create New Event</h1>
-          <p class="page-subtitle">Share an upcoming event with the community</p>
+          <h1 class="page-title">{{ 'CREATE_EVENT.TITLE' | translate }}</h1>
+          <p class="page-subtitle">{{ 'CREATE_EVENT.SUBTITLE' | translate }}</p>
         </div>
 
         <!-- Success Message -->
@@ -31,20 +31,20 @@
             <div class="form-group mb-4">
               <label for="title" class="form-label">
                 <i class="fas fa-heading"></i>
-                Event Title *
+                {{ 'FORM.EVENT_TITLE_LABEL' | translate }} *
               </label>
               <input type="text" id="title" name="title" class="form-control" [(ngModel)]="event.title"
-                placeholder="Enter event title" required maxlength="200" />
+                placeholder="{{ 'FORM.EVENT_TITLE_PLACEHOLDER' | translate }}" required maxlength="200" />
             </div>
 
             <!-- Description Field -->
             <div class="form-group mb-4">
               <label for="description" class="form-label">
                 <i class="fas fa-align-left"></i>
-                Description *
+                {{ 'FORM.DESCRIPTION_LABEL' | translate }} *
               </label>
               <textarea id="description" name="description" class="form-control" rows="5"
-                [(ngModel)]="event.description" placeholder="Describe your event in detail..." required
+                [(ngModel)]="event.description" placeholder="{{ 'FORM.DESCRIPTION_PLACEHOLDER' | translate }}" required
                 maxlength="1000"></textarea>
               <small class="form-text">{{ event.description.length }}/1000 characters</small>
             </div>
@@ -53,7 +53,7 @@
             <div class="form-group mb-4">
               <label for="eventDate" class="form-label">
                 <i class="fas fa-calendar-alt"></i>
-                Event Date & Time *
+                {{ 'FORM.EVENT_DATE_TIME_LABEL' | translate }} *
               </label>
               <input type="datetime-local" id="eventDate" name="eventDate" class="form-control"
                 [(ngModel)]="event.eventDate" required />
@@ -63,17 +63,17 @@
             <div class="form-group mb-4">
               <label for="masjidId" class="form-label">
                 <i class="fas fa-mosque"></i>
-                Masjid (Optional)
+                {{ 'FORM.SELECT_MASJID_OPTIONAL' | translate }}
               </label>
               <select id="masjidId" name="masjidId" class="form-control" [(ngModel)]="event.masjidId">
-                <option value="">Select a masjid (optional)</option>
+                <option value="">{{ 'FORM.SELECT_MASJID_OPTIONAL' | translate }}</option>
                 <option *ngFor="let masjid of masjids" [value]="masjid.id">
                   {{ masjid.shortName }}
                 </option>
               </select>
               <div class="text-center mt-2" *ngIf="loadingMasjids">
                 <div class="spinner-border spinner-border-sm text-emerald" role="status">
-                  <span class="visually-hidden">Loading masjids...</span>
+                  <span class="visually-hidden">{{ 'FORM.LOADING_MASJIDS' | translate }}</span>
                 </div>
               </div>
             </div>
@@ -82,17 +82,17 @@
             <div class="form-group mb-4">
               <label for="languageId" class="form-label">
                 <i class="fas fa-language"></i>
-                Language (Optional)
+                {{ 'FORM.SELECT_LANGUAGE_OPTIONAL' | translate }}
               </label>
               <select id="languageId" name="languageId" class="form-control" [(ngModel)]="event.languageId">
-                <option value="">Select a language (optional)</option>
+                <option value="">{{ 'FORM.SELECT_LANGUAGE_OPTIONAL' | translate }}</option>
                 <option *ngFor="let language of languages" [value]="language.id">
                   {{ language.name }}
                 </option>
               </select>
               <div class="text-center mt-2" *ngIf="loadingLanguages">
                 <div class="spinner-border spinner-border-sm text-emerald" role="status">
-                  <span class="visually-hidden">Loading languages...</span>
+                  <span class="visually-hidden">{{ 'FORM.LOADING_LANGUAGES' | translate }}</span>
                 </div>
               </div>
             </div>
@@ -101,13 +101,13 @@
             <div class="form-actions">
               <button type="button" class="btn btn-outline-secondary me-3" (click)="onCancel()" [disabled]="loading">
                 <i class="fas fa-times"></i>
-                Cancel
+                {{ 'FORM.CANCEL_BUTTON' | translate }}
               </button>
 
-              <button type="submit" class="btn btn-gold" [disabled]="loading || !eventForm.form.valid">
+              <button type="submit" class="btn btn-primary" [disabled]="eventForm.invalid || loading">
                 <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status"></span>
                 <i *ngIf="!loading" class="fas fa-plus me-2"></i>
-                {{ loading ? 'Creating...' : 'Create Event' }}
+                {{ 'CREATE_EVENT.SUBMIT' | translate }}
               </button>
             </div>
 

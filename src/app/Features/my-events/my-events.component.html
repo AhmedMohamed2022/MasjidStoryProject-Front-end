@@ -3,16 +3,16 @@
 
     <!-- Page Header -->
     <div class="page-header text-center mb-5">
-      <h1 class="page-title">{{ 'MY_EVENTS_TITLE' | translate }}</h1>
-      <p class="page-subtitle">{{ 'MY_EVENTS_SUBTITLE' | translate }}</p>
+      <h1 class="page-title">{{ 'MY_EVENTS.TITLE' | translate }}</h1>
+      <p class="page-subtitle">{{ 'MY_EVENTS.SUBTITLE' | translate }}</p>
     </div>
 
     <!-- Loading State -->
     <div class="text-center" *ngIf="loading">
       <div class="spinner-border text-emerald" role="status">
-        <span class="visually-hidden">{{ 'MY_EVENTS_LOADING' | translate }}</span>
+        <span class="visually-hidden">{{ 'MY_EVENTS.LOADING' | translate }}</span>
       </div>
-      <p class="mt-3 text-muted">{{ 'MY_EVENTS_LOADING' | translate }}</p>
+      <p class="mt-3 text-muted">{{ 'MY_EVENTS.LOADING' | translate }}</p>
     </div>
 
     <!-- Error State -->
@@ -21,7 +21,7 @@
       {{ error }}
       <button type="button" class="btn btn-sm btn-outline-danger ms-3" (click)="refreshEvents()">
         <i class="fas fa-redo-alt"></i>
-        {{ 'MY_EVENTS_TRY_AGAIN' | translate }}
+        {{ 'MY_EVENTS.TRY_AGAIN' | translate }}
       </button>
     </div>
 
@@ -30,11 +30,11 @@
       <div class="no-events-icon">
         <i class="fas fa-calendar-times"></i>
       </div>
-      <h3 class="no-events-title">{{ 'MY_EVENTS_NO_EVENTS' | translate }}</h3>
-      <p class="no-events-text">{{ 'MY_EVENTS_NO_EVENTS_DESC' | translate }}</p>
+      <h3 class="no-events-title">{{ 'MY_EVENTS.NO_EVENTS' | translate }}</h3>
+      <p class="no-events-text">{{ 'MY_EVENTS.NO_EVENTS_DESC' | translate }}</p>
       <button class="btn btn-gold btn-lg" (click)="navigateToAllEvents()">
         <i class="fas fa-search me-2"></i>
-        {{ 'MY_EVENTS_BROWSE_EVENTS' | translate }}
+        {{ 'MY_EVENTS.BROWSE_EVENTS' | translate }}
       </button>
     </div>
 
@@ -46,7 +46,7 @@
         <div class="section-header">
           <h2 class="section-title">
             <i class="fas fa-star"></i>
-            {{ 'MY_EVENTS_TODAYS_EVENTS' | translate }}
+            {{ 'MY_EVENTS.TODAYS_EVENTS' | translate }}
           </h2>
           <span class="event-count">{{ todayEvents.length }}</span>
         </div>
@@ -56,7 +56,7 @@
             <div class="event-card event-today" (click)="navigateToEventDetails(event.id)">
               <div class="event-status-badge today">
                 <i class="fas fa-clock"></i>
-                {{ 'MY_EVENTS_TODAY' | translate }}
+                {{ 'MY_EVENTS.TODAY' | translate }}
               </div>
 
               <div class="event-date">
@@ -89,7 +89,7 @@
         <div class="section-header">
           <h2 class="section-title">
             <i class="fas fa-calendar-plus"></i>
-            {{ 'MY_EVENTS_UPCOMING_EVENTS' | translate }}
+            {{ 'MY_EVENTS.UPCOMING_EVENTS' | translate }}
           </h2>
           <span class="event-count">{{ upcomingEvents.length }}</span>
         </div>
@@ -136,7 +136,7 @@
         <div class="section-header">
           <h2 class="section-title">
             <i class="fas fa-history"></i>
-            {{ 'MY_EVENTS_PAST_EVENTS' | translate }}
+            {{ 'MY_EVENTS.PAST_EVENTS' | translate }}
           </h2>
           <span class="event-count">{{ pastEvents.length }}</span>
         </div>
@@ -146,7 +146,7 @@
             <div class="event-card event-past" (click)="navigateToEventDetails(event.id)">
               <div class="event-status-badge past">
                 <i class="fas fa-check-circle"></i>
-                {{ 'MY_EVENTS_ATTENDED' | translate }}
+                {{ 'MY_EVENTS.ATTENDED' | translate }}
               </div>
 
               <div class="event-date">
@@ -178,11 +178,11 @@
       <div class="action-section text-center mt-5">
         <button class="btn btn-gold btn-lg me-3" (click)="navigateToAllEvents()">
           <i class="fas fa-search me-2"></i>
-          {{ 'MY_EVENTS_BROWSE_MORE' | translate }}
+          {{ 'MY_EVENTS.BROWSE_MORE' | translate }}
         </button>
         <button class="btn btn-outline-emerald btn-lg" (click)="refreshEvents()">
           <i class="fas fa-sync-alt me-2"></i>
-          {{ 'MY_EVENTS_REFRESH' | translate }}
+          {{ 'MY_EVENTS.REFRESH' | translate }}
         </button>
       </div>
 

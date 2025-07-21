@@ -78,7 +78,7 @@ export class LoginComponent {
         error: (error) => {
           this.isLoading = false;
           this.translate
-            .get('LOGIN_ERROR_GENERAL')
+            .get('LOGIN.ERROR_GENERAL')
             .subscribe((text: string) => {
               this.errorMessage = error.error?.message || text;
             });

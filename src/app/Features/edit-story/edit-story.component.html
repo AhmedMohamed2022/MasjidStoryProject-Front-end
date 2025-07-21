@@ -5,8 +5,8 @@
 
                 <!-- Page Header -->
                 <div class="page-header text-center mb-5">
-                    <h1 class="page-title">Edit Story</h1>
-                    <p class="page-subtitle">Update your story content and details</p>
+                    <h1 class="page-title">{{ 'EDIT_STORY.TITLE' | translate }}</h1>
+                    <p class="page-subtitle">{{ 'EDIT_STORY.SUBTITLE' | translate }}</p>
                 </div>
 
                 <!-- Content Moderation Warning -->
@@ -14,15 +14,17 @@
                     <div class="d-flex align-items-start">
                         <i class="fas fa-info-circle me-3 mt-1"></i>
                         <div>
-                            <h6 class="alert-heading">Content Moderation Notice</h6>
+                            <h6 class="alert-heading">{{ 'EDIT_STORY.MODERATION_NOTICE_HEADER' | translate }}</h6>
                             <p class="mb-2">
-                                <strong>Important:</strong> Significant changes to your story (title, content, or
-                                images) will require admin approval before being published.
+                                <strong>{{ 'EDIT_STORY.MODERATION_NOTICE_IMPORTANT' | translate }}</strong> {{
+                                'EDIT_STORY.MODERATION_NOTICE_DESC' | translate }}
                             </p>
                             <ul class="mb-0 small">
-                                <li><strong>Minor edits</strong> (typos, formatting) will be approved automatically</li>
-                                <li><strong>Major changes</strong> (content, title, images) will be set to pending</li>
-                                <li>You'll be notified once an admin reviews your changes</li>
+                                <li><strong>{{ 'EDIT_STORY.MODERATION_NOTICE_MINOR' | translate }}</strong> {{
+                                    'EDIT_STORY.MODERATION_NOTICE_MINOR_DESC' | translate }}</li>
+                                <li><strong>{{ 'EDIT_STORY.MODERATION_NOTICE_MAJOR' | translate }}</strong> {{
+                                    'EDIT_STORY.MODERATION_NOTICE_MAJOR_DESC' | translate }}</li>
+                                <li>{{ 'EDIT_STORY.MODERATION_NOTICE_NOTIFY' | translate }}</li>
                             </ul>
                         </div>
                     </div>
@@ -31,9 +33,9 @@
                 <!-- Loading State -->
                 <div *ngIf="loadingStory" class="text-center py-5">
                     <div class="spinner-border text-emerald" role="status">
-                        <span class="visually-hidden">Loading story...</span>
+                        <span class="visually-hidden">{{ 'EDIT_STORY.LOADING' | translate }}</span>
                     </div>
-                    <p class="mt-3">Loading story...</p>
+                    <p class="mt-3">{{ 'EDIT_STORY.LOADING' | translate }}</p>
                 </div>
 
                 <!-- Success Message -->
@@ -58,39 +60,41 @@
                         <div class="form-group mb-4">
                             <label for="title" class="form-label">
                                 <i class="fas fa-heading"></i>
-                                Story Title *
+                                {{ 'EDIT_STORY.STORY_TITLE_LABEL' | translate }} *
                             </label>
                             <input type="text" id="title" name="title" class="form-control" [(ngModel)]="story.title"
-                                placeholder="Enter story title" required maxlength="200" />
+                                [placeholder]="'EDIT_STORY.STORY_TITLE_PLACEHOLDER' | translate" required
+                                maxlength="200" />
                         </div>
 
                         <!-- Content Field -->
                         <div class="form-group mb-4">
                             <label for="content" class="form-label">
                                 <i class="fas fa-align-left"></i>
-                                Content *
+                                {{ 'EDIT_STORY.CONTENT_LABEL' | translate }} *
                             </label>
                             <textarea id="content" name="content" class="form-control" rows="6"
-                                [(ngModel)]="story.content" placeholder="Write your story..." required
-                                maxlength="3000"></textarea>
-                            <small class="form-text">{{ story.content.length }}/3000 characters</small>
+                                [(ngModel)]="story.content" [placeholder]="'EDIT_STORY.CONTENT_PLACEHOLDER' | translate"
+                                required maxlength="3000"></textarea>
+                            <small class="form-text">{{ 'EDIT_STORY.CONTENT_CHAR_COUNT' | translate: { count:
+                                story.content.length } }}</small>
                         </div>
 
                         <!-- Image Management -->
                         <div class="form-group mb-4">
                             <label class="form-label">
                                 <i class="fas fa-images"></i>
-                                Story Images
+                                {{ 'EDIT_STORY.IMAGES_LABEL' | translate }}
                             </label>
                             <small class="form-text text-muted d-block mb-3">
-                                You can remove existing images by clicking the X button, and add new images below.
+                                {{ 'EDIT_STORY.IMAGES_HELP' | translate }}
                             </small>
 
                             <!-- Existing Images -->
                             <div *ngIf="existingImages.length > 0" class="mb-3">
                                 <h6 class="text-emerald">
                                     <i class="fas fa-image me-2"></i>
-                                    Current Images ({{ existingImages.length }})
+                                    {{ 'EDIT_STORY.IMAGES_CURRENT' | translate: { count: existingImages.length } }}
                                 </h6>
                                 <div class="row">
                                     <div class="col-4 col-md-3 mb-2" *ngFor="let img of existingImages; let i = index">
@@ -112,13 +116,12 @@
                             <div class="mb-3">
                                 <h6 class="text-primary">
                                     <i class="fas fa-plus me-2"></i>
-                                    Add New Images
+                                    {{ 'EDIT_STORY.IMAGES_ADD' | translate }}
                                 </h6>
                                 <input type="file" class="form-control" (change)="onFilesSelected($event)" multiple
                                     accept="image/*" />
                                 <small class="form-text text-muted">
-                                    Select one or more images. Supported formats: JPG, PNG, GIF. Max size: 5MB per
-                                    image.
+                                    {{ 'EDIT_STORY.IMAGES_ADD_HELP' | translate }}
                                 </small>
                             </div>
 
@@ -143,8 +146,7 @@
                             <div *ngIf="existingImages.length === 0 && selectedFiles.length === 0"
                                 class="text-center py-3">
                                 <i class="fas fa-images fa-2x text-muted mb-2"></i>
-                                <p class="text-muted">No images added yet. Add some images to make your story more
-                                    engaging!</p>
+                                <p class="text-muted">{{ 'EDIT_STORY.IMAGES_NONE' | translate }}</p>
                             </div>
                         </div>
 
@@ -152,17 +154,17 @@
                         <div class="form-group mb-4">
                             <label for="masjidId" class="form-label">
                                 <i class="fas fa-mosque"></i>
-                                Masjid (Optional)
+                                {{ 'EDIT_STORY.MASJID_LABEL' | translate }} ({{ 'EDIT_STORY.OPTIONAL' | translate }})
                             </label>
                             <select id="masjidId" name="masjidId" class="form-control" [(ngModel)]="story.masjidId">
-                                <option value="">Select a masjid (optional)</option>
+                                <option value="">{{ 'FORM.SELECT_MASJID_OPTIONAL' | translate }}</option>
                                 <option *ngFor="let masjid of masjids" [value]="masjid.id">
                                     {{ masjid.shortName }}
                                 </option>
                             </select>
                             <div class="text-center mt-2" *ngIf="loadingMasjids">
                                 <div class="spinner-border spinner-border-sm text-emerald" role="status">
-                                    <span class="visually-hidden">Loading masjids...</span>
+                                    <span class="visually-hidden">{{ 'FORM.LOADING_MASJIDS' | translate }}</span>
                                 </div>
                             </div>
                         </div>
@@ -171,18 +173,18 @@
                         <div class="form-group mb-4">
                             <label for="languageId" class="form-label">
                                 <i class="fas fa-language"></i>
-                                Language (Optional)
+                                {{ 'FORM.SELECT_LANGUAGE_OPTIONAL' | translate }}
                             </label>
                             <select id="languageId" name="languageId" class="form-control"
                                 [(ngModel)]="story.languageId">
-                                <option value="">Select a language (optional)</option>
+                                <option value="">{{ 'FORM.SELECT_LANGUAGE_OPTIONAL' | translate }}</option>
                                 <option *ngFor="let language of languages" [value]="language.id">
                                     {{ language.name }}
                                 </option>
                             </select>
                             <div class="text-center mt-2" *ngIf="loadingLanguages">
                                 <div class="spinner-border spinner-border-sm text-emerald" role="status">
-                                    <span class="visually-hidden">Loading languages...</span>
+                                    <span class="visually-hidden">{{ 'FORM.LOADING_LANGUAGES' | translate }}</span>
                                 </div>
                             </div>
                         </div>
@@ -192,14 +194,14 @@
                             <button type="button" class="btn btn-outline-secondary me-3" (click)="onCancel()"
                                 [disabled]="loading">
                                 <i class="fas fa-times"></i>
-                                Cancel
+                                {{ 'EDIT_STORY.CANCEL' | translate }}
                             </button>
 
                             <button type="submit" class="btn btn-gold" [disabled]="loading || !storyForm.form.valid">
                                 <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"
                                     role="status"></span>
                                 <i *ngIf="!loading" class="fas fa-save me-2"></i>
-                                {{ loading ? 'Updating...' : 'Update Story' }}
+                                {{ loading ? ('EDIT_STORY.UPDATING' | translate) : ('EDIT_STORY.UPDATE' | translate) }}
                             </button>
                         </div>
 

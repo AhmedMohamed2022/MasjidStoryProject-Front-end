@@ -72,7 +72,7 @@ export class EventDetailsComponent implements OnInit {
         this.loadLikeStatus();
       },
       error: (error) => {
-        this.translate.get('EVENT_DETAILS_ERROR').subscribe((text: string) => {
+        this.translate.get('EVENT_DETAILS.ERROR').subscribe((text: string) => {
           this.error = text;
         });
         this.loading = false;
@@ -99,17 +99,17 @@ export class EventDetailsComponent implements OnInit {
         }
         this.registering = false;
         this.translate
-          .get('EVENT_DETAILS_REGISTRATION_SUCCESS')
+          .get('EVENT_DETAILS.REGISTRATION_SUCCESS')
           .subscribe((text: string) => {
-            alert(text);
+            alert(text || this.translate.instant('COMMON.SUCCESS_GENERIC'));
           });
       },
       error: (error) => {
         this.registering = false;
         this.translate
-          .get('EVENT_DETAILS_REGISTRATION_FAILED')
+          .get('EVENT_DETAILS.REGISTRATION_FAILED')
           .subscribe((text: string) => {
-            alert(text);
+            alert(text || this.translate.instant('COMMON.ERROR_GENERIC'));
           });
         console.error('Registration error:', error);
       },
@@ -125,9 +125,9 @@ export class EventDetailsComponent implements OnInit {
     if (!this.event || this.deleting) return;
 
     this.translate
-      .get('EVENT_DETAILS_DELETE_CONFIRMATION')
+      .get('EVENT_DETAILS.DELETE_CONFIRMATION')
       .subscribe((text: string) => {
-        if (!confirm(text)) {
+        if (!confirm(text || this.translate.instant('COMMON.ERROR_GENERIC'))) {
           return;
         }
       });
@@ -136,17 +136,17 @@ export class EventDetailsComponent implements OnInit {
     this.eventService.deleteEvent(this.event.id).subscribe({
       next: (message) => {
         this.translate
-          .get('EVENT_DETAILS_DELETE_SUCCESS')
+          .get('EVENT_DETAILS.DELETE_SUCCESS')
           .subscribe((text: string) => {
-            alert(text);
+            alert(text || this.translate.instant('COMMON.SUCCESS_GENERIC'));
           });
         this.router.navigate(['/upcoming-events']);
       },
       error: (error) => {
         this.translate
-          .get('EVENT_DETAILS_DELETE_FAILED')
+          .get('EVENT_DETAILS.DELETE_FAILED')
           .subscribe((text: string) => {
-            alert(text);
+            alert(text || this.translate.instant('COMMON.ERROR_GENERIC'));
           });
         console.error('Delete error:', error);
         this.deleting = false;
@@ -175,9 +175,9 @@ export class EventDetailsComponent implements OnInit {
         .writeText(window.location.href)
         .then(() => {
           this.translate
-            .get('EVENT_DETAILS_LINK_COPIED')
+            .get('EVENT_DETAILS.LINK_COPIED')
             .subscribe((text: string) => {
-              alert(text);
+              alert(text || this.translate.instant('COMMON.SUCCESS_GENERIC'));
             });
         })
         .catch((err) => console.error('Failed to copy URL', err));

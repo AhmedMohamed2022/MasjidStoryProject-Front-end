@@ -4,10 +4,10 @@
         <div class="header-content">
             <h1 class="page-title">
                 <i class="icon-users"></i>
-                Create New Community
+                {{ 'COMMUNITY_CREATE.TITLE' | translate }}
             </h1>
             <p class="page-description">
-                Start a discussion group for your masjid community
+                {{ 'COMMUNITY_CREATE.DESCRIPTION' | translate }}
             </p>
         </div>
     </div>
@@ -15,7 +15,7 @@
     <!-- Loading State -->
     <div *ngIf="isLoading" class="loading-container">
         <div class="loading-spinner"></div>
-        <p class="loading-text">Loading form data...</p>
+        <p class="loading-text">{{ 'FORM.LOADING' | translate }}</p>
     </div>
 
     <!-- Error Message -->
@@ -36,10 +36,10 @@
 
             <!-- Title Field -->
             <div class="form-group">
-                <label for="title" class="form-label required">Community Title</label>
+                <label for="title" class="form-label required">{{ 'COMMUNITY_CREATE.TITLE_LABEL' | translate }}</label>
                 <input id="title" type="text" formControlName="title" class="form-input"
-                    [class.error]="isFieldInvalid('title')" placeholder="Enter a descriptive title for your community"
-                    maxlength="200" />
+                    [class.error]="isFieldInvalid('title')"
+                    [placeholder]="'COMMUNITY_CREATE.TITLE_PLACEHOLDER' | translate" maxlength="200" />
                 <div class="field-info">
                     <span class="char-count">
                         {{ communityForm.get('title')?.value?.length || 0 }}/200
@@ -52,10 +52,11 @@
 
             <!-- Content Field -->
             <div class="form-group">
-                <label for="content" class="form-label required">Description</label>
+                <label for="content" class="form-label required">{{ 'COMMUNITY_CREATE.DESCRIPTION_LABEL' | translate
+                    }}</label>
                 <textarea id="content" formControlName="content" class="form-textarea"
                     [class.error]="isFieldInvalid('content')"
-                    placeholder="Describe the purpose and goals of this community..." rows="6"
+                    [placeholder]="'COMMUNITY_CREATE.DESCRIPTION_PLACEHOLDER' | translate" rows="6"
                     maxlength="2000"></textarea>
                 <div class="field-info">
                     <span class="char-count">
@@ -69,17 +70,18 @@
 
             <!-- Masjid Selection -->
             <div class="form-group">
-                <label for="masjidId" class="form-label required">Select Masjid</label>
+                <label for="masjidId" class="form-label required">{{ 'FORM.SELECT_MASJID_OPTIONAL' | translate
+                    }}</label>
                 <select id="masjidId" formControlName="masjidId" class="form-select"
                     [class.error]="isFieldInvalid('masjidId')" [disabled]="preselectedMasjidId !== null">
-                    <option value="">Choose a masjid...</option>
+                    <option value="">{{ 'FORM.SELECT_MASJID_OPTIONAL' | translate }}</option>
                     <option *ngFor="let masjid of masjids" [value]="masjid.id">
                         {{ masjid.shortName }} - {{ masjid.cityName }}, {{ masjid.countryName }}
                     </option>
                 </select>
                 <div *ngIf="preselectedMasjidId" class="field-hint">
                     <i class="icon-info"></i>
-                    This community will be created for the selected masjid
+                    {{ 'COMMUNITY_CREATE.PRESELECTED_HINT' | translate }}
                 </div>
                 <div *ngIf="isFieldInvalid('masjidId')" class="field-error">
                     {{ getFieldError('masjidId') }}
@@ -88,17 +90,18 @@
 
             <!-- Language Selection -->
             <div class="form-group">
-                <label for="languageId" class="form-label required">Language</label>
+                <label for="languageId" class="form-label required">{{ 'FORM.SELECT_LANGUAGE_OPTIONAL' | translate
+                    }}</label>
                 <select id="languageId" formControlName="languageId" class="form-select"
                     [class.error]="isFieldInvalid('languageId')">
-                    <option value="">Select language...</option>
+                    <option value="">{{ 'FORM.SELECT_LANGUAGE_OPTIONAL' | translate }}</option>
                     <option *ngFor="let language of languages" [value]="language.id">
                         {{ language.name }} ({{ language.code.toUpperCase() }})
                     </option>
                 </select>
                 <div class="field-hint">
                     <i class="icon-globe"></i>
-                    Choose the primary language for this community
+                    {{ 'COMMUNITY_CREATE.LANGUAGE_HINT' | translate }}
                 </div>
                 <div *ngIf="isFieldInvalid('languageId')" class="field-error">
                     {{ getFieldError('languageId') }}
@@ -109,17 +112,17 @@
             <div class="form-actions">
                 <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="isSubmitting">
                     <i class="icon-x"></i>
-                    Cancel
+                    {{ 'FORM.CANCEL' | translate }}
                 </button>
 
                 <button type="submit" class="btn btn-primary" [disabled]="communityForm.invalid || isSubmitting">
                     <span *ngIf="!isSubmitting">
                         <i class="icon-plus"></i>
-                        Create Community
+                        {{ 'COMMUNITY_CREATE.SUBMIT' | translate }}
                     </span>
                     <span *ngIf="isSubmitting" class="submitting-state">
                         <div class="btn-spinner"></div>
-                        Creating...
+                        {{ 'FORM.CREATING' | translate }}
                     </span>
                 </button>
             </div>
@@ -131,14 +134,14 @@
         <div class="guidelines-card">
             <h3 class="guidelines-title">
                 <i class="icon-lightbulb"></i>
-                Community Guidelines
+                {{ 'COMMUNITY_CREATE.GUIDELINES_TITLE' | translate }}
             </h3>
             <ul class="guidelines-list">
-                <li>Choose a clear, descriptive title that reflects your community's purpose</li>
-                <li>Provide detailed information about what discussions will take place</li>
-                <li>Be respectful and welcoming to encourage participation</li>
-                <li>Consider your target audience when selecting the language</li>
-                <li>Make sure your community adds value to the masjid's online presence</li>
+                <li>{{ 'COMMUNITY_CREATE.GUIDELINES_TITLE_CLEAR' | translate }}</li>
+                <li>{{ 'COMMUNITY_CREATE.GUIDELINES_DETAILED_INFO' | translate }}</li>
+                <li>{{ 'COMMUNITY_CREATE.GUIDELINES_RESPECTFUL' | translate }}</li>
+                <li>{{ 'COMMUNITY_CREATE.GUIDELINES_LANGUAGE' | translate }}</li>
+                <li>{{ 'COMMUNITY_CREATE.GUIDELINES_VALUE' | translate }}</li>
             </ul>
         </div>
     </div>

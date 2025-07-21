@@ -6,6 +6,9 @@ import {
   FormGroup,
   Validators,
   ReactiveFormsModule,
+  FormArray,
+  AbstractControl,
+  ValidatorFn,
 } from '@angular/forms';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
@@ -31,6 +34,7 @@ import {
   MasjidViewModel,
   CountryViewModel,
   CityViewModel,
+  MasjidContentViewModel,
 } from '../../Core/Models/masjid.model';
 import { StoryViewModel } from '../../Core/Models/story.model';
 import {
@@ -42,6 +46,19 @@ import {
   CommunityCreateViewModel,
 } from '../../Core/Models/community.model';
 import { environment } from '../../Core/environments/environment';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+
+// Custom validator: at least one name must be filled
+function atLeastOneNameValidator(): ValidatorFn {
+  return (formArray: AbstractControl) => {
+    const arr = formArray as FormArray;
+    const hasName = arr.controls.some(
+      (group: AbstractControl) =>
+        group.get('name')?.value && group.get('name')?.value.trim() !== ''
+    );
+    return hasName ? null : { atLeastOneName: true };
+  };
+}
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -62,6 +79,7 @@ import { environment } from '../../Core/environments/environment';
     MatDatepickerModule,
     MatNativeDateModule,
     MapPickerComponent,
+    TranslateModule,
   ],
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css'],
@@ -124,6 +142,11 @@ export class AdminDashboardComponent implements OnInit {
   editingMasjid: MasjidViewModel | null = null;
   selectedMediaToDelete: number[] = [];
 
+  // Add a getter for the contents FormArray
+  get contentsArray(): FormArray {
+    return this.masjidForm.get('contents') as FormArray;
+  }
+
   displayedColumns: string[] = ['title', 'author', 'date', 'actions'];
 
   constructor(
@@ -136,13 +159,19 @@ export class AdminDashboardComponent implements OnInit {
     private communityService: CommunityService,
     private snackBar: MatSnackBar,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private translate: TranslateService
   ) {
     this.masjidForm = this.fb.group({
-      shortName: ['', Validators.required],
+      contents: this.fb.array(
+        [
+          this.fb.group({ languageId: 1, name: '', description: '' }), // English
+          this.fb.group({ languageId: 2, name: '', description: '' }), // Arabic
+        ],
+        { validators: atLeastOneNameValidator() }
+      ),
       address: [''],
       archStyle: [''],
-      description: [''],
       latitude: [null],
       longitude: [null],
       countryId: [null, Validators.required],
@@ -233,31 +262,52 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   async approveStory(story: StoryViewModel) {
-    if (!confirm(`Approve story "${story.title}"?`)) return;
+    if (
+      !this.translate.instant('ADMIN_DASHBOARD.STORIES_APPROVE_CONFIRM', {
+        title: story.title,
+      })
+    )
+      return;
     try {
       await this.storyService.approveStory(story.id);
-      this.snackBar.open('Story approved!', 'Close', { duration: 2000 });
+      this.snackBar.open(
+        this.translate.instant('ADMIN_DASHBOARD.STORY_APPROVED'),
+        this.translate.instant('COMMON.CLOSE'),
+        { duration: 2000 }
+      );
       if (this.selectedTab === 0) this.loadPendingStories();
       if (this.selectedTab === 1) this.loadAllStories();
     } catch (err) {
-      this.snackBar.open('Failed to approve story.', 'Close', {
-        duration: 3000,
-      });
+      this.snackBar.open(
+        this.translate.instant('ADMIN_DASHBOARD.STORY_APPROVE_FAILED'),
+        this.translate.instant('COMMON.CLOSE'),
+        {
+          duration: 3000,
+        }
+      );
     }
   }
 
   async deleteStory(story: StoryViewModel) {
     try {
       await this.storyService.deleteStory(story.id);
-      this.snackBar.open('Story deleted successfully', 'Close', {
-        duration: 3000,
-      });
+      this.snackBar.open(
+        this.translate.instant('ADMIN_DASHBOARD.STORY_DELETED'),
+        this.translate.instant('COMMON.CLOSE'),
+        {
+          duration: 3000,
+        }
+      );
       this.loadPendingStories();
       this.loadAllStories();
     } catch (error) {
-      this.snackBar.open('Failed to delete story', 'Close', {
-        duration: 3000,
-      });
+      this.snackBar.open(
+        this.translate.instant('ADMIN_DASHBOARD.STORY_DELETE_FAILED'),
+        this.translate.instant('COMMON.CLOSE'),
+        {
+          duration: 3000,
+        }
+      );
     }
   }
 
@@ -308,7 +358,13 @@ export class AdminDashboardComponent implements OnInit {
   async bulkApproveStories() {
     if (this.selectedStories.length === 0) return;
 
-    if (confirm(`Approve ${this.selectedStories.length} stories?`)) {
+    if (
+      confirm(
+        this.translate.instant('ADMIN_DASHBOARD.STORIES_BULK_APPROVE_CONFIRM', {
+          count: this.selectedStories.length,
+        })
+      )
+    ) {
       try {
         const promises = this.selectedStories.map((storyId) =>
           this.storyService.approveStory(storyId)
@@ -316,8 +372,10 @@ export class AdminDashboardComponent implements OnInit {
         await Promise.all(promises);
 
         this.snackBar.open(
-          `${this.selectedStories.length} stories approved successfully`,
-          'Close',
+          this.translate.instant('ADMIN_DASHBOARD.STORIES_BULK_APPROVED', {
+            count: this.selectedStories.length,
+          }),
+          this.translate.instant('COMMON.CLOSE'),
           {
             duration: 3000,
           }
@@ -328,9 +386,13 @@ export class AdminDashboardComponent implements OnInit {
         this.loadPendingStories();
         this.loadAllStories();
       } catch (error) {
-        this.snackBar.open('Failed to approve some stories', 'Close', {
-          duration: 3000,
-        });
+        this.snackBar.open(
+          this.translate.instant('ADMIN_DASHBOARD.STORIES_BULK_APPROVE_FAILED'),
+          this.translate.instant('COMMON.CLOSE'),
+          {
+            duration: 3000,
+          }
+        );
       }
     }
   }
@@ -340,7 +402,9 @@ export class AdminDashboardComponent implements OnInit {
 
     if (
       confirm(
-        `Delete ${this.selectedStories.length} stories? This cannot be undone.`
+        this.translate.instant('ADMIN_DASHBOARD.STORIES_BULK_DELETE_CONFIRM', {
+          count: this.selectedStories.length,
+        })
       )
     ) {
       try {
@@ -350,8 +414,10 @@ export class AdminDashboardComponent implements OnInit {
         await Promise.all(promises);
 
         this.snackBar.open(
-          `${this.selectedStories.length} stories deleted successfully`,
-          'Close',
+          this.translate.instant('ADMIN_DASHBOARD.STORIES_BULK_DELETED', {
+            count: this.selectedStories.length,
+          }),
+          this.translate.instant('COMMON.CLOSE'),
           {
             duration: 3000,
           }
@@ -362,9 +428,13 @@ export class AdminDashboardComponent implements OnInit {
         this.loadPendingStories();
         this.loadAllStories();
       } catch (error) {
-        this.snackBar.open('Failed to delete some stories', 'Close', {
-          duration: 3000,
-        });
+        this.snackBar.open(
+          this.translate.instant('ADMIN_DASHBOARD.STORIES_BULK_DELETE_FAILED'),
+          this.translate.instant('COMMON.CLOSE'),
+          {
+            duration: 3000,
+          }
+        );
       }
     }
   }
@@ -656,8 +726,10 @@ export class AdminDashboardComponent implements OnInit {
       // Show feedback to user
       if (invalidFiles.length > 0) {
         this.snackBar.open(
-          `Some files were too large (max 10MB): ${invalidFiles.join(', ')}`,
-          'Close',
+          this.translate.instant('ADMIN_DASHBOARD.FILE_TOO_LARGE', {
+            files: invalidFiles.join(', '),
+          }),
+          this.translate.instant('COMMON.CLOSE'),
           { duration: 5000 }
         );
       }
@@ -665,10 +737,11 @@ export class AdminDashboardComponent implements OnInit {
       if (validFiles.length > 0) {
         const totalSize = validFiles.reduce((sum, file) => sum + file.size, 0);
         this.snackBar.open(
-          `${validFiles.length} file(s) selected (${this.formatFileSize(
-            totalSize
-          )})`,
-          'Close',
+          this.translate.instant('ADMIN_DASHBOARD.FILES_SELECTED', {
+            count: validFiles.length,
+            size: this.formatFileSize(totalSize),
+          }),
+          this.translate.instant('COMMON.CLOSE'),
           { duration: 3000 }
         );
       }
@@ -687,6 +760,16 @@ export class AdminDashboardComponent implements OnInit {
     this.showCreateForm = true;
     this.showEditForm = false;
     this.masjidForm.reset();
+    this.masjidForm.setControl(
+      'contents',
+      this.fb.array(
+        [
+          this.fb.group({ languageId: 1, name: '', description: '' }),
+          this.fb.group({ languageId: 2, name: '', description: '' }),
+        ],
+        { validators: atLeastOneNameValidator() }
+      )
+    );
     this.selectedFiles = [];
   }
 
@@ -696,52 +779,48 @@ export class AdminDashboardComponent implements OnInit {
     this.showCreateForm = false;
     this.selectedFiles = [];
     this.selectedMediaToDelete = [];
-
-    // Get the full masjid details including description
-    this.masjidService.getMasjidDetails(masjid.id).subscribe({
-      next: (response) => {
-        this.masjidForm.patchValue({
-          shortName: response.localizedName || masjid.shortName,
-          address: masjid.address,
-          archStyle: masjid.archStyle,
-          description: response.localizedDescription || '',
-          latitude: masjid.latitude,
-          longitude: masjid.longitude,
-          countryId: masjid.countryId,
-          cityId: masjid.cityId,
-          yearOfEstablishment: masjid.yearOfEstablishment,
-        });
-        this.loadCities();
-      },
-      error: (error) => {
-        console.error('Error loading masjid details:', error);
-        // Fallback to basic data if API call fails
-        this.masjidForm.patchValue({
-          shortName: masjid.shortName,
-          address: masjid.address,
-          archStyle: masjid.archStyle,
-          description: '',
-          latitude: masjid.latitude,
-          longitude: masjid.longitude,
-          countryId: masjid.countryId,
-          cityId: masjid.cityId,
-          yearOfEstablishment: masjid.yearOfEstablishment,
-        });
-        this.loadCities();
-      },
+    // Patch per-language fields
+    const contents = masjid.contents || [];
+    const en = contents.find((c) => c.languageId === 1) || {
+      languageId: 1,
+      name: '',
+      description: '',
+    };
+    const ar = contents.find((c) => c.languageId === 2) || {
+      languageId: 2,
+      name: '',
+      description: '',
+    };
+    this.masjidForm.patchValue({
+      contents: [en, ar],
+      address: masjid.address,
+      archStyle: masjid.archStyle,
+      latitude: masjid.latitude,
+      longitude: masjid.longitude,
+      countryId: masjid.countryId,
+      cityId: masjid.cityId,
+      yearOfEstablishment: masjid.yearOfEstablishment,
     });
+    this.loadCities();
   }
 
   onSubmit(): void {
     if (this.masjidForm.valid) {
       this.isSubmitting = true;
       const formData = this.masjidForm.value;
-
+      // Prepare contents array for backend
+      formData.contents = formData.contents.map((c: any) => ({
+        languageId: c.languageId,
+        name: c.name,
+        description: c.description,
+      }));
       if (this.showCreateForm) {
         this.createMasjid(formData);
       } else if (this.showEditForm) {
         this.updateMasjid(formData);
       }
+    } else {
+      this.masjidForm.get('contents')?.markAsTouched();
     }
   }
 
@@ -756,6 +835,16 @@ export class AdminDashboardComponent implements OnInit {
         });
         this.showCreateForm = false;
         this.masjidForm.reset();
+        this.masjidForm.setControl(
+          'contents',
+          this.fb.array(
+            [
+              this.fb.group({ languageId: 1, name: '', description: '' }),
+              this.fb.group({ languageId: 2, name: '', description: '' }),
+            ],
+            { validators: atLeastOneNameValidator() }
+          )
+        );
         this.selectedFiles = [];
         this.loadMasjids();
         this.isSubmitting = false;
@@ -792,6 +881,16 @@ export class AdminDashboardComponent implements OnInit {
           this.showEditForm = false;
           this.editingMasjid = null;
           this.masjidForm.reset();
+          this.masjidForm.setControl(
+            'contents',
+            this.fb.array(
+              [
+                this.fb.group({ languageId: 1, name: '', description: '' }),
+                this.fb.group({ languageId: 2, name: '', description: '' }),
+              ],
+              { validators: atLeastOneNameValidator() }
+            )
+          );
           this.selectedFiles = [];
           this.selectedMediaToDelete = [];
           this.loadMasjids();
@@ -811,20 +910,32 @@ export class AdminDashboardComponent implements OnInit {
 
   deleteMasjid(masjid: MasjidViewModel): void {
     if (
-      confirm(`Delete masjid "${masjid.shortName}"? This cannot be undone.`)
+      confirm(
+        this.translate.instant('ADMIN_DASHBOARD.MASJID_DELETE_CONFIRM', {
+          name: masjid.shortName,
+        })
+      )
     ) {
       this.masjidService.deleteMasjid(masjid.id).subscribe({
         next: () => {
-          this.snackBar.open('Masjid deleted successfully!', 'Close', {
-            duration: 2000,
-          });
+          this.snackBar.open(
+            this.translate.instant('ADMIN_DASHBOARD.MASJID_DELETED'),
+            this.translate.instant('COMMON.CLOSE'),
+            {
+              duration: 2000,
+            }
+          );
           this.loadMasjids();
         },
         error: (error) => {
           console.error('Error deleting masjid:', error);
-          this.snackBar.open('Failed to delete masjid.', 'Close', {
-            duration: 3000,
-          });
+          this.snackBar.open(
+            this.translate.instant('ADMIN_DASHBOARD.MASJID_DELETE_FAILED'),
+            this.translate.instant('COMMON.CLOSE'),
+            {
+              duration: 3000,
+            }
+          );
         },
       });
     }
@@ -845,6 +956,16 @@ export class AdminDashboardComponent implements OnInit {
     this.showEditForm = false;
     this.editingMasjid = null;
     this.masjidForm.reset();
+    this.masjidForm.setControl(
+      'contents',
+      this.fb.array(
+        [
+          this.fb.group({ languageId: 1, name: '', description: '' }),
+          this.fb.group({ languageId: 2, name: '', description: '' }),
+        ],
+        { validators: atLeastOneNameValidator() }
+      )
+    );
     this.selectedFiles = [];
     this.selectedMediaToDelete = [];
   }
@@ -930,9 +1051,13 @@ export class AdminDashboardComponent implements OnInit {
   createEvent(formData: EventCreateViewModel): void {
     this.eventService.createEvent(formData).subscribe({
       next: (response) => {
-        this.snackBar.open('Event created successfully!', 'Close', {
-          duration: 2000,
-        });
+        this.snackBar.open(
+          this.translate.instant('ADMIN_DASHBOARD.EVENT_CREATED'),
+          this.translate.instant('COMMON.CLOSE'),
+          {
+            duration: 2000,
+          }
+        );
         this.showCreateEventForm = false;
         this.eventForm.reset();
         this.loadEvents();
@@ -940,9 +1065,13 @@ export class AdminDashboardComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error creating event:', error);
-        this.snackBar.open('Failed to create event.', 'Close', {
-          duration: 3000,
-        });
+        this.snackBar.open(
+          this.translate.instant('ADMIN_DASHBOARD.EVENT_CREATE_FAILED'),
+          this.translate.instant('COMMON.CLOSE'),
+          {
+            duration: 3000,
+          }
+        );
         this.isSubmitting = false;
       },
     });
@@ -953,9 +1082,13 @@ export class AdminDashboardComponent implements OnInit {
 
     this.eventService.updateEvent(this.editingEvent.id, formData).subscribe({
       next: (response) => {
-        this.snackBar.open('Event updated successfully!', 'Close', {
-          duration: 2000,
-        });
+        this.snackBar.open(
+          this.translate.instant('ADMIN_DASHBOARD.EVENT_UPDATED'),
+          this.translate.instant('COMMON.CLOSE'),
+          {
+            duration: 2000,
+          }
+        );
         this.showEditEventForm = false;
         this.editingEvent = null;
         this.eventForm.reset();
@@ -964,28 +1097,46 @@ export class AdminDashboardComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error updating event:', error);
-        this.snackBar.open('Failed to update event.', 'Close', {
-          duration: 3000,
-        });
+        this.snackBar.open(
+          this.translate.instant('ADMIN_DASHBOARD.EVENT_UPDATE_FAILED'),
+          this.translate.instant('COMMON.CLOSE'),
+          {
+            duration: 3000,
+          }
+        );
         this.isSubmitting = false;
       },
     });
   }
 
   deleteEvent(event: EventViewModel): void {
-    if (confirm(`Delete event "${event.title}"? This cannot be undone.`)) {
+    if (
+      confirm(
+        this.translate.instant('ADMIN_DASHBOARD.EVENT_DELETE_CONFIRM', {
+          title: event.title,
+        })
+      )
+    ) {
       this.eventService.deleteEvent(event.id).subscribe({
         next: () => {
-          this.snackBar.open('Event deleted successfully!', 'Close', {
-            duration: 2000,
-          });
+          this.snackBar.open(
+            this.translate.instant('ADMIN_DASHBOARD.EVENT_DELETED'),
+            this.translate.instant('COMMON.CLOSE'),
+            {
+              duration: 2000,
+            }
+          );
           this.loadEvents();
         },
         error: (error) => {
           console.error('Error deleting event:', error);
-          this.snackBar.open('Failed to delete event.', 'Close', {
-            duration: 3000,
-          });
+          this.snackBar.open(
+            this.translate.instant('ADMIN_DASHBOARD.EVENT_DELETE_FAILED'),
+            this.translate.instant('COMMON.CLOSE'),
+            {
+              duration: 3000,
+            }
+          );
         },
       });
     }
@@ -1064,9 +1215,13 @@ export class AdminDashboardComponent implements OnInit {
   createCommunity(formData: CommunityCreateViewModel): void {
     this.communityService.createCommunity(formData).subscribe({
       next: (response) => {
-        this.snackBar.open('Community created successfully!', 'Close', {
-          duration: 2000,
-        });
+        this.snackBar.open(
+          this.translate.instant('ADMIN_DASHBOARD.COMMUNITY_CREATED'),
+          this.translate.instant('COMMON.CLOSE'),
+          {
+            duration: 2000,
+          }
+        );
         this.showCreateCommunityForm = false;
         this.communityForm.reset();
         this.loadCommunities();
@@ -1074,9 +1229,13 @@ export class AdminDashboardComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error creating community:', error);
-        this.snackBar.open('Failed to create community.', 'Close', {
-          duration: 3000,
-        });
+        this.snackBar.open(
+          this.translate.instant('ADMIN_DASHBOARD.COMMUNITY_CREATE_FAILED'),
+          this.translate.instant('COMMON.CLOSE'),
+          {
+            duration: 3000,
+          }
+        );
         this.isSubmitting = false;
       },
     });
@@ -1089,9 +1248,13 @@ export class AdminDashboardComponent implements OnInit {
       .updateCommunity(this.editingCommunity.id, formData)
       .subscribe({
         next: (response) => {
-          this.snackBar.open('Community updated successfully!', 'Close', {
-            duration: 2000,
-          });
+          this.snackBar.open(
+            this.translate.instant('ADMIN_DASHBOARD.COMMUNITY_UPDATED'),
+            this.translate.instant('COMMON.CLOSE'),
+            {
+              duration: 2000,
+            }
+          );
           this.showEditCommunityForm = false;
           this.editingCommunity = null;
           this.communityForm.reset();
@@ -1100,9 +1263,13 @@ export class AdminDashboardComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error updating community:', error);
-          this.snackBar.open('Failed to update community.', 'Close', {
-            duration: 3000,
-          });
+          this.snackBar.open(
+            this.translate.instant('ADMIN_DASHBOARD.COMMUNITY_UPDATE_FAILED'),
+            this.translate.instant('COMMON.CLOSE'),
+            {
+              duration: 3000,
+            }
+          );
           this.isSubmitting = false;
         },
       });
@@ -1110,20 +1277,32 @@ export class AdminDashboardComponent implements OnInit {
 
   deleteCommunity(community: CommunityViewModel): void {
     if (
-      confirm(`Delete community "${community.title}"? This cannot be undone.`)
+      confirm(
+        this.translate.instant('ADMIN_DASHBOARD.COMMUNITY_DELETE_CONFIRM', {
+          name: community.title,
+        })
+      )
     ) {
       this.communityService.deleteCommunity(community.id).subscribe({
         next: () => {
-          this.snackBar.open('Community deleted successfully!', 'Close', {
-            duration: 2000,
-          });
+          this.snackBar.open(
+            this.translate.instant('ADMIN_DASHBOARD.COMMUNITY_DELETED'),
+            this.translate.instant('COMMON.CLOSE'),
+            {
+              duration: 2000,
+            }
+          );
           this.loadCommunities();
         },
         error: (error) => {
           console.error('Error deleting community:', error);
-          this.snackBar.open('Failed to delete community.', 'Close', {
-            duration: 3000,
-          });
+          this.snackBar.open(
+            this.translate.instant('ADMIN_DASHBOARD.COMMUNITY_DELETE_FAILED'),
+            this.translate.instant('COMMON.CLOSE'),
+            {
+              duration: 3000,
+            }
+          );
         },
       });
     }
@@ -1138,14 +1317,13 @@ export class AdminDashboardComponent implements OnInit {
 
   // Helper method to convert language code to language ID
   private getLanguageIdFromCode(languageCode: string): number {
-    // Simple mapping - you might want to load languages from a service
     switch (languageCode.toLowerCase()) {
       case 'ar':
-        return 1; // Arabic
+        return 2; // Arabic
       case 'en':
-        return 2; // English
+        return 1; // English
       default:
-        return 2; // Default to English
+        return 1; // Default to English
     }
   }
 

@@ -4,10 +4,10 @@
       <div class="col-lg-4 mb-4">
         <h5 class="footer-title">
           <i class="fas fa-mosque me-2"></i>
-          MasjidStory
+          {{ 'BRAND_NAME' | translate }}
         </h5>
         <p class="footer-description">
-          {{ 'FOOTER_DESCRIPTION' | translate }}
+          {{ 'FOOTER.DESCRIPTION' | translate }}
         </p>
         <div class="social-links">
           <a href="#" class="social-link" aria-label="Facebook">
@@ -26,36 +26,36 @@
       </div>
 
       <div class="col-lg-2 col-md-6 mb-4">
-        <h6 class="footer-subtitle">{{ 'FOOTER_EXPLORE' | translate }}</h6>
+        <h6 class="footer-subtitle">{{ 'FOOTER.EXPLORE' | translate }}</h6>
         <ul class="footer-links">
-          <li><a routerLink="/home">{{ 'HOME' | translate }}</a></li>
-          <li><a routerLink="/search-masjid">{{ 'MASJIDS' | translate }}</a></li>
-          <li><a routerLink="/stories">{{ 'STORIES' | translate }}</a></li>
-          <li><a routerLink="/upcoming-events">{{ 'EVENTS' | translate }}</a></li>
+          <li><a routerLink="/home">{{ 'NAV.HOME' | translate }}</a></li>
+          <li><a routerLink="/search-masjid">{{ 'NAV.MASJIDS' | translate }}</a></li>
+          <li><a routerLink="/stories">{{ 'NAV.STORIES' | translate }}</a></li>
+          <li><a routerLink="/upcoming-events">{{ 'NAV.EVENTS' | translate }}</a></li>
         </ul>
       </div>
 
       <div class="col-lg-2 col-md-6 mb-4">
-        <h6 class="footer-subtitle">{{ 'FOOTER_COMMUNITY' | translate }}</h6>
+        <h6 class="footer-subtitle">{{ 'FOOTER.COMMUNITY' | translate }}</h6>
         <ul class="footer-links">
-          <li><a routerLink="/communities">{{ 'COMMUNITIES' | translate }}</a></li>
-          <li><a routerLink="/user-profile">{{ 'PROFILE' | translate }}</a></li>
-          <li><a routerLink="/create-story">{{ 'FOOTER_SHARE_STORY' | translate }}</a></li>
-          <li><a routerLink="/create-event">{{ 'FOOTER_CREATE_EVENT' | translate }}</a></li>
+          <li><a routerLink="/communities">{{ 'NAV.COMMUNITIES' | translate }}</a></li>
+          <li><a routerLink="/user-profile">{{ 'NAV.PROFILE' | translate }}</a></li>
+          <li><a routerLink="/create-story">{{ 'FOOTER.SHARE_STORY' | translate }}</a></li>
+          <li><a routerLink="/create-event">{{ 'FOOTER.CREATE_EVENT' | translate }}</a></li>
         </ul>
       </div>
 
       <div class="col-lg-4 mb-4">
-        <h6 class="footer-subtitle">{{ 'FOOTER_NEWSLETTER' | translate }}</h6>
+        <h6 class="footer-subtitle">{{ 'FOOTER.NEWSLETTER' | translate }}</h6>
         <p class="footer-note mb-3">
-          {{ 'FOOTER_NEWSLETTER_NOTE' | translate }}
+          {{ 'FOOTER.NEWSLETTER_NOTE' | translate }}
         </p>
         <div class="newsletter-form">
           <div class="input-group">
             <input type="email" class="form-control newsletter-input"
-              [placeholder]="'FOOTER_EMAIL_PLACEHOLDER' | translate" aria-label="Email address">
+              [placeholder]="'FOOTER.EMAIL_PLACEHOLDER' | translate" aria-label="Email address">
             <button class="btn btn-gold" type="button">
-              {{ 'FOOTER_SUBSCRIBE' | translate }}
+              {{ 'FOOTER.SUBSCRIBE' | translate }}
             </button>
           </div>
         </div>
@@ -65,13 +65,13 @@
     <div class="row border-top border-secondary pt-4">
       <div class="col-md-6">
         <p class="copyright">
-          &copy; {{ currentYear }} MasjidStory. {{ 'FOOTER_COPYRIGHT' | translate }}
+          &copy; {{ currentYear }} {{ 'COPYRIGHT' | translate }}
         </p>
       </div>
       <div class="col-md-6 text-md-end">
-        <a href="#" class="footer-legal">{{ 'FOOTER_PRIVACY_POLICY' | translate }}</a>
+        <a href="#" class="footer-legal">{{ 'FOOTER.PRIVACY_POLICY' | translate }}</a>
         <span class="mx-2 text-muted">|</span>
-        <a href="#" class="footer-legal">{{ 'FOOTER_TERMS_OF_SERVICE' | translate }}</a>
+        <a href="#" class="footer-legal">{{ 'FOOTER.TERMS_OF_SERVICE' | translate }}</a>
       </div>
     </div>
   </div>

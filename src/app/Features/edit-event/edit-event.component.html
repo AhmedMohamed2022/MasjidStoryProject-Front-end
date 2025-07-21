@@ -74,7 +74,7 @@
                                 Masjid (Optional)
                             </label>
                             <select id="masjidId" name="masjidId" class="form-control" [(ngModel)]="event.masjidId">
-                                <option value="">Select a masjid (optional)</option>
+                                <option value="">{{ 'FORM.SELECT_MASJID_OPTIONAL' | translate }}</option>
                                 <option *ngFor="let masjid of masjids" [value]="masjid.id">
                                     {{ masjid.shortName }}
                                 </option>
@@ -85,11 +85,11 @@
                         <div class="form-group mb-4">
                             <label for="languageId" class="form-label">
                                 <i class="fas fa-language"></i>
-                                Language (Optional)
+                                {{ 'FORM.SELECT_LANGUAGE_OPTIONAL' | translate }}
                             </label>
                             <select id="languageId" name="languageId" class="form-control"
                                 [(ngModel)]="event.languageId">
-                                <option value="">Select a language (optional)</option>
+                                <option value="">{{ 'FORM.SELECT_LANGUAGE_OPTIONAL' | translate }}</option>
                                 <option *ngFor="let language of languages" [value]="language.id">
                                     {{ language.name }}
                                 </option>

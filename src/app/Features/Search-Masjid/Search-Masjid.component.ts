@@ -7,6 +7,7 @@ import {
   MasjidViewModel,
   CountryViewModel,
   CityViewModel,
+  getTranslatedMasjidName,
 } from '../../Core/Models/masjid.model';
 import { MasjidService } from '../../Core/Services/masjid.service';
 import { CountryService } from '../../Core/Services/country.service';
@@ -46,8 +47,8 @@ export class SearchMasjidComponent implements OnInit {
     private masjidService: MasjidService,
     private countryService: CountryService,
     private cityService: CityService,
-    private router: Router,
-    private translate: TranslateService
+    public router: Router,
+    public translate: TranslateService // make public for template
   ) {}
 
   ngOnInit(): void {
@@ -185,9 +186,14 @@ export class SearchMasjidComponent implements OnInit {
   }
 
   applySorting(): void {
+    const lang = this.translate.currentLang || 'en';
     switch (this.sortBy) {
       case 'name':
-        this.masjids.sort((a, b) => a.shortName.localeCompare(b.shortName));
+        this.masjids.sort((a, b) =>
+          getTranslatedMasjidName(a.contents, lang).localeCompare(
+            getTranslatedMasjidName(b.contents, lang)
+          )
+        );
         break;
       case 'country':
         this.masjids.sort((a, b) => a.countryName.localeCompare(b.countryName));
@@ -203,7 +209,11 @@ export class SearchMasjidComponent implements OnInit {
         });
         break;
       default:
-        this.masjids.sort((a, b) => a.shortName.localeCompare(b.shortName));
+        this.masjids.sort((a, b) =>
+          getTranslatedMasjidName(a.contents, lang).localeCompare(
+            getTranslatedMasjidName(b.contents, lang)
+          )
+        );
     }
   }
 
@@ -214,4 +224,7 @@ export class SearchMasjidComponent implements OnInit {
   navigateToMasjidEvents(masjidId: number): void {
     this.router.navigate(['/masjid', masjidId], { fragment: 'events' });
   }
+
+  // Expose the helper for template
+  public getTranslatedMasjidName = getTranslatedMasjidName;
 }

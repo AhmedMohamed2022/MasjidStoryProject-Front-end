@@ -13,13 +13,14 @@ import { CommunityCreateViewModel } from '../../Core/Models/community.model';
 import { LanguageViewModel } from '../../Core/Services/language.service';
 import { MasjidViewModel } from '../../Core/Models/masjid.model';
 import { CommonModule } from '@angular/common';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-create-community',
   templateUrl: './community-create.component.html',
   styleUrls: ['./community-create.component.css'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
 })
 export class CreateCommunityComponent implements OnInit {
   communityForm: FormGroup;
@@ -40,7 +41,8 @@ export class CreateCommunityComponent implements OnInit {
     private languageService: LanguageService,
     private masjidService: MasjidService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private translate: TranslateService
   ) {
     this.communityForm = this.fb.group({
       title: [
@@ -75,6 +77,11 @@ export class CreateCommunityComponent implements OnInit {
     });
 
     this.loadFormData();
+
+    // Subscribe to language changes
+    this.translate.onLangChange.subscribe(() => {
+      // Refresh any dynamic content if needed
+    });
   }
 
   loadFormData(): void {
@@ -125,7 +132,11 @@ export class CreateCommunityComponent implements OnInit {
 
     this.communityService.createCommunity(formData).subscribe({
       next: (response) => {
-        this.successMessage = response || 'Community created successfully!';
+        this.translate
+          .get('COMMUNITY_CREATE.SUCCESS')
+          .subscribe((text: string) => {
+            this.successMessage = text;
+          });
         this.isSubmitting = false;
 
         // Redirect after a short delay
@@ -139,8 +150,11 @@ export class CreateCommunityComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error creating community:', error);
-        this.errorMessage =
-          error.message || 'Failed to create community. Please try again.';
+        this.translate
+          .get('COMMUNITY_CREATE.ERROR')
+          .subscribe((text: string) => {
+            this.errorMessage = text;
+          });
         this.isSubmitting = false;
       },
     });
@@ -163,7 +177,35 @@ export class CreateCommunityComponent implements OnInit {
     const field = this.communityForm.get(fieldName);
     if (field && field.errors && (field.dirty || field.touched)) {
       if (field.errors['required']) {
-        return `${this.getFieldDisplayName(fieldName)} is required`;
+        if (fieldName === 'title') {
+          let errorMsg = '';
+          this.translate
+            .get('COMMUNITY_CREATE.TITLE_REQUIRED')
+            .subscribe((text: string) => (errorMsg = text));
+          return errorMsg;
+        }
+        if (fieldName === 'content') {
+          let errorMsg = '';
+          this.translate
+            .get('COMMUNITY_CREATE.DESCRIPTION_REQUIRED')
+            .subscribe((text: string) => (errorMsg = text));
+          return errorMsg;
+        }
+        if (fieldName === 'masjidId') {
+          let errorMsg = '';
+          this.translate
+            .get('COMMUNITY_CREATE.MASJID_REQUIRED')
+            .subscribe((text: string) => (errorMsg = text));
+          return errorMsg;
+        }
+        if (fieldName === 'languageId') {
+          let errorMsg = '';
+          this.translate
+            .get('COMMUNITY_CREATE.LANGUAGE_REQUIRED')
+            .subscribe((text: string) => (errorMsg = text));
+          return errorMsg;
+        }
+        return this.getFieldDisplayName(fieldName) + ' is required';
       }
       if (field.errors['minlength']) {
         return `${this.getFieldDisplayName(fieldName)} must be at least ${

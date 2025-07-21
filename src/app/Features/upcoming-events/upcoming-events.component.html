@@ -4,24 +4,24 @@
     <div class="row mb-5">
       <div class="col-12 text-center">
         <div class="islamic-pattern-border mb-4">
-          <h1 class="display-4 text-primary-dark fw-bold">{{ 'UPCOMING_EVENTS_TITLE' | translate }}</h1>
+          <h1 class="display-4 text-primary-dark fw-bold">{{ 'UPCOMING_EVENTS.TITLE' | translate }}</h1>
         </div>
-        <p class="lead text-muted">{{ 'UPCOMING_EVENTS_SUBTITLE' | translate }}</p>
+        <p class="lead text-muted">{{ 'UPCOMING_EVENTS.SUBTITLE' | translate }}</p>
       </div>
     </div>
 
     <!-- Loading State -->
     <div *ngIf="loading" class="text-center py-5">
       <div class="spinner-border text-secondary" role="status">
-        <span class="visually-hidden">{{ 'UPCOMING_EVENTS_LOADING' | translate }}</span>
+        <span class="visually-hidden">{{ 'UPCOMING_EVENTS.LOADING' | translate }}</span>
       </div>
-      <p class="mt-2 text-muted">{{ 'UPCOMING_EVENTS_LOADING' | translate }}</p>
+      <p class="mt-2 text-muted">{{ 'UPCOMING_EVENTS.LOADING' | translate }}</p>
     </div>
 
     <!-- Error State -->
     <div *ngIf="error" class="alert alert-danger text-center" role="alert">
       <i class="fas fa-exclamation-triangle me-2"></i>
-      {{ 'UPCOMING_EVENTS_ERROR' | translate }}
+      {{ 'UPCOMING_EVENTS.ERROR' | translate }}
     </div>
 
     <!-- Events Grid -->
@@ -48,10 +48,10 @@
               <div class="d-flex gap-2">
                 <button *ngIf="!event.isUserRegistered" class="btn btn-secondary flex-grow-1"
                   (click)="registerForEvent(event.id)">
-                  <i class="fas fa-user-plus me-2"></i>{{ 'UPCOMING_EVENTS_REGISTER' | translate }}
+                  <i class="fas fa-user-plus me-2"></i>{{ 'UPCOMING_EVENTS.REGISTER' | translate }}
                 </button>
                 <span *ngIf="event.isUserRegistered" class="badge bg-success px-3 py-2 flex-grow-1 text-center">
-                  <i class="fas fa-check me-2"></i>{{ 'UPCOMING_EVENTS_REGISTERED' | translate }}
+                  <i class="fas fa-check me-2"></i>{{ 'UPCOMING_EVENTS.REGISTERED' | translate }}
                 </span>
                 <a [routerLink]="['/event-details', event.id]" class="btn btn-outline-secondary">
                   <i class="fas fa-info-circle"></i>
@@ -67,8 +67,8 @@
     <div *ngIf="!loading && !error && events.length === 0" class="text-center py-5">
       <div class="empty-state">
         <i class="fas fa-calendar-times fa-5x text-muted mb-4"></i>
-        <h3 class="text-muted">{{ 'UPCOMING_EVENTS_NO_EVENTS_TITLE' | translate }}</h3>
-        <p class="text-muted">{{ 'UPCOMING_EVENTS_NO_EVENTS_DESCRIPTION' | translate }}</p>
+        <h3 class="text-muted">{{ 'UPCOMING_EVENTS.NO_EVENTS_TITLE' | translate }}</h3>
+        <p class="text-muted">{{ 'UPCOMING_EVENTS.NO_EVENTS_DESCRIPTION' | translate }}</p>
       </div>
     </div>
 
@@ -76,7 +76,7 @@
     <div class="row mt-5">
       <div class="col-12 text-center">
         <a routerLink="/create-event" class="btn btn-ternary btn-lg">
-          <i class="fas fa-plus me-2"></i>{{ 'UPCOMING_EVENTS_CREATE_NEW' | translate }}
+          <i class="fas fa-plus me-2"></i>{{ 'UPCOMING_EVENTS.CREATE_NEW' | translate }}
         </a>
       </div>
     </div>

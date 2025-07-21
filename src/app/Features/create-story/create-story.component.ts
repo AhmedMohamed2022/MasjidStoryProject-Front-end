@@ -10,10 +10,11 @@ import {
 import { MasjidViewModel } from '../../Core/Models/masjid.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-create-story',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './create-story.component.html',
   styleUrls: ['./create-story.component.css'],
 })
@@ -44,13 +45,19 @@ export class CreateStoryComponent implements OnInit {
     private storyService: StoryService,
     private masjidService: MasjidService,
     private languageService: LanguageService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
     this.loadMasjids();
     this.loadLanguages();
     this.loadTags();
+
+    // Subscribe to language changes
+    this.translate.onLangChange.subscribe(() => {
+      // Refresh any dynamic content if needed
+    });
   }
 
   loadMasjids(): void {
@@ -119,27 +126,43 @@ export class CreateStoryComponent implements OnInit {
     this.storyService
       .createStory(this.story)
       .then((msg) => {
-        this.success = msg || 'Story submitted and pending approval.';
+        this.translate.get('CREATE_STORY.SUCCESS').subscribe((text: string) => {
+          this.success = text;
+        });
         this.loading = false;
         setTimeout(() => this.router.navigate(['/stories']), 2000);
       })
       .catch(() => {
-        this.error = 'Failed to submit story. Please try again.';
+        this.translate.get('CREATE_STORY.ERROR').subscribe((text: string) => {
+          this.error = text;
+        });
         this.loading = false;
       });
   }
 
   isFormValid(): boolean {
     if (!this.story.title.trim()) {
-      this.error = 'Title is required';
+      this.translate
+        .get('CREATE_STORY.TITLE_REQUIRED')
+        .subscribe((text: string) => {
+          this.error = text;
+        });
       return false;
     }
     if (!this.story.content.trim()) {
-      this.error = 'Content is required';
+      this.translate
+        .get('CREATE_STORY.CONTENT_REQUIRED')
+        .subscribe((text: string) => {
+          this.error = text;
+        });
       return false;
     }
     if (!this.story.masjidId || this.story.masjidId === 0) {
-      this.error = 'Please select a masjid';
+      this.translate
+        .get('CREATE_STORY.MASJID_REQUIRED')
+        .subscribe((text: string) => {
+          this.error = text;
+        });
       return false;
     }
     return true;

@@ -86,11 +86,30 @@ export class CommunityListComponent implements OnInit {
       : this.communityService.joinCommunity(community.id);
     action$.subscribe({
       next: () => {
-        community.isUserMember = !community.isUserMember;
-        community.memberCount += community.isUserMember ? 1 : -1;
+        // Fetch the updated community by ID and update the card
+        this.communityService.getCommunityById(community.id).subscribe({
+          next: (updatedCommunity) => {
+            Object.assign(community, updatedCommunity);
+            const key = community.isUserMember
+              ? 'COMMUNITY_LIST.MEMBERSHIP_JOIN_SUCCESS'
+              : 'COMMUNITY_LIST.MEMBERSHIP_LEAVE_SUCCESS';
+            this.translate.get(key).subscribe((text) => {
+              alert(text || this.translate.instant('COMMON.SUCCESS_GENERIC'));
+            });
+          },
+          error: () => {
+            // Fallback to local update if fetch fails
+            community.isUserMember = !community.isUserMember;
+            community.memberCount += community.isUserMember ? 1 : -1;
+          },
+        });
       },
       error: (err) => {
-        alert(err.message || 'Failed to update membership');
+        this.translate
+          .get('COMMUNITY_LIST.MEMBERSHIP_UPDATE_FAILED')
+          .subscribe((text) => {
+            alert(text || this.translate.instant('COMMON.ERROR_GENERIC'));
+          });
       },
     });
   }

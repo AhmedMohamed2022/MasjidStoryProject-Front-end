@@ -10,6 +10,7 @@ import {
 } from '../../Core/Services/language.service';
 import { EventCreateViewModel } from '../../Core/Models/event.model';
 import { MasjidViewModel } from '../../Core/Models/masjid.model';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 // You'll need to create this interface or import it from your existing code
 // interface LanguageViewModel {
@@ -20,7 +21,7 @@ import { MasjidViewModel } from '../../Core/Models/masjid.model';
 
 @Component({
   selector: 'app-create-event',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './create-event.component.html',
   styleUrls: ['./create-event.component.css'],
 })
@@ -46,13 +47,19 @@ export class CreateEventComponent implements OnInit {
     private eventService: EventService,
     private masjidService: MasjidService,
     private languageService: LanguageService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
     this.loadMasjids();
     this.loadLanguages();
     this.setMinDate();
+
+    // Subscribe to language changes
+    this.translate.onLangChange.subscribe(() => {
+      // Refresh any dynamic content if needed
+    });
   }
 
   loadMasjids(): void {
@@ -171,7 +178,9 @@ export class CreateEventComponent implements OnInit {
 
     this.eventService.createEvent(eventToCreate).subscribe({
       next: (response) => {
-        this.success = 'Event created successfully!';
+        this.translate.get('CREATE_EVENT.SUCCESS').subscribe((text: string) => {
+          this.success = text;
+        });
         this.loading = false;
 
         // Redirect to upcoming events page after 2 seconds
@@ -181,7 +190,9 @@ export class CreateEventComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error creating event:', error);
-        this.error = 'Failed to create event. Please try again.';
+        this.translate.get('CREATE_EVENT.ERROR').subscribe((text: string) => {
+          this.error = text;
+        });
         this.loading = false;
       },
     });
@@ -189,17 +200,29 @@ export class CreateEventComponent implements OnInit {
 
   isFormValid(): boolean {
     if (!this.event.title.trim()) {
-      this.error = 'Title is required';
+      this.translate
+        .get('FORM.EVENT_TITLE_REQUIRED')
+        .subscribe((text: string) => {
+          this.error = text;
+        });
       return false;
     }
 
     if (!this.event.description.trim()) {
-      this.error = 'Description is required';
+      this.translate
+        .get('FORM.DESCRIPTION_REQUIRED')
+        .subscribe((text: string) => {
+          this.error = text;
+        });
       return false;
     }
 
     if (!this.event.eventDate) {
-      this.error = 'Event date is required';
+      this.translate
+        .get('FORM.EVENT_DATE_REQUIRED')
+        .subscribe((text: string) => {
+          this.error = text;
+        });
       return false;
     }
 
@@ -207,7 +230,9 @@ export class CreateEventComponent implements OnInit {
     const eventDate = new Date(this.event.eventDate);
     const now = new Date();
     if (eventDate <= now) {
-      this.error = 'Event date must be in the future';
+      this.translate.get('FORM.EVENT_DATE_FUTURE').subscribe((text: string) => {
+        this.error = text;
+      });
       return false;
     }
 

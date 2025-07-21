@@ -8,8 +8,8 @@
             <i class="fas fa-mosque"></i>
           </div>
           <div class="brand-text">
-            <span class="brand-name">MasjidStory</span>
-            <span class="brand-tagline">Connect • Share • Inspire</span>
+            <span class="brand-name">{{ 'BRAND_NAME' | translate }}</span>
+            <span class="brand-tagline">{{ 'BRAND_TAGLINE' | translate }}</span>
           </div>
         </a>
       </div>
@@ -22,7 +22,7 @@
             <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
               (click)="closeAllMenus()">
               <i class="fas fa-home"></i>
-              <span>{{ 'HOME' | translate }}</span>
+              <span>{{ 'NAV.HOME' | translate }}</span>
             </a>
           </li>
 
@@ -30,7 +30,7 @@
           <li class="nav-item">
             <a class="nav-link" routerLink="/search-masjid" routerLinkActive="active" (click)="closeAllMenus()">
               <i class="fas fa-mosque"></i>
-              <span>{{ 'MASJIDS' | translate }}</span>
+              <span>{{ 'NAV.MASJIDS' | translate }}</span>
             </a>
           </li>
 
@@ -38,7 +38,7 @@
           <li class="nav-item">
             <a class="nav-link" routerLink="/stories" routerLinkActive="active" (click)="closeAllMenus()">
               <i class="fas fa-book-open"></i>
-              <span>{{ 'STORIES' | translate }}</span>
+              <span>{{ 'NAV.STORIES' | translate }}</span>
             </a>
           </li>
 
@@ -46,7 +46,7 @@
           <li class="nav-item">
             <a class="nav-link" routerLink="/communities" routerLinkActive="active" (click)="closeAllMenus()">
               <i class="fas fa-users"></i>
-              <span>{{ 'COMMUNITIES' | translate }}</span>
+              <span>{{ 'NAV.COMMUNITIES' | translate }}</span>
             </a>
           </li>
 
@@ -54,30 +54,30 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" (click)="toggleEventsDropdown()">
               <i class="fas fa-calendar-alt"></i>
-              <span>{{ 'EVENTS' | translate }}</span>
+              <span>{{ 'NAV.EVENTS' | translate }}</span>
               <i class="fas fa-chevron-down dropdown-arrow"></i>
             </a>
             <ul class="dropdown-menu" [class.show]="!isEventsDropdownCollapsed">
               <li class="dropdown-header">
                 <i class="fas fa-calendar-alt"></i>
-                <span>{{ 'HEADER_EVENT_MANAGEMENT' | translate }}</span>
+                <span>{{ 'HEADER.EVENT_MANAGEMENT' | translate }}</span>
               </li>
               <li>
                 <a class="dropdown-item" routerLink="/upcoming-events" (click)="closeAllMenus()">
                   <i class="fas fa-calendar-check"></i>
-                  <span>{{ 'HEADER_ALL_EVENTS' | translate }}</span>
+                  <span>{{ 'HEADER.ALL_EVENTS' | translate }}</span>
                 </a>
               </li>
               <li *ngIf="isAuthenticated">
                 <a class="dropdown-item" routerLink="/my-events" (click)="closeAllMenus()">
                   <i class="fas fa-user-check"></i>
-                  <span>{{ 'HEADER_MY_EVENTS' | translate }}</span>
+                  <span>{{ 'HEADER.MY_EVENTS' | translate }}</span>
                 </a>
               </li>
               <li *ngIf="isAuthenticated">
                 <a class="dropdown-item" routerLink="/create-event" (click)="closeAllMenus()">
                   <i class="fas fa-plus-circle"></i>
-                  <span>{{ 'HEADER_CREATE_EVENT' | translate }}</span>
+                  <span>{{ 'HEADER.CREATE_EVENT' | translate }}</span>
                 </a>
               </li>
             </ul>
@@ -87,46 +87,46 @@
           <li class="nav-item dropdown admin-dropdown" *ngIf="isAdmin">
             <a class="nav-link dropdown-toggle admin-toggle" (click)="toggleAdminDropdown()">
               <i class="fas fa-shield-alt"></i>
-              <span>{{ 'HEADER_ADMIN' | translate }}</span>
+              <span>{{ 'HEADER.ADMIN' | translate }}</span>
               <i class="fas fa-chevron-down dropdown-arrow"></i>
             </a>
             <ul class="dropdown-menu admin-menu" [class.show]="!isAdminDropdownCollapsed">
               <li class="dropdown-header">
                 <i class="fas fa-shield-alt"></i>
-                <span>{{ 'HEADER_ADMINISTRATION' | translate }}</span>
+                <span>{{ 'HEADER.ADMINISTRATION' | translate }}</span>
               </li>
               <li>
                 <a class="dropdown-item" routerLink="/admin-dashboard" (click)="closeAllMenus()">
                   <i class="fas fa-tachometer-alt"></i>
-                  <span>{{ 'HEADER_DASHBOARD' | translate }}</span>
+                  <span>{{ 'HEADER.DASHBOARD' | translate }}</span>
                 </a>
               </li>
               <li>
                 <a class="dropdown-item" routerLink="/admin-dashboard" [queryParams]="{tab: '1'}"
                   (click)="closeAllMenus()">
                   <i class="fas fa-book"></i>
-                  <span>{{ 'HEADER_MANAGE_STORIES' | translate }}</span>
+                  <span>{{ 'HEADER.MANAGE_STORIES' | translate }}</span>
                 </a>
               </li>
               <li>
                 <a class="dropdown-item" routerLink="/admin-dashboard" [queryParams]="{tab: '2'}"
                   (click)="closeAllMenus()">
                   <i class="fas fa-mosque"></i>
-                  <span>{{ 'HEADER_MANAGE_MASJIDS' | translate }}</span>
+                  <span>{{ 'HEADER.MANAGE_MASJIDS' | translate }}</span>
                 </a>
               </li>
               <li>
                 <a class="dropdown-item" routerLink="/admin-dashboard" [queryParams]="{tab: '3'}"
                   (click)="closeAllMenus()">
                   <i class="fas fa-calendar"></i>
-                  <span>{{ 'HEADER_MANAGE_EVENTS' | translate }}</span>
+                  <span>{{ 'HEADER.MANAGE_EVENTS' | translate }}</span>
                 </a>
               </li>
               <li>
                 <a class="dropdown-item" routerLink="/admin-dashboard" [queryParams]="{tab: '4'}"
                   (click)="closeAllMenus()">
                   <i class="fas fa-users"></i>
-                  <span>{{ 'HEADER_MANAGE_COMMUNITIES' | translate }}</span>
+                  <span>{{ 'HEADER.MANAGE_COMMUNITIES' | translate }}</span>
                 </a>
               </li>
             </ul>
@@ -146,18 +146,18 @@
           <ul class="dropdown-menu language-menu" [class.show]="!isLanguageDropdownCollapsed">
             <li class="dropdown-header">
               <i class="fas fa-globe"></i>
-              <span>{{ 'HEADER_LANGUAGE' | translate }}</span>
+              <span>{{ 'HEADER.LANGUAGE' | translate }}</span>
             </li>
             <li>
               <a class="dropdown-item" href="javascript:void(0)" (click)="switchLang('en')">
                 <i class="fas fa-flag"></i>
-                <span>{{ 'HEADER_ENGLISH' | translate }}</span>
+                <span>{{ 'HEADER.ENGLISH' | translate }}</span>
               </a>
             </li>
             <li>
               <a class="dropdown-item" href="javascript:void(0)" (click)="switchLang('ar')">
                 <i class="fas fa-flag"></i>
-                <span>{{ 'HEADER_ARABIC' | translate }}</span>
+                <span>{{ 'HEADER.ARABIC' | translate }}</span>
               </a>
             </li>
           </ul>
@@ -167,11 +167,11 @@
         <div class="guest-actions" *ngIf="!isAuthenticated">
           <a class="btn btn-outline" routerLink="/login">
             <i class="fas fa-sign-in-alt"></i>
-            <span>{{ 'LOGIN' | translate }}</span>
+            <span>{{ 'LOGIN.SIGN_IN' | translate }}</span>
           </a>
           <a class="btn btn-primary" routerLink="/register">
             <i class="fas fa-user-plus"></i>
-            <span>{{ 'REGISTER' | translate }}</span>
+            <span>{{ 'REGISTER.CREATE_ACCOUNT' | translate }}</span>
           </a>
         </div>
 
@@ -187,8 +187,8 @@
                 <i class="fas fa-user"></i>
               </div>
               <div class="user-info">
-                <span class="user-name">{{ currentUser?.email?.split('@')[0] || ('HEADER_USER' | translate) }}</span>
-                <span class="user-role">{{ isAdmin ? ('HEADER_ADMIN' | translate) : ('HEADER_MEMBER' | translate)
+                <span class="user-name">{{ currentUser?.email?.split('@')[0] || ('HEADER.USER' | translate) }}</span>
+                <span class="user-role">{{ isAdmin ? ('HEADER.ADMIN' | translate) : ('HEADER.MEMBER' | translate)
                   }}</span>
               </div>
               <i class="fas fa-chevron-down dropdown-arrow"></i>
@@ -196,42 +196,42 @@
             <ul class="dropdown-menu user-menu" [class.show]="!isUserDropdownCollapsed">
               <li class="dropdown-header">
                 <i class="fas fa-user-circle"></i>
-                <span>{{ 'HEADER_MY_ACCOUNT' | translate }}</span>
+                <span>{{ 'HEADER.MY_ACCOUNT' | translate }}</span>
               </li>
               <li>
                 <a class="dropdown-item" routerLink="/user-profile" (click)="closeAllMenus()">
                   <i class="fas fa-user-circle"></i>
-                  <span>{{ 'HEADER_MY_PROFILE' | translate }}</span>
+                  <span>{{ 'HEADER.MY_PROFILE' | translate }}</span>
                 </a>
               </li>
               <li>
                 <a class="dropdown-item" routerLink="/my-stories" (click)="closeAllMenus()">
                   <i class="fas fa-book-open"></i>
-                  <span>{{ 'HEADER_MY_STORIES' | translate }}</span>
+                  <span>{{ 'HEADER.MY_STORIES' | translate }}</span>
                 </a>
               </li>
               <li>
                 <a class="dropdown-item" routerLink="/my-communities" (click)="closeAllMenus()">
                   <i class="fas fa-users"></i>
-                  <span>{{ 'HEADER_MY_COMMUNITIES' | translate }}</span>
+                  <span>{{ 'HEADER.MY_COMMUNITIES' | translate }}</span>
                 </a>
               </li>
               <li>
                 <a class="dropdown-item" routerLink="/create-story" (click)="closeAllMenus()">
                   <i class="fas fa-plus-circle"></i>
-                  <span>{{ 'HEADER_CREATE_STORY' | translate }}</span>
+                  <span>{{ 'HEADER.CREATE_STORY' | translate }}</span>
                 </a>
               </li>
               <li>
                 <a class="dropdown-item" routerLink="/my-events" (click)="closeAllMenus()">
                   <i class="fas fa-calendar-check"></i>
-                  <span>{{ 'HEADER_MY_EVENTS' | translate }}</span>
+                  <span>{{ 'HEADER.MY_EVENTS' | translate }}</span>
                 </a>
               </li>
               <li>
                 <a class="dropdown-item" routerLink="/create-event" (click)="closeAllMenus()">
                   <i class="fas fa-plus-circle"></i>
-                  <span>{{ 'HEADER_CREATE_EVENT' | translate }}</span>
+                  <span>{{ 'HEADER.CREATE_EVENT' | translate }}</span>
                 </a>
               </li>
               <li *ngIf="isAdmin">
@@ -239,14 +239,14 @@
                 <a class="dropdown-item admin-link" routerLink="/admin-dashboard" [queryParams]="{tab: '0'}"
                   (click)="closeAllMenus()">
                   <i class="fas fa-shield-alt"></i>
-                  <span>{{ 'HEADER_ADMIN_DASHBOARD' | translate }}</span>
+                  <span>{{ 'HEADER.ADMIN_DASHBOARD' | translate }}</span>
                 </a>
               </li>
               <li class="dropdown-divider"></li>
               <li>
                 <a class="dropdown-item logout-item" href="javascript:void(0)" (click)="logout()">
                   <i class="fas fa-sign-out-alt"></i>
-                  <span>{{ 'HEADER_LOGOUT' | translate }}</span>
+                  <span>{{ 'HEADER.LOGOUT' | translate }}</span>
                 </a>
               </li>
             </ul>

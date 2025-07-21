@@ -2,7 +2,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, Subscription } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MasjidDetailService } from '../../Core/Services/masjid-details.service';
 import { MasjidDetailsViewModel } from '../../Core/Models/masjid-details.model';
@@ -29,12 +29,14 @@ export class MasjidDetailComponent implements OnInit, OnDestroy {
   error = '';
   currentImageIndex = 0;
   private destroy$ = new Subject<void>();
+  private langSub?: Subscription;
+  private masjidId?: number;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private masjidService: MasjidDetailService,
-    private translate: TranslateService
+    public translate: TranslateService // make public for template
   ) {}
   // public test() {
   //   console.log('Masjid details loaded:', this.masjid?.stories);
@@ -43,8 +45,14 @@ export class MasjidDetailComponent implements OnInit, OnDestroy {
     this.route.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
       const id = +params['id'];
       if (id) {
+        this.masjidId = id;
         this.loadMasjidDetails(id);
-        console.log('Masjid details loaded:', this.masjid?.stories);
+      }
+    });
+    // Listen for language changes
+    this.langSub = this.translate.onLangChange.subscribe(() => {
+      if (this.masjidId) {
+        this.loadMasjidDetails(this.masjidId);
       }
     });
   }
@@ -52,23 +60,24 @@ export class MasjidDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    if (this.langSub) this.langSub.unsubscribe();
   }
 
   private loadMasjidDetails(id: number): void {
     this.loading = true;
     this.error = '';
-
+    const lang = this.translate.currentLang || 'en';
     this.masjidService
-      .getMasjidDetails(id)
+      .getMasjidDetails(id, lang)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
           if (response.success) {
-            console.log('Masjid details loaded:', response.data);
+            console.log('Masjid details API response:', response.data);
             this.masjid = response.data;
           } else {
             this.translate
-              .get('MASJID_DETAILS_ERROR_GENERAL')
+              .get('MASJID_DETAILS.ERROR_GENERAL')
               .subscribe((text: string) => {
                 this.error = response.message || text;
               });
@@ -77,7 +86,7 @@ export class MasjidDetailComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           this.translate
-            .get('MASJID_DETAILS_ERROR_GENERAL')
+            .get('MASJID_DETAILS.ERROR_GENERAL')
             .subscribe((text: string) => {
               this.error = text;
             });
@@ -156,7 +165,7 @@ export class MasjidDetailComponent implements OnInit, OnDestroy {
 
     // If no description or description is just the address, provide a fallback
     if (!description || description === this.masjid.address) {
-      return this.translate.instant('MASJID_DETAILS_FALLBACK_DESCRIPTION', {
+      return this.translate.instant('MASJID_DETAILS.FALLBACK_DESCRIPTION', {
         address: this.masjid.address,
       });
     }

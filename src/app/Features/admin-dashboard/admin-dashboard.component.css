@@ -876,3 +876,26 @@
   background: #f8f9fa;
   border-top: 1px solid var(--border-color);
 }
+
+.lang-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.lang-section h4 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.mat-form-field.full-width {
+  width: 100%;
+}
+
+.form-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}

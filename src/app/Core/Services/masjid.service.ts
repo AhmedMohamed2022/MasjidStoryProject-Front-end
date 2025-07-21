@@ -51,17 +51,30 @@ export class MasjidService {
   createMasjid(masjidData: any, mediaFiles?: File[]): Observable<any> {
     const formData = new FormData();
 
-    // Add masjid data
+    // Add masjid data except contents
     Object.keys(masjidData).forEach((key) => {
-      if (masjidData[key] !== null && masjidData[key] !== undefined) {
+      if (
+        key !== 'contents' &&
+        masjidData[key] !== null &&
+        masjidData[key] !== undefined
+      ) {
         formData.append(key, masjidData[key]);
       }
     });
 
+    // Serialize contents array as indexed fields
+    if (masjidData.contents && Array.isArray(masjidData.contents)) {
+      masjidData.contents.forEach((content: any, idx: number) => {
+        formData.append(`Contents[${idx}].LanguageId`, content.languageId);
+        formData.append(`Contents[${idx}].Name`, content.name);
+        formData.append(`Contents[${idx}].Description`, content.description);
+      });
+    }
+
     // Add media files if any
     if (mediaFiles && mediaFiles.length > 0) {
-      mediaFiles.forEach((file, index) => {
-        formData.append(`MediaFiles`, file);
+      mediaFiles.forEach((file) => {
+        formData.append('MediaFiles', file);
       });
     }
 
@@ -77,28 +90,39 @@ export class MasjidService {
     mediaIdsToDelete?: number[]
   ): Observable<any> {
     const formData = new FormData();
-
-    // Add the ID first
     formData.append('Id', id.toString());
 
-    // Add masjid data
+    // Add masjid data except contents
     Object.keys(masjidData).forEach((key) => {
-      if (masjidData[key] !== null && masjidData[key] !== undefined) {
+      if (
+        key !== 'contents' &&
+        masjidData[key] !== null &&
+        masjidData[key] !== undefined
+      ) {
         formData.append(key, masjidData[key]);
       }
     });
 
+    // Serialize contents array as indexed fields
+    if (masjidData.contents && Array.isArray(masjidData.contents)) {
+      masjidData.contents.forEach((content: any, idx: number) => {
+        formData.append(`Contents[${idx}].LanguageId`, content.languageId);
+        formData.append(`Contents[${idx}].Name`, content.name);
+        formData.append(`Contents[${idx}].Description`, content.description);
+      });
+    }
+
     // Add new media files if any
     if (mediaFiles && mediaFiles.length > 0) {
-      mediaFiles.forEach((file, index) => {
-        formData.append(`NewMediaFiles`, file);
+      mediaFiles.forEach((file) => {
+        formData.append('NewMediaFiles', file);
       });
     }
 
     // Add media IDs to delete if any
     if (mediaIdsToDelete && mediaIdsToDelete.length > 0) {
       mediaIdsToDelete.forEach((mediaId) => {
-        formData.append(`MediaIdsToDelete`, mediaId.toString());
+        formData.append('MediaIdsToDelete', mediaId.toString());
       });
     }
 

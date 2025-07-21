@@ -80,14 +80,14 @@ export class UpcomingEventsComponent implements OnInit {
           event.isUserRegistered = true;
         }
         this.translate
-          .get('UPCOMING_EVENTS_REGISTRATION_SUCCESS')
+          .get('UPCOMING_EVENTS.REGISTRATION_SUCCESS')
           .subscribe((text: string) => {
             alert(text);
           });
       },
       error: (error) => {
         this.translate
-          .get('UPCOMING_EVENTS_REGISTRATION_FAILED')
+          .get('UPCOMING_EVENTS.REGISTRATION_FAILED')
           .subscribe((text: string) => {
             alert(text);
           });

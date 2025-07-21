@@ -48,7 +48,7 @@ export class MyCommunitiesComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading my communities:', error);
-        this.translate.get('MY_COMMUNITIES_ERROR').subscribe((text: string) => {
+        this.translate.get('MY_COMMUNITIES.ERROR').subscribe((text: string) => {
           this.error = error.message || text;
         });
         this.loading = false;
@@ -83,10 +83,10 @@ export class MyCommunitiesComponent implements OnInit {
 
   getMemberCountText(memberCount: number): string {
     if (memberCount === 0)
-      return this.translate.instant('MY_COMMUNITIES_NO_MEMBERS');
+      return this.translate.instant('MY_COMMUNITIES.NO_MEMBERS');
     if (memberCount === 1)
-      return this.translate.instant('MY_COMMUNITIES_ONE_MEMBER');
-    return this.translate.instant('MY_COMMUNITIES_MEMBERS', {
+      return this.translate.instant('MY_COMMUNITIES.ONE_MEMBER');
+    return this.translate.instant('MY_COMMUNITIES.MEMBERS', {
       count: memberCount,
     });
   }

@@ -14,11 +14,12 @@ import {
 } from '../../Core/Models/event.model';
 import { MasjidViewModel } from '../../Core/Models/masjid.model';
 import { AuthService } from '../../Core/Services/auth.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-edit-event',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './edit-event.component.html',
   styleUrls: ['./edit-event.component.css'],
 })

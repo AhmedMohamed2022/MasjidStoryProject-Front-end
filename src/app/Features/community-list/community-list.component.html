@@ -3,35 +3,35 @@
     <div class="title-section">
       <h2 class="section-title">
         <i class="fas fa-users"></i>
-        <span *ngIf="isFilteredByMasjid">{{ 'COMMUNITY_LIST_COMMUNITIES_AT' | translate: {masjidName: masjidName}
+        <span *ngIf="isFilteredByMasjid">{{ 'COMMUNITY_LIST.COMMUNITIES_AT' | translate: {masjidName: masjidName}
           }}</span>
-        <span *ngIf="!isFilteredByMasjid">{{ 'COMMUNITY_LIST_ALL_COMMUNITIES' | translate }}</span>
+        <span *ngIf="!isFilteredByMasjid">{{ 'COMMUNITY_LIST.ALL_COMMUNITIES' | translate }}</span>
       </h2>
       <p class="section-subtitle" *ngIf="isFilteredByMasjid">
-        {{ 'COMMUNITY_LIST_SUBTITLE_MASJID' | translate }}
+        {{ 'COMMUNITY_LIST.SUBTITLE_MASJID' | translate }}
       </p>
       <p class="section-subtitle" *ngIf="!isFilteredByMasjid">
-        {{ 'COMMUNITY_LIST_SUBTITLE_ALL' | translate }}
+        {{ 'COMMUNITY_LIST.SUBTITLE_ALL' | translate }}
       </p>
     </div>
 
     <button *ngIf="isAuthenticated" class="create-btn" (click)="createCommunity()">
       <i class="fas fa-plus"></i>
-      {{ 'COMMUNITY_LIST_CREATE_COMMUNITY' | translate }}
+      {{ 'COMMUNITY_LIST.CREATE_COMMUNITY' | translate }}
     </button>
   </div>
 
   <!-- Loading State -->
   <div *ngIf="loading" class="loading-container">
     <div class="loading-spinner"></div>
-    <p>{{ 'COMMUNITY_LIST_LOADING' | translate }}</p>
+    <p>{{ 'COMMUNITY_LIST.LOADING' | translate }}</p>
   </div>
 
   <!-- Error State -->
   <div *ngIf="error && !loading" class="error-container">
     <i class="fas fa-exclamation-triangle"></i>
     <p>{{ error }}</p>
-    <button class="retry-btn" (click)="loadCommunities()">{{ 'COMMUNITY_LIST_TRY_AGAIN' | translate }}</button>
+    <button class="retry-btn" (click)="loadCommunities()">{{ 'COMMUNITY_LIST.TRY_AGAIN' | translate }}</button>
   </div>
 
   <!-- Empty State -->
@@ -39,14 +39,14 @@
     <div class="empty-icon">
       <i class="fas fa-users-slash"></i>
     </div>
-    <h3>{{ 'COMMUNITY_LIST_NO_COMMUNITIES_TITLE' | translate }}</h3>
-    <p *ngIf="isFilteredByMasjid">{{ 'COMMUNITY_LIST_NO_COMMUNITIES_MASJID' | translate: {masjidName: masjidName} }}</p>
-    <p *ngIf="!isFilteredByMasjid">{{ 'COMMUNITY_LIST_NO_COMMUNITIES_ALL' | translate }}</p>
+    <h3>{{ 'COMMUNITY_LIST.NO_COMMUNITIES_TITLE' | translate }}</h3>
+    <p *ngIf="isFilteredByMasjid">{{ 'COMMUNITY_LIST.NO_COMMUNITIES_MASJID' | translate: {masjidName: masjidName} }}</p>
+    <p *ngIf="!isFilteredByMasjid">{{ 'COMMUNITY_LIST.NO_COMMUNITIES_ALL' | translate }}</p>
     <button *ngIf="isAuthenticated" class="create-first-btn" (click)="createCommunity()">
-      {{ 'COMMUNITY_LIST_CREATE_FIRST' | translate }}
+      {{ 'COMMUNITY_LIST.CREATE_FIRST' | translate }}
     </button>
     <button *ngIf="!isAuthenticated" class="login-btn" routerLink="/login">
-      {{ 'COMMUNITY_LIST_LOGIN_TO_CREATE' | translate }}
+      {{ 'COMMUNITY_LIST.LOGIN_TO_CREATE' | translate }}
     </button>
   </div>
 
@@ -67,7 +67,7 @@
 
         <div class="membership-status" *ngIf="community.isUserMember">
           <i class="fas fa-check-circle"></i>
-          <span>{{ 'COMMUNITY_LIST_MEMBER' | translate }}</span>
+          <span>{{ 'COMMUNITY_LIST.MEMBER' | translate }}</span>
         </div>
       </div>
 
@@ -87,8 +87,8 @@
           </div>
           <div class="meta-item">
             <i class="fas fa-users"></i>
-            <span>{{ community.memberCount }} {{ community.memberCount !== 1 ? ('COMMUNITY_LIST_MEMBERS' | translate) :
-              ('COMMUNITY_LIST_MEMBER_SINGULAR' | translate) }}</span>
+            <span>{{ community.memberCount }} {{ community.memberCount !== 1 ? ('COMMUNITY_LIST.MEMBERS' | translate) :
+              ('COMMUNITY_LIST.MEMBER_SINGULAR' | translate) }}</span>
           </div>
           <div class="meta-item" *ngIf="!isFilteredByMasjid">
             <i class="fas fa-mosque"></i>
@@ -99,18 +99,18 @@
         <div class="card-actions">
           <button class="view-btn" (click)="viewCommunity(community.id)">
             <i class="fas fa-eye"></i>
-            {{ 'COMMUNITY_LIST_VIEW' | translate }}
+            {{ 'COMMUNITY_LIST.VIEW' | translate }}
           </button>
 
           <button *ngIf="isAuthenticated" class="membership-btn" [class.join]="!community.isUserMember"
             [class.leave]="community.isUserMember" (click)="toggleMembership(community)">
             <i class="fas" [class.fa-plus]="!community.isUserMember" [class.fa-minus]="community.isUserMember"></i>
-            {{ community.isUserMember ? ('COMMUNITY_LIST_LEAVE' | translate) : ('COMMUNITY_LIST_JOIN' | translate) }}
+            {{ community.isUserMember ? ('COMMUNITY_LIST.LEAVE' | translate) : ('COMMUNITY_LIST.JOIN' | translate) }}
           </button>
 
           <button *ngIf="!isAuthenticated" class="login-required-btn" routerLink="/login">
             <i class="fas fa-sign-in-alt"></i>
-            {{ 'COMMUNITY_LIST_LOGIN_TO_JOIN' | translate }}
+            {{ 'COMMUNITY_LIST.LOGIN_TO_JOIN' | translate }}
           </button>
         </div>
       </div>

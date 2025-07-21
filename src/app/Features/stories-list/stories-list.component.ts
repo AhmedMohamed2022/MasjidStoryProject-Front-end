@@ -22,6 +22,7 @@ export class StoriesListComponent implements OnInit {
   stories: StoryViewModel[] = [];
   loading = true;
   error = '';
+  paginationText = '';
 
   // Pagination properties
   currentPage = 1;
@@ -33,13 +34,18 @@ export class StoriesListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadStories();
+    this.updatePaginationText();
+
+    // Subscribe to language changes
+    this.translate.onLangChange.subscribe(() => {
+      this.updatePaginationText();
+    });
   }
 
   async loadStories(page: number = 1): Promise<void> {
     try {
       this.loading = true;
       this.error = '';
-      console.log('Loading stories for page:', page);
 
       const response: PaginatedResponse<StoryViewModel> =
         await this.storyService.getStoriesPaginated(page, this.pageSize);
@@ -51,12 +57,7 @@ export class StoriesListComponent implements OnInit {
       this.hasPreviousPage = response.hasPreviousPage;
       this.hasNextPage = response.hasNextPage;
 
-      console.log('Stories loaded:', this.stories);
-      console.log('Pagination info:', {
-        currentPage: this.currentPage,
-        totalPages: this.totalPages,
-        totalCount: this.totalCount,
-      });
+      this.updatePaginationText();
     } catch (error) {
       this.translate.get('STORIES_LIST_ERROR').subscribe((text: string) => {
         this.error = text;
@@ -140,5 +141,53 @@ export class StoriesListComponent implements OnInit {
     }
 
     return pages;
+  }
+
+  // Pagination display getters for template
+  get showingStart(): number {
+    return (this.currentPage - 1) * this.pageSize + 1;
+  }
+
+  get showingEnd(): number {
+    return Math.min(this.currentPage * this.pageSize, this.totalCount);
+  }
+
+  get showingTotal(): number {
+    return this.totalCount;
+  }
+
+  get paginationParams(): { start: number; end: number; total: number } {
+    return {
+      start: this.showingStart,
+      end: this.showingEnd,
+      total: this.showingTotal,
+    };
+  }
+
+  get currentPaginationText(): string {
+    return this.paginationText;
+  }
+
+  updatePaginationText(): void {
+    const params = this.paginationParams;
+
+    this.translate.get('STORIES_LIST_SHOWING').subscribe((rawText: string) => {
+      // Manual interpolation since translate.get with params is not working
+      let interpolatedText = rawText;
+      interpolatedText = interpolatedText.replace(
+        '{start}',
+        params.start.toString()
+      );
+      interpolatedText = interpolatedText.replace(
+        '{end}',
+        params.end.toString()
+      );
+      interpolatedText = interpolatedText.replace(
+        '{total}',
+        params.total.toString()
+      );
+
+      this.paginationText = interpolatedText;
+    });
   }
 }

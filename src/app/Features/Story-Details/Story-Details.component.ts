@@ -45,7 +45,7 @@ export class StoryDetailComponent implements OnInit {
     } else {
       console.error('No story ID found in route');
       this.translate
-        .get('STORY_DETAILS_NO_STORY_ID')
+        .get('STORY_DETAILS.NO_STORY_ID')
         .subscribe((text: string) => {
           this.error = text;
         });
@@ -61,7 +61,7 @@ export class StoryDetailComponent implements OnInit {
       this.loadRelatedStories(); // Load related stories when a story is loaded
       console.log('Loaded Story:', this.story);
     } catch (error) {
-      this.translate.get('STORY_DETAILS_ERROR').subscribe((text: string) => {
+      this.translate.get('STORY_DETAILS.ERROR').subscribe((text: string) => {
         this.error = text;
       });
       console.error('Error loading story:', error);
@@ -162,7 +162,7 @@ export class StoryDetailComponent implements OnInit {
     } catch (error) {
       console.error('Error adding comment:', error);
       this.translate
-        .get('STORY_DETAILS_COMMENT_ERROR')
+        .get('STORY_DETAILS.COMMENT_ERROR')
         .subscribe((text: string) => {
           this.commentError = text;
         });
@@ -207,7 +207,7 @@ export class StoryDetailComponent implements OnInit {
       navigator
         .share({
           title: this.story?.title,
-          text: this.translate.instant('STORY_DETAILS_SHARE_TEXT', {
+          text: this.translate.instant('STORY_DETAILS.SHARE_TEXT', {
             masjidName: this.story?.masjidName,
           }),
           url: window.location.href,
@@ -220,9 +220,9 @@ export class StoryDetailComponent implements OnInit {
         .then(() => {
           // Show toast or alert that URL was copied
           this.translate
-            .get('STORY_DETAILS_LINK_COPIED')
+            .get('STORY_DETAILS.LINK_COPIED')
             .subscribe((text: string) => {
-              alert(text);
+              alert(text || this.translate.instant('COMMON.SUCCESS_GENERIC'));
             });
         })
         .catch((err) => console.error('Failed to copy URL', err));

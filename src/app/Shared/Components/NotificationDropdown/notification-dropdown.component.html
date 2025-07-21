@@ -10,13 +10,13 @@
         <div class="notification-header">
             <h6 class="notification-title">
                 <i class="fas fa-bell me-2"></i>
-                {{ 'NOTIFICATION_TITLE' | translate }}
+                {{ 'NOTIFICATION.TITLE' | translate }}
                 <span class="unread-count" *ngIf="unreadCount > 0">({{ unreadCount }})</span>
             </h6>
             <div class="notification-actions">
                 <button class="btn btn-sm btn-link mark-all-read" (click)="markAllAsRead()" *ngIf="unreadCount > 0">
                     <i class="fas fa-check-double"></i>
-                    {{ 'NOTIFICATION_MARK_ALL_READ' | translate }}
+                    {{ 'NOTIFICATION.MARK_ALL_READ' | translate }}
                 </button>
             </div>
         </div>
@@ -25,9 +25,9 @@
             <!-- Loading State -->
             <div class="loading-state" *ngIf="loading">
                 <div class="spinner-border spinner-border-sm text-primary" role="status">
-                    <span class="visually-hidden">{{ 'NOTIFICATION_LOADING' | translate }}</span>
+                    <span class="visually-hidden">{{ 'NOTIFICATION.LOADING' | translate }}</span>
                 </div>
-                <span class="ms-2">{{ 'NOTIFICATION_LOADING' | translate }}</span>
+                <span class="ms-2">{{ 'NOTIFICATION.LOADING' | translate }}</span>
             </div>
 
             <!-- Error State -->
@@ -52,14 +52,14 @@
                         <div class="notification-meta">
                             <span class="notification-time">{{ formatDate(notification.dateCreated) }}</span>
                             <span class="notification-sender" *ngIf="notification.senderName">
-                                {{ 'NOTIFICATION_BY' | translate }} {{ notification.senderName }}
+                                {{ 'NOTIFICATION.BY' | translate }} {{ notification.senderName }}
                             </span>
                         </div>
                     </div>
                     <div class="notification-actions">
                         <button class="btn btn-sm btn-link delete-notification"
                             (click)="deleteNotification(notification, $event)"
-                            [title]="'NOTIFICATION_DELETE' | translate">
+                            [title]="'NOTIFICATION.DELETE' | translate">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
@@ -71,8 +71,8 @@
                         <i class="fas fa-bell-slash"></i>
                     </div>
                     <div class="empty-text">
-                        <h6>{{ 'NOTIFICATION_NO_NOTIFICATIONS' | translate }}</h6>
-                        <p>{{ 'NOTIFICATION_CAUGHT_UP' | translate }}</p>
+                        <h6>{{ 'NOTIFICATION.NO_NOTIFICATIONS' | translate }}</h6>
+                        <p>{{ 'NOTIFICATION.CAUGHT_UP' | translate }}</p>
                     </div>
                 </div>
             </div>
@@ -81,8 +81,8 @@
         <!-- Notification Footer -->
         <div class="notification-footer" *ngIf="notifications.length > 0">
             <small class="text-muted">
-                {{ notifications.length }} {{ notifications.length === 1 ? ('NOTIFICATION_COUNT' | translate) :
-                ('NOTIFICATION_COUNT_PLURAL' | translate) }}
+                {{ notifications.length }} {{ notifications.length === 1 ? ('NOTIFICATION.COUNT' | translate) :
+                ('NOTIFICATION.COUNT_PLURAL' | translate) }}
             </small>
         </div>
     </div>

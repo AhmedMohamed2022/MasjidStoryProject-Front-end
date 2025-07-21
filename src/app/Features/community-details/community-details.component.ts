@@ -50,7 +50,7 @@ export class CommunityDetailsComponent implements OnInit {
     const communityId = this.route.snapshot.paramMap.get('id');
     if (!communityId) {
       this.translate
-        .get('COMMUNITY_DETAILS_ERROR')
+        .get('COMMUNITY_DETAILS.ERROR')
         .subscribe((text: string) => {
           this.error = text;
         });
@@ -69,7 +69,7 @@ export class CommunityDetailsComponent implements OnInit {
       },
       error: (err) => {
         this.translate
-          .get('COMMUNITY_DETAILS_ERROR')
+          .get('COMMUNITY_DETAILS.ERROR')
           .subscribe((text: string) => {
             this.error = err.message || text;
           });
@@ -98,9 +98,13 @@ export class CommunityDetailsComponent implements OnInit {
       },
       error: (err) => {
         this.translate
-          .get('COMMUNITY_DETAILS_ERROR')
+          .get('COMMUNITY_DETAILS.ERROR')
           .subscribe((text: string) => {
-            alert(err.message || text);
+            alert(
+              err.message ||
+                text ||
+                this.translate.instant('COMMON.ERROR_GENERIC')
+            );
           });
         this.membershipLoading = false;
       },
@@ -151,9 +155,9 @@ export class CommunityDetailsComponent implements OnInit {
       // Fallback: copy to clipboard
       navigator.clipboard.writeText(window.location.href);
       this.translate
-        .get('COMMUNITY_DETAILS_LINK_COPIED')
+        .get('COMMUNITY_DETAILS.LINK_COPIED')
         .subscribe((text: string) => {
-          alert(text);
+          alert(text || this.translate.instant('COMMON.SUCCESS_GENERIC'));
         });
     }
   }
@@ -201,7 +205,7 @@ export class CommunityDetailsComponent implements OnInit {
       },
       error: (error) => {
         this.translate
-          .get('COMMUNITY_DETAILS_ERROR')
+          .get('COMMUNITY_DETAILS.ERROR')
           .subscribe((text: string) => {
             this.commentError = error.message || text;
           });

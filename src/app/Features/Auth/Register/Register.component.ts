@@ -111,7 +111,7 @@ export class RegisterComponent {
         error: (error) => {
           this.isLoading = false;
           this.translate
-            .get('REGISTER_ERROR_GENERAL')
+            .get('REGISTER.ERROR_GENERAL')
             .subscribe((text: string) => {
               this.errorMessage = error.error?.message || text;
             });

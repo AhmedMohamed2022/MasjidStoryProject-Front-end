@@ -15,10 +15,11 @@ import {
 } from '../../Core/Models/story.model';
 import { MasjidViewModel } from '../../Core/Models/masjid.model';
 import { environment } from '../../Core/environments/environment';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-edit-story',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './edit-story.component.html',
   styleUrls: ['./edit-story.component.css'],
 })

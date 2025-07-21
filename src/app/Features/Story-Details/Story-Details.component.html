@@ -4,17 +4,17 @@
   <div *ngIf="loading" class="loading-container">
     <div class="spinner">
       <div class="spinner-border text-success" role="status">
-        <span class="visually-hidden">{{ 'STORY_DETAILS_LOADING' | translate }}</span>
+        <span class="visually-hidden">{{ 'STORY_DETAILS.LOADING' | translate }}</span>
       </div>
     </div>
-    <p class="mt-3 text-muted">{{ 'STORY_DETAILS_LOADING' | translate }}</p>
+    <p class="mt-3 text-muted">{{ 'STORY_DETAILS.LOADING' | translate }}</p>
   </div>
 
   <!-- Error State -->
   <div *ngIf="error && !loading" class="error-container">
     <div class="alert alert-danger" role="alert">
       <i class="fas fa-exclamation-triangle me-2"></i>
-      {{ 'STORY_DETAILS_ERROR' | translate }}
+      {{ 'STORY_DETAILS.ERROR' | translate }}
     </div>
   </div>
 
@@ -37,11 +37,11 @@
                 </div>
                 <div class="meta-item">
                   <i class="fas fa-user me-2"></i>
-                  <span class="author-name">{{ 'STORY_DETAILS_BY' | translate }} {{ story.authorFullName }}</span>
+                  <span class="author-name">{{ 'STORY_DETAILS.BY' | translate }} {{ story.authorFullName }}</span>
                 </div>
                 <div class="meta-item">
                   <i class="fas fa-calendar me-2"></i>
-                  <span class="date">{{ 'STORY_DETAILS_PUBLISHED_ON' | translate }} {{ formatDate(story.datePublished)
+                  <span class="date">{{ 'STORY_DETAILS.PUBLISHED_ON' | translate }} {{ formatDate(story.datePublished)
                     }}</span>
                 </div>
               </div>
@@ -82,14 +82,14 @@
                   (click)="toggleLike()">
                   <i class="fas fa-heart" [class.text-danger]="story.isLikedByCurrentUser"></i>
                   <span class="like-count">{{ story.likeCount }}</span>
-                  <span class="like-text">{{ story.likeCount === 1 ? ('STORY_DETAILS_LIKE' | translate) :
-                    ('STORY_DETAILS_LIKES' | translate) }}</span>
+                  <span class="like-text">{{ story.likeCount === 1 ? ('STORY_DETAILS.LIKE' | translate) :
+                    ('STORY_DETAILS.LIKES' | translate) }}</span>
                 </button>
 
                 <!-- Share Button -->
                 <button class="share-btn ms-3" (click)="shareStory()">
                   <i class="fas fa-share-alt"></i>
-                  {{ 'STORY_DETAILS_SHARE' | translate }}
+                  {{ 'STORY_DETAILS.SHARE' | translate }}
                 </button>
               </div>
             </div>
@@ -99,7 +99,7 @@
               <div class="comments-header">
                 <h3 class="section-title">
                   <i class="fas fa-comments me-2"></i>
-                  {{ 'STORY_DETAILS_COMMENTS' | translate }} ({{ story.comments.length }})
+                  {{ 'STORY_DETAILS.COMMENTS' | translate }} ({{ story.comments.length }})
                 </h3>
               </div>
 
@@ -107,9 +107,9 @@
               <div class="add-comment-form" *ngIf="isAuthenticated">
                 <div class="comment-input-card">
                   <div class="form-group">
-                    <label for="newComment" class="form-label">{{ 'STORY_DETAILS_SHARE_THOUGHTS' | translate }}</label>
+                    <label for="newComment" class="form-label">{{ 'STORY_DETAILS.SHARE_THOUGHTS' | translate }}</label>
                     <textarea id="newComment" class="form-control comment-textarea" [(ngModel)]="newComment"
-                      [placeholder]="'STORY_DETAILS_COMMENT_PLACEHOLDER' | translate" maxlength="500"
+                      [placeholder]="'STORY_DETAILS.COMMENT_PLACEHOLDER' | translate" maxlength="500"
                       rows="3"></textarea>
                     <div class="character-count">
                       {{ newComment?.length || 0 }}/500
@@ -120,7 +120,7 @@
                       [disabled]="!newComment?.trim() || submittingComment" (click)="addComment()">
                       <i class="fas fa-paper-plane me-2" *ngIf="!submittingComment"></i>
                       <i class="fas fa-spinner fa-spin me-2" *ngIf="submittingComment"></i>
-                      {{ submittingComment ? ('STORY_DETAILS_POSTING' | translate) : ('STORY_DETAILS_POST_COMMENT' |
+                      {{ submittingComment ? ('STORY_DETAILS.POSTING' | translate) : ('STORY_DETAILS.POST_COMMENT' |
                       translate) }}
                     </button>
                   </div>
@@ -137,8 +137,8 @@
               <div class="login-prompt" *ngIf="!isAuthenticated">
                 <div class="alert alert-info">
                   <i class="fas fa-info-circle me-2"></i>
-                  {{ 'STORY_DETAILS_LOGIN_TO_INTERACT' | translate }} <a href="/login" class="alert-link">{{
-                    'STORY_DETAILS_LOGIN' | translate }}</a>.
+                  {{ 'STORY_DETAILS.LOGIN_TO_INTERACT' | translate }} <a href="/login" class="alert-link">{{
+                    'STORY_DETAILS.LOGIN' | translate }}</a>.
                 </div>
               </div>
 
@@ -167,7 +167,7 @@
                 <div class="no-comments" *ngIf="story.comments.length === 0">
                   <div class="text-center text-muted">
                     <i class="fas fa-comment-slash fa-3x mb-3"></i>
-                    <p>{{ 'STORY_DETAILS_NO_COMMENTS' | translate }}</p>
+                    <p>{{ 'STORY_DETAILS.NO_COMMENTS' | translate }}</p>
                   </div>
                 </div>
               </div>
@@ -178,7 +178,7 @@
               <div class="section-header">
                 <h3 class="section-title">
                   <i class="fas fa-book-reader me-2"></i>
-                  {{ 'STORY_DETAILS_RELATED_STORIES' | translate }}
+                  {{ 'STORY_DETAILS.RELATED_STORIES' | translate }}
                 </h3>
               </div>
               <div class="row">
@@ -196,7 +196,7 @@
 
             <!-- No Related Stories -->
             <div class="no-related-stories" *ngIf="!loading && relatedStories.length === 0">
-              <p class="text-muted text-center">{{ 'STORY_DETAILS_NO_RELATED_STORIES' | translate }}</p>
+              <p class="text-muted text-center">{{ 'STORY_DETAILS.NO_RELATED_STORIES' | translate }}</p>
             </div>
           </div>
         </div>

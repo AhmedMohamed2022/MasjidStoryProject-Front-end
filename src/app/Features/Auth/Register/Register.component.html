@@ -7,8 +7,8 @@
           <!-- Header with Islamic pattern -->
           <div class="auth-header">
             <div class="islamic-pattern"></div>
-            <h2 class="auth-title">{{ 'REGISTER_JOIN_COMMUNITY' | translate }}</h2>
-            <p class="auth-subtitle">{{ 'REGISTER_SUBTITLE' | translate }}</p>
+            <h2 class="auth-title">{{ 'REGISTER.JOIN_COMMUNITY' | translate }}</h2>
+            <p class="auth-subtitle">{{ 'REGISTER.SUBTITLE' | translate }}</p>
           </div>
 
           <!-- Registration Form -->
@@ -24,15 +24,15 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="firstName" class="form-label">
-                    <i class="fas fa-user me-2"></i>{{ 'REGISTER_FIRST_NAME_LABEL' | translate }}
+                    <i class="fas fa-user me-2"></i>{{ 'REGISTER.FIRST_NAME_LABEL' | translate }}
                   </label>
                   <input type="text" id="firstName" formControlName="firstName" class="form-control"
                     [class.is-invalid]="firstName?.invalid && firstName?.touched"
-                    [placeholder]="'REGISTER_FIRST_NAME_PLACEHOLDER' | translate" autocomplete="given-name">
+                    [placeholder]="'REGISTER.FIRST_NAME_PLACEHOLDER' | translate" autocomplete="given-name">
                   <div *ngIf="firstName?.invalid && firstName?.touched" class="invalid-feedback">
-                    <span *ngIf="firstName?.errors?.['required']">{{ 'REGISTER_ERROR_FIRST_NAME_REQUIRED' | translate
+                    <span *ngIf="firstName?.errors?.['required']">{{ 'REGISTER.ERROR_FIRST_NAME_REQUIRED' | translate
                       }}</span>
-                    <span *ngIf="firstName?.errors?.['minlength']">{{ 'REGISTER_ERROR_FIRST_NAME_MIN_LENGTH' | translate
+                    <span *ngIf="firstName?.errors?.['minlength']">{{ 'REGISTER.ERROR_FIRST_NAME_MIN_LENGTH' | translate
                       }}</span>
                   </div>
                 </div>
@@ -40,15 +40,15 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="lastName" class="form-label">
-                    <i class="fas fa-user me-2"></i>{{ 'REGISTER_LAST_NAME_LABEL' | translate }}
+                    <i class="fas fa-user me-2"></i>{{ 'REGISTER.LAST_NAME_LABEL' | translate }}
                   </label>
                   <input type="text" id="lastName" formControlName="lastName" class="form-control"
                     [class.is-invalid]="lastName?.invalid && lastName?.touched"
-                    [placeholder]="'REGISTER_LAST_NAME_PLACEHOLDER' | translate" autocomplete="family-name">
+                    [placeholder]="'REGISTER.LAST_NAME_PLACEHOLDER' | translate" autocomplete="family-name">
                   <div *ngIf="lastName?.invalid && lastName?.touched" class="invalid-feedback">
-                    <span *ngIf="lastName?.errors?.['required']">{{ 'REGISTER_ERROR_LAST_NAME_REQUIRED' | translate
+                    <span *ngIf="lastName?.errors?.['required']">{{ 'REGISTER.ERROR_LAST_NAME_REQUIRED' | translate
                       }}</span>
-                    <span *ngIf="lastName?.errors?.['minlength']">{{ 'REGISTER_ERROR_LAST_NAME_MIN_LENGTH' | translate
+                    <span *ngIf="lastName?.errors?.['minlength']">{{ 'REGISTER.ERROR_LAST_NAME_MIN_LENGTH' | translate
                       }}</span>
                   </div>
                 </div>
@@ -58,34 +58,34 @@
             <!-- Email Field -->
             <div class="form-group">
               <label for="email" class="form-label">
-                <i class="fas fa-envelope me-2"></i>{{ 'REGISTER_EMAIL_LABEL' | translate }}
+                <i class="fas fa-envelope me-2"></i>{{ 'REGISTER.EMAIL_LABEL' | translate }}
               </label>
               <input type="email" id="email" formControlName="email" class="form-control"
                 [class.is-invalid]="email?.invalid && email?.touched"
-                [placeholder]="'REGISTER_EMAIL_PLACEHOLDER' | translate" autocomplete="email">
+                [placeholder]="'REGISTER.EMAIL_PLACEHOLDER' | translate" autocomplete="email">
               <div *ngIf="email?.invalid && email?.touched" class="invalid-feedback">
-                <span *ngIf="email?.errors?.['required']">{{ 'REGISTER_ERROR_EMAIL_REQUIRED' | translate }}</span>
-                <span *ngIf="email?.errors?.['email']">{{ 'REGISTER_ERROR_EMAIL_INVALID' | translate }}</span>
+                <span *ngIf="email?.errors?.['required']">{{ 'REGISTER.ERROR_EMAIL_REQUIRED' | translate }}</span>
+                <span *ngIf="email?.errors?.['email']">{{ 'REGISTER.ERROR_EMAIL_INVALID' | translate }}</span>
               </div>
             </div>
 
             <!-- Password Field -->
             <div class="form-group">
               <label for="password" class="form-label">
-                <i class="fas fa-lock me-2"></i>{{ 'REGISTER_PASSWORD_LABEL' | translate }}
+                <i class="fas fa-lock me-2"></i>{{ 'REGISTER.PASSWORD_LABEL' | translate }}
               </label>
               <div class="password-input-wrapper">
                 <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password"
                   class="form-control" [class.is-invalid]="password?.invalid && password?.touched"
-                  [placeholder]="'REGISTER_PASSWORD_PLACEHOLDER' | translate" autocomplete="new-password">
+                  [placeholder]="'REGISTER.PASSWORD_PLACEHOLDER' | translate" autocomplete="new-password">
                 <button type="button" class="password-toggle" (click)="togglePasswordVisibility()"
-                  [attr.aria-label]="showPassword ? ('REGISTER_HIDE_PASSWORD' | translate) : ('REGISTER_SHOW_PASSWORD' | translate)">
+                  [attr.aria-label]="showPassword ? ('REGISTER.HIDE_PASSWORD' | translate) : ('REGISTER.SHOW_PASSWORD' | translate)">
                   <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
                 </button>
               </div>
               <div *ngIf="password?.invalid && password?.touched" class="invalid-feedback">
-                <span *ngIf="password?.errors?.['required']">{{ 'REGISTER_ERROR_PASSWORD_REQUIRED' | translate }}</span>
-                <span *ngIf="password?.errors?.['minlength']">{{ 'REGISTER_ERROR_PASSWORD_MIN_LENGTH' | translate
+                <span *ngIf="password?.errors?.['required']">{{ 'REGISTER.ERROR_PASSWORD_REQUIRED' | translate }}</span>
+                <span *ngIf="password?.errors?.['minlength']">{{ 'REGISTER.ERROR_PASSWORD_MIN_LENGTH' | translate
                   }}</span>
               </div>
             </div>
@@ -93,25 +93,25 @@
             <!-- Confirm Password Field -->
             <div class="form-group">
               <label for="confirmPassword" class="form-label">
-                <i class="fas fa-lock me-2"></i>{{ 'REGISTER_CONFIRM_PASSWORD_LABEL' | translate }}
+                <i class="fas fa-lock me-2"></i>{{ 'REGISTER.CONFIRM_PASSWORD_LABEL' | translate }}
               </label>
               <div class="password-input-wrapper">
                 <input [type]="showConfirmPassword ? 'text' : 'password'" id="confirmPassword"
                   formControlName="confirmPassword" class="form-control"
                   [class.is-invalid]="(confirmPassword?.invalid && confirmPassword?.touched) || registerForm.errors?.['passwordMismatch']"
-                  [placeholder]="'REGISTER_CONFIRM_PASSWORD_PLACEHOLDER' | translate" autocomplete="new-password">
+                  [placeholder]="'REGISTER.CONFIRM_PASSWORD_PLACEHOLDER' | translate" autocomplete="new-password">
                 <button type="button" class="password-toggle" (click)="toggleConfirmPasswordVisibility()"
-                  [attr.aria-label]="showConfirmPassword ? ('REGISTER_HIDE_PASSWORD' | translate) : ('REGISTER_SHOW_PASSWORD' | translate)">
+                  [attr.aria-label]="showConfirmPassword ? ('REGISTER.HIDE_PASSWORD' | translate) : ('REGISTER.SHOW_PASSWORD' | translate)">
                   <i [class]="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
                 </button>
               </div>
               <div
                 *ngIf="(confirmPassword?.invalid && confirmPassword?.touched) || registerForm.errors?.['passwordMismatch']"
                 class="invalid-feedback">
-                <span *ngIf="confirmPassword?.errors?.['required']">{{ 'REGISTER_ERROR_CONFIRM_PASSWORD_REQUIRED' |
+                <span *ngIf="confirmPassword?.errors?.['required']">{{ 'REGISTER.ERROR_CONFIRM_PASSWORD_REQUIRED' |
                   translate }}</span>
                 <span *ngIf="registerForm.errors?.['passwordMismatch'] && !confirmPassword?.errors?.['required']">{{
-                  'REGISTER_ERROR_PASSWORDS_MISMATCH' | translate }}</span>
+                  'REGISTER.ERROR_PASSWORDS_MISMATCH' | translate }}</span>
               </div>
             </div>
 
@@ -119,15 +119,15 @@
             <button type="submit" class="btn btn-primary btn-auth" [disabled]="isLoading">
               <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status"></span>
               <i *ngIf="!isLoading" class="fas fa-user-plus me-2"></i>
-              {{ isLoading ? ('REGISTER_CREATING_ACCOUNT' | translate) : ('REGISTER_CREATE_ACCOUNT' | translate) }}
+              {{ isLoading ? ('REGISTER.CREATING_ACCOUNT' | translate) : ('REGISTER.CREATE_ACCOUNT' | translate) }}
             </button>
           </form>
 
           <!-- Footer -->
           <div class="auth-footer">
             <p class="text-center">
-              {{ 'REGISTER_HAVE_ACCOUNT' | translate }}
-              <a routerLink="/login" class="auth-link">{{ 'REGISTER_SIGN_IN' | translate }}</a>
+              {{ 'REGISTER.HAVE_ACCOUNT' | translate }}
+              <a routerLink="/login" class="auth-link">{{ 'REGISTER.SIGN_IN' | translate }}</a>
             </p>
           </div>
 

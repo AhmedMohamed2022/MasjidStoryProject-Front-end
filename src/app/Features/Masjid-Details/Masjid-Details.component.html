@@ -5,17 +5,17 @@
     <div class="islamic-spinner">
       <div class="spinner-circle"></div>
     </div>
-    <p class="loading-text">{{ 'MASJID_DETAILS_LOADING' | translate }}</p>
+    <p class="loading-text">{{ 'MASJID_DETAILS.LOADING' | translate }}</p>
   </div>
 
   <!-- Error State -->
   <div *ngIf="error && !loading" class="error-container">
     <div class="error-card">
       <i class="fas fa-exclamation-triangle error-icon"></i>
-      <h3>{{ 'MASJID_DETAILS_ERROR_TITLE' | translate }}</h3>
+      <h3>{{ 'MASJID_DETAILS.ERROR_TITLE' | translate }}</h3>
       <p>{{ error }}</p>
       <button class="btn btn-primary" (click)="goBack()">
-        <i class="fas fa-arrow-left"></i> {{ 'MASJID_DETAILS_GO_BACK' | translate }}
+        <i class="fas fa-arrow-left"></i> {{ 'MASJID_DETAILS.GO_BACK' | translate }}
       </button>
     </div>
   </div>
@@ -26,7 +26,7 @@
     <div class="back-navigation">
       <button class="btn-back" (click)="goBack()">
         <i class="fas fa-arrow-left"></i>
-        <span>{{ 'MASJID_DETAILS_BACK_TO_EXPLORE' | translate }}</span>
+        <span>{{ 'MASJID_DETAILS.BACK_TO_EXPLORE' | translate }}</span>
       </button>
     </div>
 
@@ -37,7 +37,7 @@
           <div class="col-lg-8">
             <!-- Image Gallery Carousel -->
             <div class="image-gallery" *ngIf="masjid.mediaUrls.length > 0"
-              [attr.aria-label]="'MASJID_DETAILS_IMAGE_GALLERY' | translate">
+              [attr.aria-label]="'MASJID_DETAILS.IMAGE_GALLERY' | translate">
               <div class="main-image-container">
                 <img [src]="masjid.mediaUrls[currentImageIndex]" [alt]="masjid.localizedName" class="main-image">
                 <div class="image-overlay">
@@ -46,11 +46,11 @@
 
                 <!-- Navigation Arrows -->
                 <button class="carousel-btn prev-btn" (click)="previousImage()" *ngIf="masjid.mediaUrls.length > 1"
-                  [attr.aria-label]="'MASJID_DETAILS_PREVIOUS_IMAGE' | translate">
+                  [attr.aria-label]="'MASJID_DETAILS.PREVIOUS_IMAGE' | translate">
                   <i class="fas fa-angle-left fa-lg"></i>
                 </button>
                 <button class="carousel-btn next-btn" (click)="nextImage()" *ngIf="masjid.mediaUrls.length > 1"
-                  [attr.aria-label]="'MASJID_DETAILS_NEXT_IMAGE' | translate">
+                  [attr.aria-label]="'MASJID_DETAILS.NEXT_IMAGE' | translate">
                   <i class="fas fa-angle-right fa-lg"></i>
                 </button>
               </div>
@@ -59,7 +59,7 @@
               <div class="thumbnail-strip" *ngIf="masjid.mediaUrls.length > 1">
                 <button *ngFor="let url of masjid.mediaUrls; let i = index" class="thumbnail-btn"
                   [class.active]="i === currentImageIndex" (click)="selectImage(i)">
-                  <img [src]="url" [alt]="('MASJID_DETAILS_IMAGE_ALT' | translate: {number: i + 1})">
+                  <img [src]="url" [alt]="('MASJID_DETAILS.IMAGE_ALT' | translate: {number: i + 1})">
                 </button>
               </div>
             </div>
@@ -68,7 +68,7 @@
             <div class="no-images-fallback" *ngIf="masjid.mediaUrls.length === 0">
               <div class="fallback-content">
                 <i class="fas fa-image fallback-icon"></i>
-                <p>{{ 'MASJID_DETAILS_NO_IMAGES' | translate }}</p>
+                <p>{{ 'MASJID_DETAILS.NO_IMAGES' | translate }}</p>
               </div>
             </div>
           </div>
@@ -78,7 +78,7 @@
             <div class="info-card">
               <div class="card-header">
                 <h1 class="masjid-title">{{ masjid.localizedName }}</h1>
-                <p class="masjid-subtitle">{{ masjid.shortName }}</p>
+                <p class="masjid-subtitle">{{ masjid.localizedName }}</p>
               </div>
 
               <div class="card-body">
@@ -86,7 +86,7 @@
                 <div class="info-item">
                   <i class="fas fa-map-marker-alt info-icon"></i>
                   <div class="info-content">
-                    <strong>{{ 'MASJID_DETAILS_LOCATION' | translate }}</strong>
+                    <strong>{{ 'MASJID_DETAILS.LOCATION' | translate }}</strong>
                     <p>{{ masjid.address }}</p>
                     <p class="text-muted">{{ masjid.cityName }}, {{ masjid.countryName }}</p>
                   </div>
@@ -96,7 +96,7 @@
                 <div class="info-item" *ngIf="masjid.archStyle">
                   <i class="fas fa-building info-icon"></i>
                   <div class="info-content">
-                    <strong>{{ 'MASJID_DETAILS_ARCHITECTURAL_STYLE' | translate }}</strong>
+                    <strong>{{ 'MASJID_DETAILS.ARCHITECTURAL_STYLE' | translate }}</strong>
                     <p>{{ masjid.archStyle }}</p>
                   </div>
                 </div>
@@ -105,7 +105,7 @@
                 <div class="info-item" *ngIf="masjid.yearOfEstablishment">
                   <i class="fas fa-calendar-alt info-icon"></i>
                   <div class="info-content">
-                    <strong>{{ 'MASJID_DETAILS_ESTABLISHED' | translate }}</strong>
+                    <strong>{{ 'MASJID_DETAILS.ESTABLISHED' | translate }}</strong>
                     <p>{{ masjid.yearOfEstablishment }}</p>
                   </div>
                 </div>
@@ -116,14 +116,14 @@
                     <i class="fas fa-eye stat-icon"></i>
                     <div class="stat-content">
                       <span class="stat-number">{{ masjid.totalVisits }}</span>
-                      <span class="stat-label">{{ 'MASJID_DETAILS_VISITS' | translate }}</span>
+                      <span class="stat-label">{{ 'MASJID_DETAILS.VISITS' | translate }}</span>
                     </div>
                   </div>
                   <div class="stat-item">
                     <i class="fas fa-calendar-check stat-icon"></i>
                     <div class="stat-content">
                       <span class="stat-number">{{ masjid.upcomingEventCount }}</span>
-                      <span class="stat-label">{{ 'MASJID_DETAILS_UPCOMING_EVENTS' | translate }}</span>
+                      <span class="stat-label">{{ 'MASJID_DETAILS.UPCOMING_EVENTS' | translate }}</span>
                     </div>
                   </div>
                 </div>
@@ -140,7 +140,7 @@
         <div class="section-card">
           <h2 class="section-title">
             <i class="fas fa-mosque section-icon"></i>
-            {{ 'MASJID_DETAILS_ABOUT_THIS_MASJID' | translate }}
+            {{ 'MASJID_DETAILS.ABOUT_THIS_MASJID' | translate }}
           </h2>
           <div class="description-content">
             <p>{{ getDisplayDescription() }}</p>
@@ -155,31 +155,31 @@
         <div class="section-card">
           <h2 class="section-title">
             <i class="fas fa-book-open section-icon"></i>
-            {{ 'MASJID_DETAILS_ASSOCIATED_STORIES' | translate }}
+            {{ 'MASJID_DETAILS.ASSOCIATED_STORIES' | translate }}
           </h2>
           <div class="stories-grid">
             <div *ngFor="let story of masjid.stories" class="story-card" (click)="navigateToStory(story.id)"
               (keypress)="onStoryKeyPress($event, story.id)"
-              [attr.aria-label]="('MASJID_DETAILS_VIEW_STORY' | translate) + ': ' + story.title" role="button"
+              [attr.aria-label]="('MASJID_DETAILS.VIEW_STORY' | translate) + ': ' + story.title" role="button"
               tabindex="0">
               <div class="story-image" *ngIf="story.imageUrl">
                 <img [src]="story.imageUrl" [alt]="story.title">
               </div>
               <div class="story-content">
                 <h3 class="story-title">{{ story.title }}</h3>
-                <p class="story-author">{{ 'MASJID_DETAILS_BY' | translate }} {{ story.authorName }}</p>
+                <p class="story-author">{{ 'MASJID_DETAILS.BY' | translate }} {{ story.authorName }}</p>
                 <p class="story-date">{{ story.datePublished ? formatDate(story.datePublished) :
-                  ('MASJID_DETAILS_DATE_NOT_AVAILABLE' | translate) }}
+                  ('MASJID_DETAILS.DATE_NOT_AVAILABLE' | translate) }}
                 </p>
                 <p class="story-summary">{{ story.summary }}</p>
                 <div class="story-stats">
                   <span class="stat">
                     <i class="fas fa-heart"></i>
-                    {{ story.likeCount }} {{ 'MASJID_DETAILS_LIKES' | translate }}
+                    {{ story.likeCount }} {{ 'MASJID_DETAILS.LIKES' | translate }}
                   </span>
                   <span class="stat">
                     <i class="fas fa-comment"></i>
-                    {{ story.commentCount }} {{ 'MASJID_DETAILS_COMMENTS' | translate }}
+                    {{ story.commentCount }} {{ 'MASJID_DETAILS.COMMENTS' | translate }}
                   </span>
                 </div>
               </div>
@@ -193,7 +193,7 @@
     <div class="events-section">
       <div class="container">
         <div class="section-card">
-          <app-masjid-events [masjidId]="masjid.id" [masjidName]="masjid.shortName">
+          <app-masjid-events [masjidId]="masjid.id" [masjidName]="masjid.localizedName">
           </app-masjid-events>
         </div>
       </div>
@@ -203,7 +203,7 @@
     <div class="communities-section">
       <div class="container">
         <div class="section-card">
-          <app-community-list [masjidId]="masjid.id" [masjidName]="masjid.shortName">
+          <app-community-list [masjidId]="masjid.id" [masjidName]="masjid.localizedName">
           </app-community-list>
         </div>
       </div>
@@ -215,7 +215,7 @@
         <div class="section-card">
           <h2 class="section-title">
             <i class="fas fa-map section-icon"></i>
-            {{ 'MASJID_DETAILS_LOCATION_TITLE' | translate }}
+            {{ 'MASJID_DETAILS.LOCATION_TITLE' | translate }}
           </h2>
           <div class="map-container">
             <app-map-picker [latitude]="masjid.latitude" [longitude]="masjid.longitude" [readonly]="true"

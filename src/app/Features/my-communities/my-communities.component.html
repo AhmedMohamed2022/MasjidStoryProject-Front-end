@@ -3,9 +3,9 @@
   <div class="section-header">
     <h1 class="section-title">
       <i class="fas fa-users section-icon"></i>
-      {{ 'MY_COMMUNITIES_TITLE' | translate }}
+      {{ 'MY_COMMUNITIES.TITLE' | translate }}
     </h1>
-    <p class="section-subtitle">{{ 'MY_COMMUNITIES_SUBTITLE' | translate }}</p>
+    <p class="section-subtitle">{{ 'MY_COMMUNITIES.SUBTITLE' | translate }}</p>
   </div>
 
   <!-- Loading State -->
@@ -13,17 +13,17 @@
     <div class="islamic-spinner">
       <div class="spinner-circle"></div>
     </div>
-    <p class="loading-text">{{ 'MY_COMMUNITIES_LOADING' | translate }}</p>
+    <p class="loading-text">{{ 'MY_COMMUNITIES.LOADING' | translate }}</p>
   </div>
 
   <!-- Error State -->
   <div *ngIf="error && !loading" class="error-container">
     <div class="error-card">
       <i class="fas fa-exclamation-triangle error-icon"></i>
-      <h4>{{ 'MY_COMMUNITIES_ERROR' | translate }}</h4>
+      <h4>{{ 'MY_COMMUNITIES.ERROR' | translate }}</h4>
       <p>{{ error }}</p>
       <button class="btn btn-primary" (click)="refreshCommunities()">
-        <i class="fas fa-refresh"></i> {{ 'MY_COMMUNITIES_TRY_AGAIN' | translate }}
+        <i class="fas fa-refresh"></i> {{ 'MY_COMMUNITIES.TRY_AGAIN' | translate }}
       </button>
     </div>
   </div>
@@ -32,16 +32,16 @@
   <div *ngIf="!loading && !error && communities.length === 0" class="no-communities-container">
     <div class="no-communities-card">
       <i class="fas fa-users no-communities-icon"></i>
-      <h4>{{ 'MY_COMMUNITIES_NO_COMMUNITIES' | translate }}</h4>
-      <p>{{ 'MY_COMMUNITIES_NO_COMMUNITIES_DESC' | translate }}</p>
+      <h4>{{ 'MY_COMMUNITIES.NO_COMMUNITIES' | translate }}</h4>
+      <p>{{ 'MY_COMMUNITIES.NO_COMMUNITIES_DESC' | translate }}</p>
       <div class="action-buttons">
         <button class="btn btn-primary" (click)="navigateToCreateCommunity()">
           <i class="fas fa-plus-circle"></i>
-          {{ 'MY_COMMUNITIES_CREATE_COMMUNITY' | translate }}
+          {{ 'MY_COMMUNITIES.CREATE_COMMUNITY' | translate }}
         </button>
         <button class="btn btn-outline" (click)="navigateToAllCommunities()">
           <i class="fas fa-search"></i>
-          {{ 'MY_COMMUNITIES_BROWSE_COMMUNITIES' | translate }}
+          {{ 'MY_COMMUNITIES.BROWSE_COMMUNITIES' | translate }}
         </button>
       </div>
     </div>
@@ -82,7 +82,7 @@
       <div class="community-actions">
         <button class="btn btn-read-more">
           <i class="fas fa-arrow-right"></i>
-          {{ 'MY_COMMUNITIES_VIEW_COMMUNITY' | translate }}
+          {{ 'MY_COMMUNITIES.VIEW_COMMUNITY' | translate }}
         </button>
       </div>
     </div>
@@ -101,11 +101,11 @@
     <div class="action-buttons">
       <button class="btn btn-primary" (click)="navigateToCreateCommunity()">
         <i class="fas fa-plus-circle"></i>
-        {{ 'MY_COMMUNITIES_CREATE_NEW' | translate }}
+        {{ 'MY_COMMUNITIES.CREATE_NEW' | translate }}
       </button>
       <button class="btn btn-outline" (click)="navigateToAllCommunities()">
         <i class="fas fa-search"></i>
-        {{ 'MY_COMMUNITIES_BROWSE_ALL' | translate }}
+        {{ 'MY_COMMUNITIES.BROWSE_ALL' | translate }}
       </button>
     </div>
   </div>
@@ -123,7 +123,7 @@
     <div class="back-content">
       <button class="btn btn-outline" routerLink="/">
         <i class="fas fa-arrow-left"></i>
-        {{ 'MY_COMMUNITIES_BACK_TO_HOME' | translate }}
+        {{ 'MY_COMMUNITIES.BACK_TO_HOME' | translate }}
       </button>
     </div>
   </div>

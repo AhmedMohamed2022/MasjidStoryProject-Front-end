@@ -3,13 +3,13 @@
   <div class="nav-header">
     <button class="back-btn" (click)="goBack()">
       <i class="fas fa-arrow-left"></i>
-      {{ 'COMMUNITY_DETAILS_BACK' | translate }}
+      {{ 'COMMUNITY_DETAILS.BACK' | translate }}
     </button>
 
     <div class="nav-actions">
       <button class="share-btn" (click)="shareCommunity()" *ngIf="community">
         <i class="fas fa-share-alt"></i>
-        {{ 'COMMUNITY_DETAILS_SHARE' | translate }}
+        {{ 'COMMUNITY_DETAILS.SHARE' | translate }}
       </button>
     </div>
   </div>
@@ -17,7 +17,7 @@
   <!-- Loading State -->
   <div *ngIf="loading" class="loading-container">
     <div class="loading-spinner"></div>
-    <p>{{ 'COMMUNITY_DETAILS_LOADING' | translate }}</p>
+    <p>{{ 'COMMUNITY_DETAILS.LOADING' | translate }}</p>
   </div>
 
   <!-- Error State -->
@@ -25,11 +25,11 @@
     <div class="error-icon">
       <i class="fas fa-exclamation-triangle"></i>
     </div>
-    <h3>{{ 'COMMUNITY_DETAILS_ERROR' | translate }}</h3>
+    <h3>{{ 'COMMUNITY_DETAILS.ERROR' | translate }}</h3>
     <p>{{ error }}</p>
     <div class="error-actions">
-      <button class="retry-btn" (click)="loadCommunity()">{{ 'COMMUNITY_DETAILS_TRY_AGAIN' | translate }}</button>
-      <button class="home-btn" routerLink="/home">{{ 'COMMUNITY_DETAILS_GO_HOME' | translate }}</button>
+      <button class="retry-btn" (click)="loadCommunity()">{{ 'COMMUNITY_DETAILS.TRY_AGAIN' | translate }}</button>
+      <button class="home-btn" routerLink="/home">{{ 'COMMUNITY_DETAILS.GO_HOME' | translate }}</button>
     </div>
   </div>
 
@@ -54,8 +54,8 @@
             </div>
             <div class="meta-item">
               <i class="fas fa-users"></i>
-              <span>{{ community.memberCount || 0 }} {{ (community.memberCount || 0) === 1 ? ('COMMUNITY_DETAILS_MEMBER'
-                | translate) : ('COMMUNITY_DETAILS_MEMBERS' | translate) }}</span>
+              <span>{{ community.memberCount || 0 }} {{ (community.memberCount || 0) === 1 ? ('COMMUNITY_DETAILS.MEMBER'
+                | translate) : ('COMMUNITY_DETAILS.MEMBERS' | translate) }}</span>
             </div>
           </div>
         </div>
@@ -63,7 +63,7 @@
         <div class="membership-section">
           <div class="membership-status" *ngIf="community?.isUserMember">
             <i class="fas fa-check-circle"></i>
-            <span>{{ 'COMMUNITY_DETAILS_YOU_ARE_MEMBER' | translate }}</span>
+            <span>{{ 'COMMUNITY_DETAILS.YOU_ARE_MEMBER' | translate }}</span>
           </div>
 
           <button *ngIf="isAuthenticated" class="membership-btn" [class.join]="!community.isUserMember"
@@ -71,13 +71,13 @@
             <div *ngIf="membershipLoading" class="btn-spinner"></div>
             <i *ngIf="!membershipLoading" class="fas" [class.fa-plus]="!community.isUserMember"
               [class.fa-minus]="community.isUserMember"></i>
-            {{ membershipLoading ? ('COMMUNITY_DETAILS_PROCESSING' | translate) : (community.isUserMember ?
-            ('COMMUNITY_DETAILS_LEAVE_COMMUNITY' | translate) : ('COMMUNITY_DETAILS_JOIN_COMMUNITY' | translate)) }}
+            {{ membershipLoading ? ('COMMUNITY_DETAILS.PROCESSING' | translate) : (community.isUserMember ?
+            ('COMMUNITY_DETAILS.LEAVE_COMMUNITY' | translate) : ('COMMUNITY_DETAILS.JOIN_COMMUNITY' | translate)) }}
           </button>
 
           <button *ngIf="!isAuthenticated" class="login-required-btn" routerLink="/login">
             <i class="fas fa-sign-in-alt"></i>
-            {{ 'COMMUNITY_DETAILS_LOGIN_TO_JOIN' | translate }}
+            {{ 'COMMUNITY_DETAILS.LOGIN_TO_JOIN' | translate }}
           </button>
         </div>
       </div>
@@ -85,7 +85,7 @@
       <div class="community-info">
         <div class="info-item">
           <i class="fas fa-user"></i>
-          <span>{{ 'COMMUNITY_DETAILS_CREATED_BY' | translate }} <strong>{{ community.createdByName }}</strong></span>
+          <span>{{ 'COMMUNITY_DETAILS.CREATED_BY' | translate }} <strong>{{ community.createdByName }}</strong></span>
         </div>
         <div class="info-item">
           <i class="fas fa-calendar"></i>
@@ -97,33 +97,33 @@
     <!-- Community Content -->
     <div class="community-body">
       <div class="content-section">
-        <h3>{{ 'COMMUNITY_DETAILS_ABOUT_COMMUNITY' | translate }}</h3>
+        <h3>{{ 'COMMUNITY_DETAILS.ABOUT_COMMUNITY' | translate }}</h3>
         <div class="content-text" [innerHTML]="community.content"></div>
       </div>
 
       <!-- Community Features -->
       <div class="features-section" *ngIf="community?.isUserMember">
-        <h3>{{ 'COMMUNITY_DETAILS_FEATURES' | translate }}</h3>
+        <h3>{{ 'COMMUNITY_DETAILS.FEATURES' | translate }}</h3>
         <div class="features-grid">
           <div class="feature-card">
             <i class="fas fa-comments"></i>
-            <h4>{{ 'COMMUNITY_DETAILS_DISCUSSIONS' | translate }}</h4>
-            <p>{{ 'COMMUNITY_DETAILS_DISCUSSIONS_DESC' | translate }}</p>
+            <h4>{{ 'COMMUNITY_DETAILS.DISCUSSIONS' | translate }}</h4>
+            <p>{{ 'COMMUNITY_DETAILS.DISCUSSIONS_DESC' | translate }}</p>
           </div>
           <div class="feature-card">
             <i class="fas fa-calendar-alt"></i>
-            <h4>{{ 'COMMUNITY_DETAILS_EVENTS' | translate }}</h4>
-            <p>{{ 'COMMUNITY_DETAILS_EVENTS_DESC' | translate }}</p>
+            <h4>{{ 'COMMUNITY_DETAILS.EVENTS' | translate }}</h4>
+            <p>{{ 'COMMUNITY_DETAILS.EVENTS_DESC' | translate }}</p>
           </div>
           <div class="feature-card">
             <i class="fas fa-share-alt"></i>
-            <h4>{{ 'COMMUNITY_DETAILS_SHARE_STORIES' | translate }}</h4>
-            <p>{{ 'COMMUNITY_DETAILS_SHARE_STORIES_DESC' | translate }}</p>
+            <h4>{{ 'COMMUNITY_DETAILS.SHARE_STORIES' | translate }}</h4>
+            <p>{{ 'COMMUNITY_DETAILS.SHARE_STORIES_DESC' | translate }}</p>
           </div>
           <div class="feature-card">
             <i class="fas fa-bell"></i>
-            <h4>{{ 'COMMUNITY_DETAILS_NOTIFICATIONS' | translate }}</h4>
-            <p>{{ 'COMMUNITY_DETAILS_NOTIFICATIONS_DESC' | translate }}</p>
+            <h4>{{ 'COMMUNITY_DETAILS.NOTIFICATIONS' | translate }}</h4>
+            <p>{{ 'COMMUNITY_DETAILS.NOTIFICATIONS_DESC' | translate }}</p>
           </div>
         </div>
       </div>
@@ -131,13 +131,13 @@
       <!-- Join Call-to-Action for Non-Members -->
       <div class="join-cta" *ngIf="!community?.isUserMember && isAuthenticated">
         <div class="cta-content">
-          <h3>{{ 'COMMUNITY_DETAILS_JOIN_CTA_TITLE' | translate }}</h3>
-          <p>{{ 'COMMUNITY_DETAILS_JOIN_CTA_DESC' | translate: { count: community.memberCount || 0, masjidName:
+          <h3>{{ 'COMMUNITY_DETAILS.JOIN_CTA_TITLE' | translate }}</h3>
+          <p>{{ 'COMMUNITY_DETAILS.JOIN_CTA_DESC' | translate: { count: community.memberCount || 0, masjidName:
             community.masjidName } }}</p>
           <button class="cta-btn" (click)="toggleMembership()" [disabled]="membershipLoading">
             <div *ngIf="membershipLoading" class="btn-spinner"></div>
             <i *ngIf="!membershipLoading" class="fas fa-plus"></i>
-            {{ membershipLoading ? ('COMMUNITY_DETAILS_JOINING' | translate) : ('COMMUNITY_DETAILS_JOIN_COMMUNITY' |
+            {{ membershipLoading ? ('COMMUNITY_DETAILS.JOINING' | translate) : ('COMMUNITY_DETAILS.JOIN_COMMUNITY' |
             translate) }}
           </button>
         </div>
@@ -150,8 +150,8 @@
             (click)="toggleLike()">
             <i class="fas fa-heart" [class.text-danger]="community.isLikedByCurrentUser"></i>
             <span class="like-count">{{ community.likeCount || 0 }}</span>
-            <span class="like-text">{{ (community.likeCount || 0) === 1 ? ('COMMUNITY_DETAILS_LIKE' | translate) :
-              ('COMMUNITY_DETAILS_LIKES' | translate) }}</span>
+            <span class="like-text">{{ (community.likeCount || 0) === 1 ? ('COMMUNITY_DETAILS.LIKE' | translate) :
+              ('COMMUNITY_DETAILS.LIKES' | translate) }}</span>
           </button>
         </div>
       </div>
@@ -161,7 +161,7 @@
         <div class="comments-header">
           <h3 class="section-title">
             <i class="fas fa-comments me-2"></i>
-            {{ 'COMMUNITY_DETAILS_COMMENTS' | translate }} ({{ community.comments?.length || 0 }})
+            {{ 'COMMUNITY_DETAILS.COMMENTS' | translate }} ({{ community.comments?.length || 0 }})
           </h3>
         </div>
 
@@ -169,9 +169,9 @@
         <div class="add-comment-form" *ngIf="isAuthenticated">
           <div class="comment-input-card">
             <div class="form-group">
-              <label for="newComment" class="form-label">{{ 'COMMUNITY_DETAILS_SHARE_THOUGHTS' | translate }}</label>
+              <label for="newComment" class="form-label">{{ 'COMMUNITY_DETAILS.SHARE_THOUGHTS' | translate }}</label>
               <textarea id="newComment" class="form-control comment-textarea" [(ngModel)]="newComment"
-                [placeholder]="'COMMUNITY_DETAILS_COMMENT_PLACEHOLDER' | translate" maxlength="500" rows="3"></textarea>
+                [placeholder]="'COMMUNITY_DETAILS.COMMENT_PLACEHOLDER' | translate" maxlength="500" rows="3"></textarea>
               <div class="character-count">
                 {{ newComment.length || 0 }}/500
               </div>
@@ -181,7 +181,7 @@
                 (click)="addComment()">
                 <i class="fas fa-paper-plane me-2" *ngIf="!submittingComment"></i>
                 <i class="fas fa-spinner fa-spin me-2" *ngIf="submittingComment"></i>
-                {{ submittingComment ? ('COMMUNITY_DETAILS_POSTING' | translate) : ('COMMUNITY_DETAILS_POST_COMMENT' |
+                {{ submittingComment ? ('COMMUNITY_DETAILS.POSTING' | translate) : ('COMMUNITY_DETAILS.POST_COMMENT' |
                 translate) }}
               </button>
             </div>
@@ -198,8 +198,8 @@
         <div class="login-prompt" *ngIf="!isAuthenticated">
           <div class="alert alert-info">
             <i class="fas fa-info-circle me-2"></i>
-            {{ 'COMMUNITY_DETAILS_LOGIN_TO_INTERACT' | translate }} <a href="/login" class="alert-link">{{
-              'COMMUNITY_DETAILS_LOGIN' | translate }}</a>.
+            {{ 'COMMUNITY_DETAILS.LOGIN_TO_INTERACT' | translate }} <a href="/login" class="alert-link">{{
+              'COMMUNITY_DETAILS.LOGIN' | translate }}</a>.
           </div>
         </div>
 
@@ -228,7 +228,7 @@
           <div class="no-comments" *ngIf="!community.comments || community.comments.length === 0">
             <div class="text-center text-muted">
               <i class="fas fa-comment-slash fa-3x mb-3"></i>
-              <p>{{ 'COMMUNITY_DETAILS_NO_COMMENTS' | translate }}</p>
+              <p>{{ 'COMMUNITY_DETAILS.NO_COMMENTS' | translate }}</p>
             </div>
           </div>
         </div>
