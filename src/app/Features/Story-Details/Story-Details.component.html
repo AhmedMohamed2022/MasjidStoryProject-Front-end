@@ -26,7 +26,7 @@
         <div class="row">
           <div class="col-12">
             <div class="story-header">
-              <h1 class="story-title">{{ story.title }}</h1>
+              <h1 class="story-title">{{ story.localizedTitle }}</h1>
               <div class="story-tags mb-2" *ngIf="story.tags && story.tags.length">
                 <span class="badge bg-emerald me-2" *ngFor="let tag of story.tags">{{ tag }}</span>
               </div>
@@ -67,7 +67,7 @@
             <div class="story-body">
               <div class="content-card">
                 <div class="story-text">
-                  <p *ngFor="let paragraph of story.content.split('\n'); let i = index"
+                  <p *ngFor="let paragraph of story.localizedContent.split('\n'); let i = index"
                     [class.first-paragraph]="i === 0">
                     {{ paragraph }}
                   </p>
@@ -184,7 +184,7 @@
               <div class="row">
                 <div class="col-md-4" *ngFor="let relatedStory of relatedStories">
                   <div class="story-card" (click)="navigateToStory(relatedStory.id)">
-                    <h4 class="story-title">{{ relatedStory.title }}</h4>
+                    <h4 class="story-title">{{ relatedStory.localizedTitle }}</h4>
                     <p class="story-masjid">{{ relatedStory.masjidName }}</p>
                     <div class="story-meta">
                       <span class="date">{{ formatDate(relatedStory.datePublished) }}</span>

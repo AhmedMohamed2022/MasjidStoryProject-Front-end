@@ -185,7 +185,7 @@
     "NO_EVENTS_TITLE": "لا توجد فعاليات قادمة",
     "NO_EVENTS_DESCRIPTION": "لا توجد فعاليات قادمة مجدولة لهذا المسجد حالياً.",
     "BROWSE_ALL": "تصفح جميع الفعاليات",
-    "ORGANIZED_BY": "منظم بواسطة {name}",
+    "ORGANIZED_BY": "منظم بواسطة {{name}}",
     "REGISTER": "تسجيل",
     "REGISTERING": "جاري التسجيل...",
     "REGISTERED": "مسجل",
@@ -248,7 +248,7 @@
     "DELETE_SUCCESS": "تم حذف الفعالية بنجاح!",
     "DELETE_FAILED": "فشل في حذف الفعالية. قد لا يكون لديك إذن.",
     "MASJID": "المسجد",
-    "ORGANIZED_BY": "منظم بواسطة",
+    "ORGANIZED_BY": "منظم بواسطة {{name}}",
     "TIME": "الوقت",
     "REGISTRATION_STATUS": "حالة التسجيل",
     "NOT_REGISTERED": "غير مسجل",
@@ -271,7 +271,8 @@
     "NO_COMMENTS": "لا توجد تعليقات بعد. كن أول من يشارك أفكاره!",
     "REGISTRATION_SUCCESS": "تم التسجيل بنجاح!",
     "REGISTRATION_FAILED": "فشل التسجيل. قد تكون مسجلاً بالفعل.",
-    "LINK_COPIED": "تم نسخ رابط الفعالية إلى الحافظة!"
+    "LINK_COPIED": "تم نسخ رابط الفعالية إلى الحافظة!",
+    "REGISTERED": "مسجل"
   },
 
   "STORY_DETAILS": {

@@ -33,6 +33,9 @@ export class UpcomingEventsComponent implements OnInit {
     if (this.authService.isAuthenticated()) {
       this.userRegistrationService.refreshRegistrations();
     }
+    this.translate.onLangChange.subscribe(() => {
+      this.loadEvents();
+    });
   }
 
   get isAuthenticated(): boolean {
@@ -41,7 +44,7 @@ export class UpcomingEventsComponent implements OnInit {
 
   loadEvents(): void {
     this.loading = true;
-    this.eventService.getUpcomingEvents().subscribe({
+    this.eventService.getUpcomingEvents(this.translate.currentLang).subscribe({
       next: (events) => {
         // Update registration status for each event
         this.events = events.map((event) => ({

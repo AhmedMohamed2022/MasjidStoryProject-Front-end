@@ -32,13 +32,16 @@ export class MyEventsComponent implements OnInit {
     if (this.authService.isAuthenticated()) {
       this.userRegistrationService.refreshRegistrations();
     }
+    this.translate.onLangChange.subscribe(() => {
+      this.loadMyEvents();
+    });
   }
 
   loadMyEvents(): void {
     this.loading = true;
     this.error = null;
 
-    this.eventService.getMyRegistrations().subscribe({
+    this.eventService.getMyRegistrations(this.translate.currentLang).subscribe({
       next: (events) => {
         // Ensure all events show as registered
         this.registeredEvents = events.map((event) => ({

@@ -29,7 +29,7 @@
           <!-- Event Header -->
           <div class="event-header">
             <div class="event-title-section">
-              <h1 class="event-title">{{ event.title }}</h1>
+              <h1 class="event-title">{{ event.localizedTitle }}</h1>
               <div class="event-meta">
                 <span class="event-status" [class]="getEventStatusClass()">
                   <i class="fas" [class]="getEventStatusIcon()"></i>
@@ -75,9 +75,8 @@
               <div class="info-item">
                 <div class="info-label">
                   <i class="fas fa-user"></i>
-                  {{ 'EVENT_DETAILS.ORGANIZED_BY' | translate }}
+                  {{ 'EVENT_DETAILS.ORGANIZED_BY' | translate:{ name: event.createdByName } }}
                 </div>
-                <div class="info-value">{{ event.createdByName }}</div>
               </div>
 
               <div class="info-item">
@@ -110,7 +109,7 @@
                 {{ 'EVENT_DETAILS.DESCRIPTION' | translate }}
               </h3>
               <div class="description-content">
-                <p>{{ event.description }}</p>
+                <p>{{ event.localizedDescription }}</p>
               </div>
             </div>
 

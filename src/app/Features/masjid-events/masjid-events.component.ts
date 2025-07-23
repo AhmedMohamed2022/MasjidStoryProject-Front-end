@@ -51,6 +51,11 @@ export class MasjidEventsComponent implements OnInit, OnDestroy {
         }
       }
     });
+    this.translate.onLangChange.subscribe(() => {
+      if (this.masjidId) {
+        this.loadMasjidEvents(this.masjidId);
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -69,7 +74,7 @@ export class MasjidEventsComponent implements OnInit, OnDestroy {
     this.error = '';
 
     this.eventService
-      .getMasjidEvents(masjidId)
+      .getMasjidEvents(masjidId, this.translate.currentLang)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {

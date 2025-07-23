@@ -42,6 +42,7 @@ export interface MasjidViewModel {
   dateOfRecord: Date;
   mediaItems?: MediaViewModel[];
   contents?: MasjidContentViewModel[];
+  localizedName?: string;
 }
 
 export interface MasjidCreateViewModel {

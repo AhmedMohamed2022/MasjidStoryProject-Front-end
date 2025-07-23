@@ -166,11 +166,11 @@
         <div class="col-lg-6 mb-4" *ngFor="let story of latestStories">
           <div class="story-card" (click)="navigateToStory(story.id)">
             <div class="story-header">
-              <h5 class="story-title">{{ story.title }}</h5>
+              <h5 class="story-title">{{ story.localizedTitle }}</h5>
               <span class="story-masjid">{{ story.masjidName }}</span>
             </div>
             <div class="story-content">
-              <p class="story-excerpt">{{ getStoryExcerpt(story.content) }}</p>
+              <p class="story-excerpt">{{ getStoryExcerpt(story.localizedContent) }}</p>
               <div class="story-meta">
                 <span class="story-author">
                   <i class="fas fa-user"></i>

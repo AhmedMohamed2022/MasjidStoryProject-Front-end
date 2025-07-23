@@ -123,7 +123,7 @@
                 <div class="card-header-left">
                   <mat-checkbox [checked]="isStorySelected(story.id)" (change)="toggleStorySelection(story.id, $event)">
                   </mat-checkbox>
-                  <h3>{{ story.title }}</h3>
+                  <h3>{{ story.localizedTitle }}</h3>
                 </div>
                 <div class="card-badge pending">{{ 'ADMIN_DASHBOARD.PENDING_REVIEW' | translate }}</div>
               </div>
@@ -157,7 +157,7 @@
                 </div>
 
                 <div class="story-content content-text">
-                  <p>{{ story.content | slice:0:200 }}...</p>
+                  <p>{{ story.localizedContent | slice:0:200 }}...</p>
                 </div>
 
                 <!-- Story Images Preview -->
@@ -233,7 +233,7 @@
           <div *ngIf="!allStoriesLoading && !allStoriesError && allStories.length > 0" class="stories-grid admin-grid">
             <div *ngFor="let story of allStories" class="story-card admin-card">
               <div class="card-header">
-                <h3>{{ story.title }}</h3>
+                <h3>{{ story.localizedTitle }}</h3>
                 <div class="card-badge published">{{ 'ADMIN_DASHBOARD.PUBLISHED' | translate }}</div>
               </div>
               <div class="card-body">
@@ -256,7 +256,7 @@
                   </div>
                 </div>
                 <div class="story-content content-text">
-                  <p>{{ story.content | slice:0:200 }}...</p>
+                  <p>{{ story.localizedContent | slice:0:200 }}...</p>
                 </div>
               </div>
               <div class="card-actions">
@@ -446,7 +446,7 @@
             <div *ngIf="!masjidsLoading && !masjidsError && masjids.length > 0" class="masjids-grid admin-grid">
               <div *ngFor="let masjid of masjids" class="masjid-card admin-card">
                 <div class="card-header">
-                  <h3>{{ masjid.shortName }}</h3>
+                  <h3>{{ masjid.localizedName }}</h3>
                   <div class="card-badge masjid">{{ 'ADMIN_DASHBOARD.MASJID' | translate }}</div>
                 </div>
                 <div class="card-body">
@@ -617,7 +617,7 @@
             <div *ngIf="!eventsLoading && !eventsError && events.length > 0" class="events-grid admin-grid">
               <div *ngFor="let event of events" class="event-card admin-card">
                 <div class="card-header">
-                  <h3>{{ event.title }}</h3>
+                  <h3>{{ event.localizedTitle }}</h3>
                   <div class="card-badge event">{{ 'ADMIN_DASHBOARD.EVENT' | translate }}</div>
                 </div>
                 <div class="card-body">
@@ -641,7 +641,8 @@
                     </div>
                   </div>
                   <div class="event-content content-text">
-                    <p>{{ event.description | slice:0:150 }}{{ event.description.length > 150 ? '...' : '' }}</p>
+                    <p>{{ event.localizedDescription | slice:0:150 }}{{ (event.localizedDescription.length || 0) > 150
+                      ? '...' : '' }}</p>
                   </div>
                 </div>
                 <div class="card-actions">

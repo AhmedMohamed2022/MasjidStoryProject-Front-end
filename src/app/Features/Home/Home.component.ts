@@ -47,6 +47,13 @@ export class HomeComponent implements OnInit {
     if (this.authService.isAuthenticated()) {
       this.userRegistrationService.refreshRegistrations();
     }
+
+    // Subscribe to language changes
+    this.translate.onLangChange.subscribe(() => {
+      this.loadFeaturedMasjids();
+      this.loadLatestStories();
+      this.loadUpcomingEvents();
+    });
   }
 
   get isAuthenticated(): boolean {
@@ -95,7 +102,7 @@ export class HomeComponent implements OnInit {
   }
 
   loadUpcomingEvents(): void {
-    this.homeService.getUpcomingEvents().subscribe({
+    this.homeService.getUpcomingEvents(this.translate.currentLang).subscribe({
       next: (events) => {
         // Update registration status for each event
         this.upcomingEvents = events.slice(0, 6).map((event) => ({

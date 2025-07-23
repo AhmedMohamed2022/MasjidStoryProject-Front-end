@@ -29,9 +29,13 @@ export class HomeService {
       .pipe(map((response) => response.data));
   }
 
-  getUpcomingEvents(): Observable<EventViewModel[]> {
+  getUpcomingEvents(languageCode?: string): Observable<EventViewModel[]> {
+    let url = `${this.apiUrl}/api/event/upcoming`;
+    if (languageCode) {
+      url += `?languageCode=${languageCode}`;
+    }
     return this.http
-      .get<ApiResponse<EventViewModel[]>>(`${this.apiUrl}/api/event/upcoming`)
+      .get<ApiResponse<EventViewModel[]>>(url)
       .pipe(map((response) => response.data));
   }
 }

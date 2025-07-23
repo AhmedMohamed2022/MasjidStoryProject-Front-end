@@ -60,7 +60,7 @@
                                 <!-- Story Image -->
                                 <div class="story-image">
                                     <img *ngIf="story.imageUrls && story.imageUrls.length > 0"
-                                        [src]="story.imageUrls[0]" [alt]="story.title" class="img-fluid" />
+                                        [src]="story.imageUrls[0]" [alt]="story.localizedTitle" class="img-fluid" />
                                     <div *ngIf="!story.imageUrls || story.imageUrls.length === 0" class="no-image">
                                         <i class="fas fa-image"></i>
                                     </div>
@@ -76,9 +76,9 @@
 
                                 <!-- Story Content -->
                                 <div class="story-content">
-                                    <h5 class="story-title">{{ story.title }}</h5>
-                                    <p class="story-excerpt">{{ story.content | slice:0:150 }}{{ story.content.length >
-                                        150 ? '...' : '' }}</p>
+                                    <h5 class="story-title">{{ story.localizedTitle }}</h5>
+                                    <p class="story-excerpt">{{ story.localizedContent | slice:0:150 }}{{
+                                        story.localizedContent.length > 150 ? '...' : '' }}</p>
 
                                     <!-- Story Meta -->
                                     <div class="story-meta">

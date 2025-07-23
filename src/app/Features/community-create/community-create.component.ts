@@ -94,7 +94,9 @@ export class CreateCommunityComponent implements OnInit {
       this.masjidService.getAllMasjids().toPromise(),
     ])
       .then(([languages, masjids]) => {
-        this.languages = languages || [];
+        this.languages = (languages || []).filter(
+          (lang) => lang.code === 'en' || lang.code === 'ar'
+        );
         this.masjids = masjids || [];
 
         // Set default language to English if available

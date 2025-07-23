@@ -48,6 +48,7 @@ export class EventDetailsComponent implements OnInit {
     this.route.params.subscribe((params) => {
       const eventId = +params['id'];
       if (eventId) {
+        this.eventId = eventId;
         this.loadEventDetails(eventId);
         // Only load registrations if user is authenticated
         if (this.authService.isAuthenticated()) {
@@ -55,30 +56,37 @@ export class EventDetailsComponent implements OnInit {
         }
       }
     });
+    this.translate.onLangChange.subscribe(() => {
+      if (this.eventId) {
+        this.loadEventDetails(this.eventId);
+      }
+    });
   }
 
   loadEventDetails(eventId: number): void {
     this.loading = true;
-    this.eventService.getEventDetails(eventId).subscribe({
-      next: (event) => {
-        event.isUserRegistered = this.userRegistrationService.isUserRegistered(
-          event.id
-        );
-        this.event = event;
-        this.loading = false;
-
-        // Load comments and likes after event is loaded
-        this.loadComments();
-        this.loadLikeStatus();
-      },
-      error: (error) => {
-        this.translate.get('EVENT_DETAILS.ERROR').subscribe((text: string) => {
-          this.error = text;
-        });
-        this.loading = false;
-        console.error('Error loading event:', error);
-      },
-    });
+    this.eventService
+      .getEventDetails(eventId, this.translate.currentLang)
+      .subscribe({
+        next: (event) => {
+          event.isUserRegistered =
+            this.userRegistrationService.isUserRegistered(event.id);
+          this.event = event;
+          this.loading = false;
+          // Load comments and likes after event is loaded
+          this.loadComments();
+          this.loadLikeStatus();
+        },
+        error: (error) => {
+          this.translate
+            .get('EVENT_DETAILS.ERROR')
+            .subscribe((text: string) => {
+              this.error = text;
+            });
+          this.loading = false;
+          console.error('Error loading event:', error);
+        },
+      });
   }
 
   registerForEvent(): void {
@@ -191,7 +199,7 @@ export class EventDetailsComponent implements OnInit {
   get isEventCreator(): boolean {
     if (!this.event || !this.isAuthenticated) return false;
     const currentUser = this.authService.getCurrentUser();
-    return currentUser?.email === this.event.createdByName; // Assuming createdByName is email
+    return currentUser?.userId === this.event.createdById;
   }
 
   get isEventPast(): boolean {

@@ -15,12 +15,14 @@ export interface AuthResponse {
   token: string;
   email: string;
   fullName: string;
+  userId: string;
   roles: string[];
 }
 
 export interface User {
   email: string;
   fullName: string;
+  userId: string;
   roles: string[];
 }
 

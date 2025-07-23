@@ -14,51 +14,86 @@ import {
 } from '../../Core/Models/event.model';
 import { MasjidViewModel } from '../../Core/Models/masjid.model';
 import { AuthService } from '../../Core/Services/auth.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import {
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 
 @Component({
   selector: 'app-edit-event',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './edit-event.component.html',
   styleUrls: ['./edit-event.component.css'],
 })
 export class EditEventComponent implements OnInit {
-  event: EventCreateViewModel = {
-    title: '',
-    description: '',
-    eventDate: '',
-    masjidId: undefined,
-    languageId: undefined,
-  };
+  eventForm!: FormGroup;
 
   originalEvent: EventViewModel | null = null;
   masjids: MasjidViewModel[] = [];
-  languages: LanguageViewModel[] = [];
+  languages: { id: number; code: string; name: string }[] = [
+    { id: 1, code: 'en', name: 'English' },
+    { id: 2, code: 'ar', name: 'Arabic' },
+  ];
   eventId: number = 0;
   loading = false;
   loadingEvent = true;
   loadingMasjids = true;
-  loadingLanguages = true;
+  loadingLanguages = false;
   error: string | null = null;
   success: string | null = null;
 
   constructor(
     private eventService: EventService,
     private masjidService: MasjidService,
-    private languageService: LanguageService,
     private authService: AuthService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private fb: FormBuilder,
+    public translate: TranslateService
   ) {}
 
   ngOnInit(): void {
     this.eventId = Number(this.route.snapshot.paramMap.get('id'));
+    this.initForm();
+    this.loadMasjids();
+    this.translate.onLangChange.subscribe(() => {
+      this.loadMasjids();
+    });
     if (this.eventId) {
       this.loadEventForEdit();
-      this.loadMasjids();
-      this.loadLanguages();
     }
+  }
+
+  initForm(): void {
+    this.eventForm = this.fb.group({
+      eventDate: ['', Validators.required],
+      masjidId: [null],
+      contents: this.fb.array([]),
+    });
+    this.initContentsArray();
+  }
+
+  initContentsArray(): void {
+    const contentsArray = this.eventForm.get('contents') as FormArray;
+    contentsArray.clear();
+    this.languages.forEach((lang) => {
+      contentsArray.push(
+        this.fb.group({
+          languageId: [lang.id, Validators.required],
+          title: ['', Validators.required],
+          description: ['', Validators.required],
+        })
+      );
+    });
+  }
+
+  get contentsControls() {
+    return (this.eventForm.get('contents') as FormArray).controls;
   }
 
   loadEventForEdit(): void {
@@ -74,14 +109,12 @@ export class EditEventComponent implements OnInit {
           return;
         }
 
-        // Populate form with existing data
-        this.event = {
-          title: event.title,
-          description: event.description,
+        // Patch form with existing data
+        this.eventForm.patchValue({
           eventDate: new Date(event.eventDate).toISOString().slice(0, 16),
           masjidId: event.masjidId,
-          languageId: undefined, // Add if available in your model
-        };
+        });
+        this.patchContentsArray((event as any).contents || []);
 
         this.loadingEvent = false;
       },
@@ -93,6 +126,25 @@ export class EditEventComponent implements OnInit {
     });
   }
 
+  patchContentsArray(contents: any[]): void {
+    const contentsArray = this.eventForm.get('contents') as FormArray;
+    contentsArray.clear();
+    this.languages.forEach((lang) => {
+      const existing = contents.find((c) => c.languageId === lang.id) || {
+        languageId: lang.id,
+        title: '',
+        description: '',
+      };
+      contentsArray.push(
+        this.fb.group({
+          languageId: [lang.id, Validators.required],
+          title: [existing.title, Validators.required],
+          description: [existing.description, Validators.required],
+        })
+      );
+    });
+  }
+
   isEventCreator(event: EventViewModel): boolean {
     if (!this.authService.isAuthenticated()) return false;
     const currentUser = this.authService.getCurrentUser();
@@ -100,57 +152,29 @@ export class EditEventComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (!this.isFormValid()) {
-      return;
-    }
-
+    if (this.eventForm.invalid) return;
     this.loading = true;
     this.error = null;
     this.success = null;
-
-    this.eventService.updateEvent(this.eventId, this.event).subscribe({
+    const formValue = this.eventForm.value;
+    const eventToUpdate = {
+      eventDate: new Date(formValue.eventDate).toISOString(),
+      masjidId: formValue.masjidId,
+      contents: formValue.contents,
+    };
+    this.eventService.updateEvent(this.eventId, eventToUpdate).subscribe({
       next: (response) => {
         this.success = 'Event updated successfully!';
         this.loading = false;
-
-        // Redirect to event details after 2 seconds
         setTimeout(() => {
           this.router.navigate(['/event-details', this.eventId]);
         }, 2000);
       },
       error: (error) => {
-        console.error('Error updating event:', error);
         this.error = 'Failed to update event. Please try again.';
         this.loading = false;
       },
     });
-  }
-
-  isFormValid(): boolean {
-    if (!this.event.title.trim()) {
-      this.error = 'Title is required';
-      return false;
-    }
-
-    if (!this.event.description.trim()) {
-      this.error = 'Description is required';
-      return false;
-    }
-
-    if (!this.event.eventDate) {
-      this.error = 'Event date is required';
-      return false;
-    }
-
-    // Check if date is in the future
-    const eventDate = new Date(this.event.eventDate);
-    const now = new Date();
-    if (eventDate <= now) {
-      this.error = 'Event date must be in the future';
-      return false;
-    }
-
-    return true;
   }
 
   onCancel(): void {
@@ -166,7 +190,7 @@ export class EditEventComponent implements OnInit {
   }
 
   loadMasjids(): void {
-    this.masjidService.getAllMasjids().subscribe({
+    this.masjidService.getAllMasjids(this.translate.currentLang).subscribe({
       next: (masjids) => {
         this.masjids = masjids;
         this.loadingMasjids = false;
@@ -174,77 +198,9 @@ export class EditEventComponent implements OnInit {
       error: (error) => {
         console.error('Error loading masjids:', error);
         this.loadingMasjids = false;
-        this.loadMockMasjids();
       },
     });
   }
 
-  loadMockMasjids(): void {
-    setTimeout(() => {
-      this.masjids = [
-        {
-          id: 1,
-          shortName: 'Al-Azhar',
-          address: 'Cairo, Egypt',
-          archStyle: 'Islamic',
-          countryId: 1,
-          countryName: 'Egypt',
-          cityId: 1,
-          cityName: 'Cairo',
-          yearOfEstablishment: 970,
-          dateOfRecord: new Date(),
-        },
-        {
-          id: 2,
-          shortName: 'Al-Kadhimiya',
-          address: 'Baghdad, Iraq',
-          archStyle: 'Islamic',
-          countryId: 2,
-          countryName: 'Iraq',
-          cityId: 2,
-          cityName: 'Baghdad',
-          yearOfEstablishment: 1515,
-          dateOfRecord: new Date(),
-        },
-        {
-          id: 3,
-          shortName: 'Al-Askari',
-          address: 'Samarra, Iraq',
-          archStyle: 'Islamic',
-          countryId: 2,
-          countryName: 'Iraq',
-          cityId: 2,
-          cityName: 'Baghdad',
-          yearOfEstablishment: 944,
-          dateOfRecord: new Date(),
-        },
-      ];
-      this.loadingMasjids = false;
-    }, 1000);
-  }
-
-  loadLanguages(): void {
-    this.languageService.getAllLanguages().subscribe({
-      next: (languages) => {
-        this.languages = languages;
-        this.loadingLanguages = false;
-      },
-      error: (error) => {
-        console.error('Error loading languages:', error);
-        this.loadingLanguages = false;
-        this.loadMockLanguages();
-      },
-    });
-  }
-
-  loadMockLanguages(): void {
-    setTimeout(() => {
-      this.languages = [
-        { id: 1, name: 'English', code: 'en' },
-        { id: 2, name: 'Arabic', code: 'ar' },
-        { id: 3, name: 'Turkish', code: 'tr' },
-      ];
-      this.loadingLanguages = false;
-    }, 1000);
-  }
+  // contentsControls getter is already present
 }

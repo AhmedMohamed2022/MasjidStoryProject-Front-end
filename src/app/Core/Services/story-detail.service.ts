@@ -13,6 +13,7 @@ import {
 import { environment } from '../environments/environment';
 import { ApiResponse } from '../Models/api-response.model';
 import { PaginatedResponse } from '../Models/paginated-response.model';
+import { TagViewModel } from '../../Core/Models/tag.model';
 
 @Injectable({
   providedIn: 'root',
@@ -21,10 +22,15 @@ export class StoryService {
   private http = inject(HttpClient);
   private readonly baseUrl = `${environment.apiUrl}/api`;
 
-  async getStoryById(id: number): Promise<StoryViewModel> {
+  async getStoryById(
+    id: number,
+    languageCode: string = 'en'
+  ): Promise<StoryViewModel> {
     try {
       const response = await firstValueFrom(
-        this.http.get<StoryViewModel>(`${this.baseUrl}/story/details/${id}`)
+        this.http.get<StoryViewModel>(
+          `${this.baseUrl}/story/details/${id}?languageCode=${languageCode}`
+        )
       );
       return response;
     } catch (error) {
@@ -82,11 +88,14 @@ export class StoryService {
     }
   }
 
-  async getRelatedStories(storyId: number): Promise<StoryViewModel[]> {
+  async getRelatedStories(
+    storyId: number,
+    languageCode: string = 'en'
+  ): Promise<StoryViewModel[]> {
     try {
       const response = await firstValueFrom(
         this.http.get<ApiResponse<StoryViewModel[]>>(
-          `${this.baseUrl}/story/related/${storyId}`
+          `${this.baseUrl}/story/related/${storyId}?languageCode=${languageCode}`
         )
       );
 
@@ -98,13 +107,13 @@ export class StoryService {
     }
   }
 
-  async getAllStories(): Promise<StoryViewModel[]> {
+  async getAllStories(languageCode: string = 'en'): Promise<StoryViewModel[]> {
     try {
       const response = await firstValueFrom(
-        this.http.get<StoryViewModel[]>(`${this.baseUrl}/story/all`)
+        this.http.get<StoryViewModel[]>(
+          `${this.baseUrl}/story/all?languageCode=${languageCode}`
+        )
       );
-
-      // The backend returns direct array, not wrapped in ApiResponse
       return response || [];
     } catch (error) {
       console.error('Error fetching all stories:', error);
@@ -114,13 +123,14 @@ export class StoryService {
 
   async getStoriesPaginated(
     page: number = 1,
-    size: number = 10
+    size: number = 10,
+    languageCode: string = 'en'
   ): Promise<PaginatedResponse<StoryViewModel>> {
     try {
       console.log(`Fetching stories: page=${page}, size=${size}`);
       const response = await firstValueFrom(
         this.http.get<PaginatedResponse<StoryViewModel>>(
-          `${this.baseUrl}/story/paginated?page=${page}&size=${size}`
+          `${this.baseUrl}/story/paginated?page=${page}&size=${size}&languageCode=${languageCode}`
         )
       );
 
@@ -143,10 +153,12 @@ export class StoryService {
     }
   }
 
-  async getAllTags(): Promise<string[]> {
+  async getAllTags(languageCode: string = 'en'): Promise<TagViewModel[]> {
     try {
       const response = await firstValueFrom(
-        this.http.get<string[]>(`${this.baseUrl}/tag/all`)
+        this.http.get<TagViewModel[]>(
+          `${this.baseUrl}/tag/all?languageCode=${languageCode}`
+        )
       );
       return response;
     } catch (error) {
@@ -157,13 +169,18 @@ export class StoryService {
 
   async createStory(story: StoryCreateViewModel): Promise<string> {
     const formData = new FormData();
-    formData.append('title', story.title);
-    formData.append('content', story.content);
-    if (story.masjidId) formData.append('masjidId', story.masjidId.toString());
-    if (story.languageId)
-      formData.append('languageId', story.languageId.toString());
+    formData.append('masjidId', story.masjidId.toString());
     story.tags.forEach((tag) => formData.append('tags', tag));
     story.storyImages.forEach((file) => formData.append('storyImages', file));
+    // Serialize contents array as indexed fields
+    story.contents.forEach((content, idx) => {
+      formData.append(
+        `contents[${idx}].languageId`,
+        content.languageId.toString()
+      );
+      formData.append(`contents[${idx}].title`, content.title);
+      formData.append(`contents[${idx}].content`, content.content);
+    });
 
     try {
       const response = await firstValueFrom(
@@ -176,10 +193,14 @@ export class StoryService {
     }
   }
 
-  async getPendingStories(): Promise<StoryViewModel[]> {
+  async getPendingStories(
+    languageCode: string = 'en'
+  ): Promise<StoryViewModel[]> {
     try {
       const response = await firstValueFrom(
-        this.http.get<StoryViewModel[]>(`${this.baseUrl}/story/pending`)
+        this.http.get<StoryViewModel[]>(
+          `${this.baseUrl}/story/pending?languageCode=${languageCode}`
+        )
       );
       return response || [];
     } catch (error) {
@@ -217,12 +238,17 @@ export class StoryService {
   async updateStory(id: number, story: StoryEditViewModel): Promise<string> {
     const formData = new FormData();
     formData.append('id', story.id.toString());
-    formData.append('title', story.title);
-    formData.append('content', story.content);
     formData.append('masjidId', story.masjidId.toString());
-    if (story.languageId)
-      formData.append('languageId', story.languageId.toString());
     formData.append('isApproved', story.isApproved.toString());
+    // Serialize contents array as indexed fields
+    story.contents.forEach((content, idx) => {
+      formData.append(
+        `contents[${idx}].languageId`,
+        content.languageId.toString()
+      );
+      formData.append(`contents[${idx}].title`, content.title);
+      formData.append(`contents[${idx}].content`, content.content);
+    });
 
     // Handle media IDs to keep (not delete)
     if (story.keepMediaIds) {

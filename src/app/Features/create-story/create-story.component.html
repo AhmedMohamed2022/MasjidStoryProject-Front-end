@@ -27,26 +27,33 @@
         <div class="event-form-card">
           <form (ngSubmit)="onSubmit()" #storyForm="ngForm">
 
-            <!-- Title Field -->
-            <div class="form-group mb-4">
-              <label for="title" class="form-label">
-                <i class="fas fa-heading"></i>
-                {{ 'CREATE_STORY.TITLE_LABEL' | translate }}
-              </label>
-              <input type="text" id="title" name="title" class="form-control" [(ngModel)]="story.title"
-                [placeholder]="'CREATE_STORY.TITLE_PLACEHOLDER' | translate" required maxlength="200" />
-            </div>
-
-            <!-- Content Field -->
-            <div class="form-group mb-4">
-              <label for="content" class="form-label">
-                <i class="fas fa-align-left"></i>
-                {{ 'CREATE_STORY.CONTENT_LABEL' | translate }}
-              </label>
-              <textarea id="content" name="content" class="form-control" rows="6" [(ngModel)]="story.content"
-                [placeholder]="'CREATE_STORY.CONTENT_PLACEHOLDER' | translate" required maxlength="3000"></textarea>
-              <small class="form-text">{{ 'CREATE_STORY.CHAR_COUNT' | translate: { count: story.content.length }
-                }}</small>
+            <!-- Multilingual Title/Content Fields -->
+            <div *ngFor="let lang of languages; let i = index" class="mb-4 border rounded p-3 bg-light">
+              <div class="mb-2">
+                <strong>
+                  <i class="fas fa-language"></i>
+                  {{ lang.name }}
+                </strong>
+              </div>
+              <div class="form-group mb-2">
+                <label>
+                  <i class="fas fa-heading"></i>
+                  {{ 'CREATE_STORY.TITLE_LABEL' | translate }}
+                </label>
+                <input type="text" class="form-control" [(ngModel)]="story.contents[i].title" name="title_{{lang.id}}"
+                  [placeholder]="'CREATE_STORY.TITLE_PLACEHOLDER' | translate" maxlength="200" required />
+              </div>
+              <div class="form-group mb-2">
+                <label>
+                  <i class="fas fa-align-left"></i>
+                  {{ 'CREATE_STORY.CONTENT_LABEL' | translate }}
+                </label>
+                <textarea class="form-control" rows="4" [(ngModel)]="story.contents[i].content"
+                  name="content_{{lang.id}}" [placeholder]="'CREATE_STORY.CONTENT_PLACEHOLDER' | translate"
+                  maxlength="3000" required></textarea>
+                <small class="form-text">{{ 'CREATE_STORY.CHAR_COUNT' | translate: { count:
+                  story.contents[i].content.length } }}</small>
+              </div>
             </div>
 
             <!-- Tag Selection -->
@@ -96,7 +103,7 @@
               <select id="masjidId" name="masjidId" class="form-control" [(ngModel)]="story.masjidId">
                 <option value="">{{ 'FORM.SELECT_MASJID_OPTIONAL' | translate }}</option>
                 <option *ngFor="let masjid of masjids" [value]="masjid.id">
-                  {{ masjid.shortName }}
+                  {{ masjid.localizedName }}
                 </option>
               </select>
               <div class="text-center mt-2" *ngIf="loadingMasjids">
@@ -106,8 +113,8 @@
               </div>
             </div>
 
-            <!-- Language Selection (Optional) -->
-            <div class="form-group mb-4">
+            <!-- Remove old Language Selection -->
+            <!-- <div class="form-group mb-4">
               <label for="languageId" class="form-label">
                 <i class="fas fa-language"></i>
                 {{ 'FORM.SELECT_LANGUAGE_OPTIONAL' | translate }}
@@ -123,7 +130,7 @@
                   <span class="visually-hidden">{{ 'FORM.LOADING_LANGUAGES' | translate }}</span>
                 </div>
               </div>
-            </div>
+            </div> -->
 
             <!-- Form Actions -->
             <div class="form-actions">

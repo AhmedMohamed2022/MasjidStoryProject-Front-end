@@ -17,21 +17,39 @@ export class EventService {
 
   constructor(private http: HttpClient) {}
 
-  getUpcomingEvents(): Observable<EventViewModel[]> {
+  getUpcomingEvents(languageCode?: string): Observable<EventViewModel[]> {
+    let url = `${this.apiUrl}/upcoming`;
+    if (languageCode) {
+      url += `?languageCode=${languageCode}`;
+    }
     return this.http
-      .get<ApiResponse<EventViewModel[]>>(`${this.apiUrl}/upcoming`)
+      .get<ApiResponse<EventViewModel[]>>(url)
       .pipe(map((response) => response.data));
   }
 
-  getEventDetails(id: number): Observable<EventViewModel> {
+  getEventDetails(
+    id: number,
+    languageCode?: string
+  ): Observable<EventViewModel> {
+    let url = `${this.apiUrl}/${id}`;
+    if (languageCode) {
+      url += `?languageCode=${languageCode}`;
+    }
     return this.http
-      .get<ApiResponse<EventViewModel>>(`${this.apiUrl}/${id}`)
+      .get<ApiResponse<EventViewModel>>(url)
       .pipe(map((response) => response.data));
   }
 
-  getMasjidEvents(masjidId: number): Observable<EventViewModel[]> {
+  getMasjidEvents(
+    masjidId: number,
+    languageCode?: string
+  ): Observable<EventViewModel[]> {
+    let url = `${this.apiUrl}/masjid/${masjidId}`;
+    if (languageCode) {
+      url += `?languageCode=${languageCode}`;
+    }
     return this.http
-      .get<ApiResponse<EventViewModel[]>>(`${this.apiUrl}/masjid/${masjidId}`)
+      .get<ApiResponse<EventViewModel[]>>(url)
       .pipe(map((response) => response.data));
   }
 
@@ -47,9 +65,13 @@ export class EventService {
       .pipe(map((response) => response.data));
   }
 
-  getMyRegistrations(): Observable<EventViewModel[]> {
+  getMyRegistrations(languageCode?: string): Observable<EventViewModel[]> {
+    let url = `${this.apiUrl}/my-registrations`;
+    if (languageCode) {
+      url += `?languageCode=${languageCode}`;
+    }
     return this.http
-      .get<ApiResponse<EventViewModel[]>>(`${this.apiUrl}/my-registrations`)
+      .get<ApiResponse<EventViewModel[]>>(url)
       .pipe(map((response) => response.data));
   }
 

@@ -15,7 +15,7 @@ import {
 } from '../../Core/Models/story.model';
 import { MasjidViewModel } from '../../Core/Models/masjid.model';
 import { environment } from '../../Core/environments/environment';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-edit-story',
@@ -26,10 +26,8 @@ import { TranslateModule } from '@ngx-translate/core';
 export class EditStoryComponent implements OnInit {
   story: StoryEditViewModel = {
     id: 0,
-    title: '',
-    content: '',
     masjidId: 0,
-    languageId: undefined,
+    contents: [],
     isApproved: false,
     newStoryImages: [],
     keepMediaIds: [],
@@ -62,7 +60,8 @@ export class EditStoryComponent implements OnInit {
     private router: Router,
     private storyService: StoryService,
     private masjidService: MasjidService,
-    private languageService: LanguageService
+    private languageService: LanguageService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -75,6 +74,10 @@ export class EditStoryComponent implements OnInit {
       this.loadLanguages();
       this.loadTags();
     }
+    this.translate.onLangChange.subscribe(() => {
+      this.loadMasjids();
+      this.loadTags();
+    });
   }
 
   async loadDataAndStory(storyId: number): Promise<void> {
@@ -92,7 +95,7 @@ export class EditStoryComponent implements OnInit {
   async loadMasjidsAsync(): Promise<void> {
     return new Promise((resolve) => {
       this.loadingMasjids = true;
-      this.masjidService.getAllMasjids().subscribe({
+      this.masjidService.getAllMasjids(this.translate.currentLang).subscribe({
         next: (masjids) => {
           this.masjids = masjids;
           this.loadingMasjids = false;
@@ -112,7 +115,9 @@ export class EditStoryComponent implements OnInit {
       this.loadingLanguages = true;
       this.languageService.getAllLanguages().subscribe({
         next: (languages) => {
-          this.languages = languages;
+          this.languages = languages.filter(
+            (lang) => lang.code === 'en' || lang.code === 'ar'
+          );
           this.loadingLanguages = false;
           resolve();
         },
@@ -129,9 +134,9 @@ export class EditStoryComponent implements OnInit {
     return new Promise((resolve) => {
       this.loadingTags = true;
       this.storyService
-        .getAllTags()
+        .getAllTags(this.translate.currentLang)
         .then((tags) => {
-          this.tags = tags;
+          this.tags = tags.map((t) => t.localizedName);
           this.loadingTags = false;
           resolve();
         })
@@ -145,7 +150,7 @@ export class EditStoryComponent implements OnInit {
 
   loadMasjids(): void {
     this.loadingMasjids = true;
-    this.masjidService.getAllMasjids().subscribe({
+    this.masjidService.getAllMasjids(this.translate.currentLang).subscribe({
       next: (masjids) => {
         this.masjids = masjids;
         this.loadingMasjids = false;
@@ -161,7 +166,9 @@ export class EditStoryComponent implements OnInit {
     this.loadingLanguages = true;
     this.languageService.getAllLanguages().subscribe({
       next: (languages) => {
-        this.languages = languages;
+        this.languages = languages.filter(
+          (lang) => lang.code === 'en' || lang.code === 'ar'
+        );
         this.loadingLanguages = false;
       },
       error: () => {
@@ -174,9 +181,9 @@ export class EditStoryComponent implements OnInit {
   loadTags(): void {
     this.loadingTags = true;
     this.storyService
-      .getAllTags()
+      .getAllTags(this.translate.currentLang)
       .then((tags) => {
-        this.tags = tags;
+        this.tags = tags.map((t) => t.localizedName);
         this.loadingTags = false;
       })
       .catch(() => {
@@ -189,8 +196,6 @@ export class EditStoryComponent implements OnInit {
     try {
       this.loadingStory = true;
       this.originalStory = await this.storyService.getStoryById(storyId);
-
-      // Process image URLs to ensure they have the correct base URL
       if (this.originalStory.mediaItems) {
         this.originalStory.mediaItems = this.originalStory.mediaItems.map(
           (media) => ({
@@ -199,35 +204,30 @@ export class EditStoryComponent implements OnInit {
           })
         );
       }
-
-      // Find masjid ID by name
       const masjid = this.masjids.find(
         (m) => m.shortName === this.originalStory?.masjidName
       );
-
-      // Find language ID by code
-      const language = this.languages.find(
-        (l) => l.code === this.originalStory?.languageCode
-      );
-
-      // Populate the form with existing story data
+      // Map story contents to form, ensure all languages are present
       this.story = {
         id: this.originalStory.id,
-        title: this.originalStory.title,
-        content: this.originalStory.content,
         masjidId: masjid?.id || 0,
-        languageId: language?.id || undefined,
+        contents: this.languages.map((lang) => {
+          const found = this.originalStory!.contents.find(
+            (c) => c.languageId === lang.id
+          );
+          return found
+            ? { ...found }
+            : { languageId: lang.id, title: '', content: '' };
+        }),
         isApproved: this.originalStory.isApproved,
         newStoryImages: [],
         keepMediaIds: this.originalStory.mediaItems?.map((m) => m.id) || [],
         removeMediaIds: [],
-        originalTitle: this.originalStory.title,
-        originalContent: this.originalStory.content,
+        originalTitle: this.originalStory.localizedTitle,
+        originalContent: this.originalStory.localizedContent,
         requiresReapproval: false,
         changeReason: '',
       };
-
-      // Set existing images
       this.existingImages = this.originalStory.mediaItems || [];
       this.imagePreviews = [...this.existingImages.map((img) => img.fileUrl)];
     } catch (err) {
@@ -302,36 +302,25 @@ export class EditStoryComponent implements OnInit {
 
   async onSubmit(): Promise<void> {
     if (!this.originalStory) return;
-
     this.loading = true;
     this.error = '';
     this.success = '';
-
     try {
-      // Update keepMediaIds to only include images that should be kept
       this.story.keepMediaIds = this.existingImages.map((img) => img.id);
-
-      // Set original content for comparison
-      this.story.originalTitle = this.originalStory.title;
-      this.story.originalContent = this.originalStory.content;
-
-      // Call update service
+      this.story.originalTitle = this.originalStory.localizedTitle;
+      this.story.originalContent = this.originalStory.localizedContent;
       const response = await this.storyService.updateStory(
         this.originalStory.id,
         this.story
       );
-
       this.success = response;
-
-      // Check if the response indicates re-approval is needed
       if (response.includes('pending for admin approval')) {
         this.success +=
           ' You will be notified once an admin reviews your changes.';
       }
-
       setTimeout(() => {
         this.router.navigate(['/story-details', this.originalStory!.id]);
-      }, 3000); // Give user more time to read the message
+      }, 3000);
     } catch (err) {
       this.error = 'Failed to update story.';
       console.error('Error updating story:', err);

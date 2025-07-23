@@ -42,6 +42,9 @@ export class StoryDetailComponent implements OnInit {
     console.log('Story ID from route:', storyId);
     if (storyId) {
       this.loadStory(parseInt(storyId));
+      this.translate.onLangChange.subscribe(() => {
+        this.loadStory(parseInt(storyId));
+      });
     } else {
       console.error('No story ID found in route');
       this.translate
@@ -56,15 +59,15 @@ export class StoryDetailComponent implements OnInit {
   async loadStory(id: number): Promise<void> {
     try {
       this.loading = true;
-      console.log('Loading story with ID:', id);
-      this.story = await this.storyService.getStoryById(id);
-      this.loadRelatedStories(); // Load related stories when a story is loaded
-      console.log('Loaded Story:', this.story);
+      this.story = await this.storyService.getStoryById(
+        id,
+        this.translate.currentLang
+      );
+      this.loadRelatedStories();
     } catch (error) {
       this.translate.get('STORY_DETAILS.ERROR').subscribe((text: string) => {
         this.error = text;
       });
-      console.error('Error loading story:', error);
     } finally {
       this.loading = false;
     }
@@ -72,17 +75,13 @@ export class StoryDetailComponent implements OnInit {
 
   async loadRelatedStories(): Promise<void> {
     if (!this.story) return;
-
     try {
-      const stories = await this.storyService.getRelatedStories(this.story.id);
-
-      // Filter out the current story if it's in the related stories
+      const stories = await this.storyService.getRelatedStories(
+        this.story.id,
+        this.translate.currentLang
+      );
       this.relatedStories = stories.filter((s) => s.id !== this.story?.id);
-
-      console.log('Related Stories:', this.relatedStories);
     } catch (error) {
-      console.error('Error loading related stories:', error);
-      // Set empty array on error
       this.relatedStories = [];
     }
   }
@@ -206,7 +205,7 @@ export class StoryDetailComponent implements OnInit {
     if (navigator.share) {
       navigator
         .share({
-          title: this.story?.title,
+          title: this.story?.localizedTitle,
           text: this.translate.instant('STORY_DETAILS.SHARE_TEXT', {
             masjidName: this.story?.masjidName,
           }),
@@ -218,7 +217,6 @@ export class StoryDetailComponent implements OnInit {
       navigator.clipboard
         .writeText(window.location.href)
         .then(() => {
-          // Show toast or alert that URL was copied
           this.translate
             .get('STORY_DETAILS.LINK_COPIED')
             .subscribe((text: string) => {

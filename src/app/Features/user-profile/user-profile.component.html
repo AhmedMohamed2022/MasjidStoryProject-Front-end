@@ -65,7 +65,7 @@
             <div class="col-md-6 col-lg-4 mb-3" *ngFor="let story of stories">
               <div class="card h-100">
                 <div class="card-body">
-                  <h5 class="card-title">{{ story.title }}</h5>
+                  <h5 class="card-title">{{ story.localizedTitle }}</h5>
                   <div class="mb-2"><span class="badge" [ngClass]="story.isApproved ? 'bg-success' : 'bg-warning'">{{
                       story.isApproved ? ('USER_PROFILE.APPROVED' | translate) : ('USER_PROFILE.PENDING' | translate)
                       }}</span></div>

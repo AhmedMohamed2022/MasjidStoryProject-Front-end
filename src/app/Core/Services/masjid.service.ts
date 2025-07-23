@@ -15,9 +15,11 @@ export class MasjidService {
 
   constructor(private http: HttpClient) {}
 
-  getAllMasjids(): Observable<MasjidViewModel[]> {
+  getAllMasjids(languageCode: string = 'en'): Observable<MasjidViewModel[]> {
     return this.http
-      .get<ApiResponse<MasjidViewModel[]>>(`${this.apiUrl}/getAll`)
+      .get<ApiResponse<MasjidViewModel[]>>(
+        `${this.apiUrl}/getAll?languageCode=${languageCode}`
+      )
       .pipe(
         map((response) => response.data || []),
         catchError(this.handleError)

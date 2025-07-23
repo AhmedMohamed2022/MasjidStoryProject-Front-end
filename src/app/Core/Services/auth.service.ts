@@ -79,6 +79,7 @@ export class AuthService {
     const user: User = {
       email: response.email,
       fullName: response.fullName,
+      userId: response.userId,
       roles: response.roles,
     };
 

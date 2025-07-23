@@ -185,7 +185,7 @@
     "NO_EVENTS_TITLE": "No Upcoming Events",
     "NO_EVENTS_DESCRIPTION": "There are currently no upcoming events scheduled for this masjid.",
     "BROWSE_ALL": "Browse All Events",
-    "ORGANIZED_BY": "Organized by {name}",
+    "ORGANIZED_BY": "Organized by {{name}}",
     "REGISTER": "Register",
     "REGISTERING": "Registering...",
     "REGISTERED": "Registered",
@@ -248,7 +248,7 @@
     "DELETE_SUCCESS": "Event deleted successfully!",
     "DELETE_FAILED": "Failed to delete event. You may not have permission.",
     "MASJID": "Masjid",
-    "ORGANIZED_BY": "Organized by",
+    "ORGANIZED_BY": "Organized by {{name}}",
     "TIME": "Time",
     "REGISTRATION_STATUS": "Registration Status",
     "NOT_REGISTERED": "Not Registered",
@@ -271,7 +271,8 @@
     "NO_COMMENTS": "No comments yet. Be the first to share your thoughts!",
     "REGISTRATION_SUCCESS": "Registered successfully!",
     "REGISTRATION_FAILED": "Registration failed. You may already be registered.",
-    "LINK_COPIED": "Event link copied to clipboard!"
+    "LINK_COPIED": "Event link copied to clipboard!",
+    "REGISTERED": "Registered"
   },
 
   "STORY_DETAILS": {

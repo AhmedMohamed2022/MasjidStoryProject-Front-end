@@ -48,7 +48,7 @@
             <div class="story-content">
                 <!-- Story Header -->
                 <div class="story-header">
-                    <h3 class="story-title">{{ story.title }}</h3>
+                    <h3 class="story-title">{{ story.localizedTitle }}</h3>
                     <div class="story-meta">
                         <span class="story-masjid">
                             <i class="fas fa-mosque"></i>
@@ -68,7 +68,7 @@
 
                 <!-- Story Description -->
                 <div class="story-description">
-                    <p>{{ getStoryExcerpt(story.content) }}</p>
+                    <p>{{ getStoryExcerpt(story.localizedContent) }}</p>
                 </div>
 
                 <!-- Story Stats -->

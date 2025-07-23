@@ -25,28 +25,28 @@
 
         <!-- Create Event Form -->
         <div class="event-form-card">
-          <form (ngSubmit)="onSubmit()" #eventForm="ngForm">
+          <form (ngSubmit)="onSubmit()" [formGroup]="eventForm">
 
-            <!-- Title Field -->
-            <div class="form-group mb-4">
-              <label for="title" class="form-label">
-                <i class="fas fa-heading"></i>
-                {{ 'FORM.EVENT_TITLE_LABEL' | translate }} *
-              </label>
-              <input type="text" id="title" name="title" class="form-control" [(ngModel)]="event.title"
-                placeholder="{{ 'FORM.EVENT_TITLE_PLACEHOLDER' | translate }}" required maxlength="200" />
-            </div>
-
-            <!-- Description Field -->
-            <div class="form-group mb-4">
-              <label for="description" class="form-label">
-                <i class="fas fa-align-left"></i>
-                {{ 'FORM.DESCRIPTION_LABEL' | translate }} *
-              </label>
-              <textarea id="description" name="description" class="form-control" rows="5"
-                [(ngModel)]="event.description" placeholder="{{ 'FORM.DESCRIPTION_PLACEHOLDER' | translate }}" required
-                maxlength="1000"></textarea>
-              <small class="form-text">{{ event.description.length }}/1000 characters</small>
+            <!-- Multilingual Title/Description Fields -->
+            <div formArrayName="contents">
+              <div *ngFor="let content of contentsControls; let i = index" [formGroupName]="i" class="mb-4">
+                <h5>{{ languages[i].name }}</h5>
+                <div class="form-group mb-2">
+                  <label>
+                    <i class="fas fa-heading"></i>
+                    {{ 'FORM.EVENT_TITLE_LABEL' | translate }} ({{ languages[i].code.toUpperCase() }}) *
+                  </label>
+                  <input type="text" class="form-control" formControlName="title" maxlength="200" required />
+                </div>
+                <div class="form-group mb-2">
+                  <label>
+                    <i class="fas fa-align-left"></i>
+                    {{ 'FORM.DESCRIPTION_LABEL' | translate }} ({{ languages[i].code.toUpperCase() }}) *
+                  </label>
+                  <textarea class="form-control" formControlName="description" rows="3" maxlength="1000"
+                    required></textarea>
+                </div>
+              </div>
             </div>
 
             <!-- Event Date Field -->
@@ -56,7 +56,7 @@
                 {{ 'FORM.EVENT_DATE_TIME_LABEL' | translate }} *
               </label>
               <input type="datetime-local" id="eventDate" name="eventDate" class="form-control"
-                [(ngModel)]="event.eventDate" required />
+                formControlName="eventDate" required />
             </div>
 
             <!-- Masjid Selection -->
@@ -65,34 +65,15 @@
                 <i class="fas fa-mosque"></i>
                 {{ 'FORM.SELECT_MASJID_OPTIONAL' | translate }}
               </label>
-              <select id="masjidId" name="masjidId" class="form-control" [(ngModel)]="event.masjidId">
+              <select id="masjidId" name="masjidId" class="form-control" formControlName="masjidId">
                 <option value="">{{ 'FORM.SELECT_MASJID_OPTIONAL' | translate }}</option>
                 <option *ngFor="let masjid of masjids" [value]="masjid.id">
-                  {{ masjid.shortName }}
+                  {{ masjid.localizedName }}
                 </option>
               </select>
               <div class="text-center mt-2" *ngIf="loadingMasjids">
                 <div class="spinner-border spinner-border-sm text-emerald" role="status">
                   <span class="visually-hidden">{{ 'FORM.LOADING_MASJIDS' | translate }}</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Language Selection -->
-            <div class="form-group mb-4">
-              <label for="languageId" class="form-label">
-                <i class="fas fa-language"></i>
-                {{ 'FORM.SELECT_LANGUAGE_OPTIONAL' | translate }}
-              </label>
-              <select id="languageId" name="languageId" class="form-control" [(ngModel)]="event.languageId">
-                <option value="">{{ 'FORM.SELECT_LANGUAGE_OPTIONAL' | translate }}</option>
-                <option *ngFor="let language of languages" [value]="language.id">
-                  {{ language.name }}
-                </option>
-              </select>
-              <div class="text-center mt-2" *ngIf="loadingLanguages">
-                <div class="spinner-border spinner-border-sm text-emerald" role="status">
-                  <span class="visually-hidden">{{ 'FORM.LOADING_LANGUAGES' | translate }}</span>
                 </div>
               </div>
             </div>

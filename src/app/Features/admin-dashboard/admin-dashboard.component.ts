@@ -212,7 +212,10 @@ export class AdminDashboardComponent implements OnInit {
     // Load initial data
     this.loadCountries();
     this.loadMasjids();
-    this.loadPendingStories();
+    this.onTabChange(this.selectedTab);
+    this.translate.onLangChange.subscribe(() => {
+      this.onTabChange(this.selectedTab);
+    });
   }
 
   onTabChange(index: number) {
@@ -241,7 +244,9 @@ export class AdminDashboardComponent implements OnInit {
     this.pendingLoading = true;
     this.pendingError = '';
     try {
-      this.pendingStories = await this.storyService.getPendingStories();
+      this.pendingStories = await this.storyService.getPendingStories(
+        this.translate.currentLang
+      );
     } catch (err) {
       this.pendingError = 'Failed to load pending stories.';
     } finally {
@@ -253,7 +258,9 @@ export class AdminDashboardComponent implements OnInit {
     this.allStoriesLoading = true;
     this.allStoriesError = '';
     try {
-      this.allStories = await this.storyService.getAllStories();
+      this.allStories = await this.storyService.getAllStories(
+        this.translate.currentLang
+      );
     } catch (err) {
       this.allStoriesError = 'Failed to load all stories.';
     } finally {
@@ -264,7 +271,7 @@ export class AdminDashboardComponent implements OnInit {
   async approveStory(story: StoryViewModel) {
     if (
       !this.translate.instant('ADMIN_DASHBOARD.STORIES_APPROVE_CONFIRM', {
-        title: story.title,
+        title: story.localizedTitle,
       })
     )
       return;
@@ -445,7 +452,9 @@ export class AdminDashboardComponent implements OnInit {
     this.masjidsError = '';
     try {
       this.masjids =
-        (await this.masjidService.getAllMasjids().toPromise()) || [];
+        (await this.masjidService
+          .getAllMasjids(this.translate.currentLang)
+          .toPromise()) || [];
     } catch (err) {
       this.masjidsError = 'Failed to load masjids.';
     } finally {
@@ -975,21 +984,20 @@ export class AdminDashboardComponent implements OnInit {
     this.eventsLoading = true;
     this.eventsError = '';
     try {
-      // For admin dashboard, we'll get all events (not just upcoming)
-      // Since the backend doesn't have a specific "all events" endpoint,
-      // we'll use the upcoming events for now and can extend later
-      this.eventService.getUpcomingEvents().subscribe({
-        next: (events) => {
-          this.events = events;
-        },
-        error: (error) => {
-          console.error('Error loading events:', error);
-          this.eventsError = 'Failed to load events.';
-        },
-        complete: () => {
-          this.eventsLoading = false;
-        },
-      });
+      this.eventService
+        .getUpcomingEvents(this.translate.currentLang)
+        .subscribe({
+          next: (events) => {
+            this.events = events;
+          },
+          error: (error) => {
+            console.error('Error loading events:', error);
+            this.eventsError = 'Failed to load events.';
+          },
+          complete: () => {
+            this.eventsLoading = false;
+          },
+        });
     } catch (err) {
       this.eventsError = 'Failed to load events.';
       this.eventsLoading = false;

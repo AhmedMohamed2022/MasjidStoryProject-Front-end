@@ -46,17 +46,18 @@ export class StoriesListComponent implements OnInit {
     try {
       this.loading = true;
       this.error = '';
-
       const response: PaginatedResponse<StoryViewModel> =
-        await this.storyService.getStoriesPaginated(page, this.pageSize);
-
+        await this.storyService.getStoriesPaginated(
+          page,
+          this.pageSize,
+          this.translate.currentLang
+        );
       this.stories = response.items;
       this.currentPage = response.pageNumber;
       this.totalCount = response.totalCount;
       this.totalPages = response.totalPages;
       this.hasPreviousPage = response.hasPreviousPage;
       this.hasNextPage = response.hasNextPage;
-
       this.updatePaginationText();
     } catch (error) {
       this.translate.get('STORIES_LIST_ERROR').subscribe((text: string) => {

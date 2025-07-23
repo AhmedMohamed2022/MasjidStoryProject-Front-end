@@ -127,7 +127,7 @@ export class UserProfileComponent {
         // Flatten all comments for this user
         this.comments = stories
           .flatMap((s) =>
-            s.comments.map((c) => ({ ...c, storyTitle: s.title }))
+            s.comments.map((c) => ({ ...c, storyTitle: s.localizedTitle }))
           )
           .filter((c) => c.userName === this.profile?.userName);
       }

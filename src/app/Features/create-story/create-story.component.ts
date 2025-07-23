@@ -20,12 +20,10 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 })
 export class CreateStoryComponent implements OnInit {
   story: StoryCreateViewModel = {
-    title: '',
-    content: '',
+    masjidId: 0,
+    contents: [],
     tags: [],
     storyImages: [],
-    masjidId: 0,
-    languageId: undefined,
   };
 
   masjids: MasjidViewModel[] = [];
@@ -53,15 +51,14 @@ export class CreateStoryComponent implements OnInit {
     this.loadMasjids();
     this.loadLanguages();
     this.loadTags();
-
-    // Subscribe to language changes
     this.translate.onLangChange.subscribe(() => {
-      // Refresh any dynamic content if needed
+      this.loadMasjids();
+      this.loadTags();
     });
   }
 
   loadMasjids(): void {
-    this.masjidService.getAllMasjids().subscribe({
+    this.masjidService.getAllMasjids(this.translate.currentLang).subscribe({
       next: (masjids) => {
         this.masjids = masjids;
         this.loadingMasjids = false;
@@ -76,8 +73,16 @@ export class CreateStoryComponent implements OnInit {
   loadLanguages(): void {
     this.languageService.getAllLanguages().subscribe({
       next: (languages) => {
-        this.languages = languages;
+        this.languages = languages.filter(
+          (lang) => lang.code === 'en' || lang.code === 'ar'
+        );
         this.loadingLanguages = false;
+        // Initialize contents for each language
+        this.story.contents = this.languages.map((lang) => ({
+          languageId: lang.id,
+          title: '',
+          content: '',
+        }));
       },
       error: () => {
         this.loadingLanguages = false;
@@ -88,9 +93,9 @@ export class CreateStoryComponent implements OnInit {
 
   loadTags(): void {
     this.storyService
-      .getAllTags()
+      .getAllTags(this.translate.currentLang)
       .then((tags) => {
-        this.tags = tags;
+        this.tags = tags.map((t) => t.localizedName);
         this.loadingTags = false;
       })
       .catch(() => {
@@ -141,7 +146,7 @@ export class CreateStoryComponent implements OnInit {
   }
 
   isFormValid(): boolean {
-    if (!this.story.title.trim()) {
+    if (!this.story.contents.some((c) => c.title.trim())) {
       this.translate
         .get('CREATE_STORY.TITLE_REQUIRED')
         .subscribe((text: string) => {
@@ -149,7 +154,7 @@ export class CreateStoryComponent implements OnInit {
         });
       return false;
     }
-    if (!this.story.content.trim()) {
+    if (!this.story.contents.some((c) => c.content.trim())) {
       this.translate
         .get('CREATE_STORY.CONTENT_REQUIRED')
         .subscribe((text: string) => {

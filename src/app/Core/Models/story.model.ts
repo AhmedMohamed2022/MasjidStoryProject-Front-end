@@ -19,15 +19,20 @@
 // }
 // src/app/core/models/story.models.ts
 
-export interface StoryViewModel {
-  id: number;
+export interface StoryContentViewModel {
+  languageId: number;
   title: string;
   content: string;
+}
+
+export interface StoryViewModel {
+  id: number;
+  localizedTitle: string;
+  localizedContent: string;
   datePublished: string;
   isApproved: boolean;
   masjidName: string;
   authorFullName: string;
-  languageCode: string;
   likeCount: number;
   isLikedByCurrentUser: boolean;
   comments: CommentViewModel[];
@@ -35,6 +40,7 @@ export interface StoryViewModel {
   mediaItems: MediaViewModel[];
   imageUrls: string[];
   changeReason?: string;
+  contents: StoryContentViewModel[];
 }
 
 export interface MediaViewModel {
@@ -69,20 +75,16 @@ export interface LikeCreateViewModel {
 }
 
 export interface StoryCreateViewModel {
-  title: string;
-  content: string;
+  masjidId: number;
+  contents: StoryContentViewModel[];
   tags: string[];
   storyImages: File[];
-  masjidId: number;
-  languageId?: number;
 }
 
 export interface StoryEditViewModel {
   id: number;
-  title: string;
-  content: string;
   masjidId: number;
-  languageId?: number;
+  contents: StoryContentViewModel[];
   isApproved: boolean;
   newStoryImages?: File[];
   keepMediaIds?: number[];
