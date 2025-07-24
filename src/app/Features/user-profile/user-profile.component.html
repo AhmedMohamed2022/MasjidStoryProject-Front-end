@@ -107,7 +107,7 @@
             <div class="col-md-6 col-lg-4 mb-3" *ngFor="let community of communities">
               <div class="card h-100">
                 <div class="card-body">
-                  <h5 class="card-title">{{ community.title }}</h5>
+                  <h5 class="card-title">{{ getTranslatedField(community, 'title') }}</h5>
                   <div class="text-muted small">{{ 'USER_PROFILE.JOINED' | translate }}: {{ community.dateCreated| date
                     }}</div>
                 </div>

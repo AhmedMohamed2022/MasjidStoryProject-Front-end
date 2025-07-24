@@ -38,22 +38,21 @@ export class StoryDetailComponent implements OnInit {
   commentError: string = '';
 
   ngOnInit(): void {
-    const storyId = this.route.snapshot.params['id'];
-    console.log('Story ID from route:', storyId);
-    if (storyId) {
-      this.loadStory(parseInt(storyId));
-      this.translate.onLangChange.subscribe(() => {
+    this.route.paramMap.subscribe((params) => {
+      const storyId = params.get('id');
+      if (storyId) {
         this.loadStory(parseInt(storyId));
-      });
-    } else {
-      console.error('No story ID found in route');
-      this.translate
-        .get('STORY_DETAILS.NO_STORY_ID')
-        .subscribe((text: string) => {
-          this.error = text;
-        });
-      this.loading = false;
-    }
+      } else {
+        this.error = this.translate.instant('STORY_DETAILS.NO_STORY_ID');
+        this.loading = false;
+      }
+    });
+    this.translate.onLangChange.subscribe(() => {
+      const storyId = this.route.snapshot.paramMap.get('id');
+      if (storyId) {
+        this.loadStory(parseInt(storyId));
+      }
+    });
   }
 
   async loadStory(id: number): Promise<void> {

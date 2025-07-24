@@ -19,9 +19,11 @@ export class CountryService {
 
   constructor(private http: HttpClient) {}
 
-  getAllCountries(): Observable<CountryViewModel[]> {
+  getAllCountries(languageCode: string = 'en'): Observable<CountryViewModel[]> {
     return this.http
-      .get<ApiResponse<CountryViewModel[]>>(`${this.apiUrl}/all`)
+      .get<ApiResponse<CountryViewModel[]>>(
+        `${this.apiUrl}/all?languageCode=${languageCode}`
+      )
       .pipe(map((response) => response.data));
   }
 }

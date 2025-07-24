@@ -16,6 +16,7 @@ export interface EventViewModel {
   // Optionally keep old fields for compatibility
   title?: string;
   description?: string;
+  contents?: EventContentViewModel[];
 }
 
 export interface EventCreateViewModel {

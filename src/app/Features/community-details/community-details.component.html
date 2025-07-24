@@ -39,7 +39,7 @@
     <div class="community-header">
       <div class="header-main">
         <div class="title-section">
-          <h1 class="community-title">{{ community.title }}</h1>
+          <h1 class="community-title">{{ displayedTitle }}</h1>
           <div class="community-meta">
             <div class="meta-item">
               <i class="fas fa-mosque"></i>
@@ -98,7 +98,7 @@
     <div class="community-body">
       <div class="content-section">
         <h3>{{ 'COMMUNITY_DETAILS.ABOUT_COMMUNITY' | translate }}</h3>
-        <div class="content-text" [innerHTML]="community.content"></div>
+        <div class="content-text" [innerHTML]="displayedContent"></div>
       </div>
 
       <!-- Community Features -->

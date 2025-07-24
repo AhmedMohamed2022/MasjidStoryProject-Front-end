@@ -32,11 +32,10 @@
                 </div>
 
                 <!-- Edit Event Form -->
-                <div class="event-form-card" *ngIf="!loadingEvent && originalEvent">
+                <div class="event-form-card" *ngIf="!loadingEvent && originalEvent && eventForm">
                     <form (ngSubmit)="onSubmit()" [formGroup]="eventForm">
-
                         <!-- Multilingual Title/Description Fields -->
-                        <div formArrayName="contents">
+                        <div formArrayName="contents" *ngIf="eventForm.get('contents')">
                             <div *ngFor="let content of contentsControls; let i = index" [formGroupName]="i"
                                 class="mb-4">
                                 <h5>{{ languages[i].name }}</h5>
@@ -102,7 +101,6 @@
                                 {{ loading ? 'Updating...' : 'Update Event' }}
                             </button>
                         </div>
-
                     </form>
                 </div>
 

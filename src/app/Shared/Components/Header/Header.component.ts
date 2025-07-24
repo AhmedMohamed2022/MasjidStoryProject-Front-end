@@ -1,5 +1,5 @@
 // src/app/shared/header/header.component.ts
-import { Component } from '@angular/core';
+import { Component, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../../Core/Services/auth.service';
@@ -31,7 +31,8 @@ export class HeaderComponent {
     private authService: AuthService,
     private userRegistrationService: UserRegistrationService,
     private router: Router,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private eRef: ElementRef
   ) {
     translate.addLangs(['en', 'ar']);
     translate.setDefaultLang('en');
@@ -41,6 +42,18 @@ export class HeaderComponent {
     translate.use(lang);
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    // Only close language dropdown if open and click is outside language switcher
+    if (!this.isLanguageDropdownCollapsed) {
+      const langSwitcher =
+        this.eRef.nativeElement.querySelector('.language-switcher');
+      if (langSwitcher && !langSwitcher.contains(event.target)) {
+        this.closeLanguageDropdown();
+      }
+    }
   }
 
   switchLang(lang: string) {
@@ -121,5 +134,18 @@ export class HeaderComponent {
 
   private enableBodyScroll(): void {
     document.body.classList.remove('mobile-menu-open');
+  }
+
+  closeEventsDropdown() {
+    this.isEventsDropdownCollapsed = true;
+  }
+  closeAdminDropdown() {
+    this.isAdminDropdownCollapsed = true;
+  }
+  closeUserDropdown() {
+    this.isUserDropdownCollapsed = true;
+  }
+  closeLanguageDropdown() {
+    this.isLanguageDropdownCollapsed = true;
   }
 }

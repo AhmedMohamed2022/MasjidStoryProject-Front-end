@@ -34,79 +34,76 @@
     <div class="form-container" *ngIf="!isLoading">
         <form [formGroup]="communityForm" (ngSubmit)="onSubmit()" class="community-form">
 
-            <!-- Title Field -->
-            <div class="form-group">
-                <label for="title" class="form-label required">{{ 'COMMUNITY_CREATE.TITLE_LABEL' | translate }}</label>
-                <input id="title" type="text" formControlName="title" class="form-input"
-                    [class.error]="isFieldInvalid('title')"
-                    [placeholder]="'COMMUNITY_CREATE.TITLE_PLACEHOLDER' | translate" maxlength="200" />
-                <div class="field-info">
-                    <span class="char-count">
-                        {{ communityForm.get('title')?.value?.length || 0 }}/200
-                    </span>
-                </div>
-                <div *ngIf="isFieldInvalid('title')" class="field-error">
-                    {{ getFieldError('title') }}
-                </div>
-            </div>
-
-            <!-- Content Field -->
-            <div class="form-group">
-                <label for="content" class="form-label required">{{ 'COMMUNITY_CREATE.DESCRIPTION_LABEL' | translate
-                    }}</label>
-                <textarea id="content" formControlName="content" class="form-textarea"
-                    [class.error]="isFieldInvalid('content')"
-                    [placeholder]="'COMMUNITY_CREATE.DESCRIPTION_PLACEHOLDER' | translate" rows="6"
-                    maxlength="2000"></textarea>
-                <div class="field-info">
-                    <span class="char-count">
-                        {{ communityForm.get('content')?.value?.length || 0 }}/2000
-                    </span>
-                </div>
-                <div *ngIf="isFieldInvalid('content')" class="field-error">
-                    {{ getFieldError('content') }}
-                </div>
-            </div>
-
             <!-- Masjid Selection -->
             <div class="form-group">
                 <label for="masjidId" class="form-label required">{{ 'FORM.SELECT_MASJID_OPTIONAL' | translate
                     }}</label>
                 <select id="masjidId" formControlName="masjidId" class="form-select"
-                    [class.error]="isFieldInvalid('masjidId')" [disabled]="preselectedMasjidId !== null">
+                    [class.error]="communityForm.get('masjidId')?.invalid && (communityForm.get('masjidId')?.dirty || communityForm.get('masjidId')?.touched)">
                     <option value="">{{ 'FORM.SELECT_MASJID_OPTIONAL' | translate }}</option>
                     <option *ngFor="let masjid of masjids" [value]="masjid.id">
-                        {{ masjid.shortName }} - {{ masjid.cityName }}, {{ masjid.countryName }}
+                        {{ getMasjidDisplayName(masjid) }} - {{ masjid.cityName }}, {{ masjid.countryName }}
                     </option>
                 </select>
                 <div *ngIf="preselectedMasjidId" class="field-hint">
                     <i class="icon-info"></i>
                     {{ 'COMMUNITY_CREATE.PRESELECTED_HINT' | translate }}
                 </div>
-                <div *ngIf="isFieldInvalid('masjidId')" class="field-error">
-                    {{ getFieldError('masjidId') }}
+                <div *ngIf="communityForm.get('masjidId')?.invalid && (communityForm.get('masjidId')?.dirty || communityForm.get('masjidId')?.touched)"
+                    class="field-error">
+                    {{ getFieldDisplayName('masjidId') }} is required
                 </div>
             </div>
 
-            <!-- Language Selection -->
-            <div class="form-group">
-                <label for="languageId" class="form-label required">{{ 'FORM.SELECT_LANGUAGE_OPTIONAL' | translate
-                    }}</label>
-                <select id="languageId" formControlName="languageId" class="form-select"
-                    [class.error]="isFieldInvalid('languageId')">
-                    <option value="">{{ 'FORM.SELECT_LANGUAGE_OPTIONAL' | translate }}</option>
-                    <option *ngFor="let language of languages" [value]="language.id">
-                        {{ language.name }} ({{ language.code.toUpperCase() }})
-                    </option>
-                </select>
-                <div class="field-hint">
-                    <i class="icon-globe"></i>
-                    {{ 'COMMUNITY_CREATE.LANGUAGE_HINT' | translate }}
+            <!-- Multilingual Content Fields -->
+            <ng-container *ngFor="let lang of languages; let i = index">
+                <div class="language-section">
+                    <h3 class="language-title">
+                        <i class="icon-globe"></i>
+                        {{ lang.name }} ({{ lang.code.toUpperCase() }})
+                    </h3>
+                    <!-- Title Field -->
+                    <div class="form-group">
+                        <label [for]="'title-' + lang.code" class="form-label required">
+                            {{ 'COMMUNITY_CREATE.TITLE_LABEL' | translate }}
+                            <span class="lang-label">[{{ lang.code.toUpperCase() }}]</span>
+                        </label>
+                        <input [id]="'title-' + lang.code" type="text"
+                            [formControl]="asFormControl(contents.at(i).get('title'))" class="form-input"
+                            [class.error]="isFieldInvalid(i, 'title')"
+                            [placeholder]="'COMMUNITY_CREATE.TITLE_PLACEHOLDER' | translate" maxlength="200" />
+                        <div class="field-info">
+                            <span class="char-count">
+                                {{ contents.at(i).get('title')?.value?.length || 0 }}/200
+                            </span>
+                        </div>
+                        <div *ngIf="isFieldInvalid(i, 'title')" class="field-error">
+                            {{ getFieldError(i, 'title') }}
+                        </div>
+                    </div>
+
+                    <!-- Content Field -->
+                    <div class="form-group">
+                        <label [for]="'content-' + lang.code" class="form-label required">
+                            {{ 'COMMUNITY_CREATE.DESCRIPTION_LABEL' | translate }}
+                            <span class="lang-label">[{{ lang.code.toUpperCase() }}]</span>
+                        </label>
+                        <textarea [id]="'content-' + lang.code"
+                            [formControl]="asFormControl(contents.at(i).get('content'))" class="form-textarea"
+                            [class.error]="isFieldInvalid(i, 'content')"
+                            [placeholder]="'COMMUNITY_CREATE.DESCRIPTION_PLACEHOLDER' | translate" rows="6"
+                            maxlength="2000"></textarea>
+                        <div class="field-info">
+                            <span class="char-count">
+                                {{ contents.at(i).get('content')?.value?.length || 0 }}/2000
+                            </span>
+                        </div>
+                        <div *ngIf="isFieldInvalid(i, 'content')" class="field-error">
+                            {{ getFieldError(i, 'content') }}
+                        </div>
+                    </div>
                 </div>
-                <div *ngIf="isFieldInvalid('languageId')" class="field-error">
-                    {{ getFieldError('languageId') }}
-                </div>
-            </div>
+            </ng-container>
 
             <!-- Form Actions -->
             <div class="form-actions">

@@ -29,6 +29,10 @@ export class MyCommunitiesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.translate.onLangChange.subscribe(() => {
+      // Optionally, reload communities if API returns language-specific data
+      // this.loadMyCommunities();
+    });
     this.loadMyCommunities();
   }
 
@@ -109,5 +113,19 @@ export class MyCommunitiesComponent implements OnInit {
 
   refreshCommunities(): void {
     this.loadMyCommunities();
+  }
+
+  getTranslatedField(
+    community: CommunityViewModel,
+    field: 'title' | 'content'
+  ): string {
+    const langCode = this.translate.currentLang || 'en';
+    let translation = community.contents?.find((c) =>
+      langCode === 'ar' ? c.languageId === 2 : c.languageId === 1
+    );
+    if (!translation && community.contents && community.contents.length > 0) {
+      translation = community.contents[0];
+    }
+    return translation?.[field] || (community as any)[field] || '';
   }
 }

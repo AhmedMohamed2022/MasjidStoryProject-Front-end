@@ -24,6 +24,10 @@ export class CommunityDetailsComponent implements OnInit {
   isAuthenticated = false;
   membershipLoading = false;
 
+  // For multilingual display
+  displayedTitle: string = '';
+  displayedContent: string = '';
+
   // Comments and Likes properties
   newComment = '';
   submittingComment = false;
@@ -43,6 +47,9 @@ export class CommunityDetailsComponent implements OnInit {
 
   ngOnInit() {
     this.isAuthenticated = this.authService.isAuthenticated();
+    this.translate.onLangChange.subscribe(() => {
+      this.updateDisplayedTranslation();
+    });
     this.loadCommunity();
   }
 
@@ -62,7 +69,7 @@ export class CommunityDetailsComponent implements OnInit {
       next: (community) => {
         this.community = community;
         this.loading = false;
-
+        this.updateDisplayedTranslation();
         // Load comments and likes after community is loaded
         this.loadComments();
         this.loadLikeStatus();
@@ -76,6 +83,28 @@ export class CommunityDetailsComponent implements OnInit {
         this.loading = false;
       },
     });
+  }
+
+  updateDisplayedTranslation() {
+    if (!this.community) {
+      this.displayedTitle = '';
+      this.displayedContent = '';
+      return;
+    }
+    const langCode = this.translate.currentLang || 'en';
+    let translation = this.community.contents?.find((c) =>
+      langCode === 'ar' ? c.languageId === 2 : c.languageId === 1
+    );
+    if (
+      !translation &&
+      this.community.contents &&
+      this.community.contents.length > 0
+    ) {
+      translation = this.community.contents[0];
+    }
+    this.displayedTitle = translation?.title || this.community.title || '';
+    this.displayedContent =
+      translation?.content || this.community.content || '';
   }
 
   toggleMembership() {

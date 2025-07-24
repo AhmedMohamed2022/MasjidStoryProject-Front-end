@@ -51,7 +51,7 @@
   <div *ngIf="!loading && !error && communities.length > 0" class="communities-grid">
     <div *ngFor="let community of communities" class="community-card" (click)="navigateToCommunity(community.id)">
       <div class="community-header">
-        <h3 class="community-title">{{ community.title }}</h3>
+        <h3 class="community-title">{{ getTranslatedField(community, 'title') }}</h3>
         <div class="community-meta">
           <span class="community-masjid">
             <i class="fas fa-mosque"></i>
@@ -65,7 +65,7 @@
       </div>
 
       <div class="community-content">
-        <p class="community-description">{{ community.content }}</p>
+        <p class="community-description">{{ getTranslatedField(community, 'content') }}</p>
       </div>
 
       <div class="community-stats">

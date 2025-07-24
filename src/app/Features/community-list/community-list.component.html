@@ -57,11 +57,11 @@
       <div class="card-header">
         <div class="title-area">
           <h3 class="community-title" (click)="viewCommunity(community.id)">
-            {{ community.title }}
+            {{ getTranslatedField(community, 'title') }}
           </h3>
           <div class="language-indicator">
-            <span class="flag">{{ getLanguageFlag(community.languageCode) }}</span>
-            <span class="code">{{ community.languageCode.toUpperCase() }}</span>
+            <span class="flag">{{ getLanguageFlag(getCommunityLanguageCode(community)) }}</span>
+            <span class="code">{{ getCommunityLanguageCode(community).toUpperCase() }}</span>
           </div>
         </div>
 
@@ -72,7 +72,7 @@
       </div>
 
       <div class="card-content">
-        <p class="community-content">{{ community.content }}</p>
+        <p class="community-content">{{ getTranslatedField(community, 'content') }}</p>
       </div>
 
       <div class="card-footer">

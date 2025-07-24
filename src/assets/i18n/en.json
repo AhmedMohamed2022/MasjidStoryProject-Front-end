@@ -580,6 +580,10 @@
     "COMMUNITY_CONTENT_LABEL": "Content *",
     "COMMUNITY_CONTENT_PLACEHOLDER": "Community Description",
     "COMMUNITY_CONTENT_REQUIRED": "Content is required",
+    "COMMUNITY_TITLE_MINLENGTH": "Title must be at least 3 characters.",
+    "COMMUNITY_TITLE_MAXLENGTH": "Title cannot exceed 200 characters.",
+    "COMMUNITY_CONTENT_MINLENGTH": "Content must be at least 10 characters.",
+    "COMMUNITY_CONTENT_MAXLENGTH": "Content cannot exceed 2000 characters.",
 
     "COMMUNITY_DELETE_CONFIRM": "Delete community \"{{name}}\"? This cannot be undone.",
     "COMMUNITY_DELETE_FAILED": "Failed to delete community.",
@@ -695,7 +699,12 @@
     "YEAR_LABEL": "Year of Establishment",
     "YEAR_PLACEHOLDER": "Year",
     "LANGUAGE_ENGLISH": "English",
-    "LANGUAGE_ARABIC": "Arabic"
+    "LANGUAGE_ARABIC": "Arabic",
+    "TAB_PENDING_STORIES": "Pending Stories",
+    "TAB_ALL_STORIES": "All Stories",
+    "TAB_MASJIDS": "Masjids",
+    "TAB_EVENTS": "Events",
+    "TAB_COMMUNITIES": "Communities"
   },
   "EDIT_STORY": {
     "TITLE": "Edit Story",

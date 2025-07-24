@@ -4,6 +4,12 @@ export interface ApiResponse<T> {
   data?: T;
 }
 
+export interface CommunityContentViewModel {
+  languageId: number;
+  title: string;
+  content: string;
+}
+
 export interface CommunityViewModel {
   id: number;
   title: string;
@@ -18,13 +24,18 @@ export interface CommunityViewModel {
   comments?: any[];
   isLikedByCurrentUser?: boolean;
   likeCount?: number;
+  contents?: CommunityContentViewModel[];
+}
+
+export interface CommunityContentCreateViewModel {
+  languageId: number;
+  title: string;
+  content: string;
 }
 
 export interface CommunityCreateViewModel {
-  title: string;
-  content: string;
   masjidId: number;
-  languageId: number;
+  contents: CommunityContentCreateViewModel[];
 }
 
 export interface LanguageViewModel {

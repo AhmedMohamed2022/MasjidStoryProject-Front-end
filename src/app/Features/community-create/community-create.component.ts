@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
-  ReactiveFormsModule,
+  FormArray,
   Validators,
+  AbstractControl,
+  FormControl,
 } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommunityService } from '../../Core/Services/community.service';
@@ -14,6 +16,7 @@ import { LanguageViewModel } from '../../Core/Services/language.service';
 import { MasjidViewModel } from '../../Core/Models/masjid.model';
 import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-create-community',
@@ -32,7 +35,6 @@ export class CreateCommunityComponent implements OnInit {
   errorMessage = '';
   successMessage = '';
 
-  // Pre-selected masjid from route params
   preselectedMasjidId: number | null = null;
 
   constructor(
@@ -45,29 +47,12 @@ export class CreateCommunityComponent implements OnInit {
     private translate: TranslateService
   ) {
     this.communityForm = this.fb.group({
-      title: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(200),
-        ],
-      ],
-      content: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(10),
-          Validators.maxLength(2000),
-        ],
-      ],
-      masjidId: ['', Validators.required],
-      languageId: ['', Validators.required],
+      masjidId: [{ value: '', disabled: false }, Validators.required],
+      contents: this.fb.array([]),
     });
   }
 
   ngOnInit(): void {
-    // Check if masjidId is passed in route params
     this.route.params.subscribe((params) => {
       if (params['masjidId']) {
         this.preselectedMasjidId = +params['masjidId'];
@@ -75,20 +60,21 @@ export class CreateCommunityComponent implements OnInit {
         this.communityForm.get('masjidId')?.disable();
       }
     });
-
     this.loadFormData();
+    this.translate.onLangChange.subscribe(() => {});
+  }
 
-    // Subscribe to language changes
-    this.translate.onLangChange.subscribe(() => {
-      // Refresh any dynamic content if needed
-    });
+  getMasjidDisplayName(masjid: MasjidViewModel): string {
+    const lang = this.translate.currentLang || 'en';
+    if (!masjid.contents || masjid.contents.length === 0) return '';
+    const langId = lang === 'ar' ? 2 : 1;
+    const found = masjid.contents.find((c) => c.languageId === langId);
+    return found?.name || masjid.contents[0].name;
   }
 
   loadFormData(): void {
     this.isLoading = true;
     this.errorMessage = '';
-
-    // Load languages and masjids concurrently
     Promise.all([
       this.languageService.getAllLanguages().toPromise(),
       this.masjidService.getAllMasjids().toPromise(),
@@ -98,13 +84,33 @@ export class CreateCommunityComponent implements OnInit {
           (lang) => lang.code === 'en' || lang.code === 'ar'
         );
         this.masjids = masjids || [];
-
-        // Set default language to English if available
-        const englishLang = this.languages.find((lang) => lang.code === 'en');
-        if (englishLang && !this.communityForm.get('languageId')?.value) {
-          this.communityForm.get('languageId')?.setValue(englishLang.id);
-        }
-
+        console.log('Masjids loaded:', this.masjids);
+        // Initialize contents FormArray for both languages
+        const contentsArray = this.communityForm.get('contents') as FormArray;
+        contentsArray.clear();
+        this.languages.forEach((lang) => {
+          contentsArray.push(
+            this.fb.group({
+              languageId: [lang.id, Validators.required],
+              title: [
+                '',
+                [
+                  Validators.required,
+                  Validators.minLength(3),
+                  Validators.maxLength(200),
+                ],
+              ],
+              content: [
+                '',
+                [
+                  Validators.required,
+                  Validators.minLength(10),
+                  Validators.maxLength(2000),
+                ],
+              ],
+            })
+          );
+        });
         this.isLoading = false;
       })
       .catch((error) => {
@@ -115,23 +121,26 @@ export class CreateCommunityComponent implements OnInit {
       });
   }
 
+  get contents(): FormArray {
+    return this.communityForm.get('contents') as FormArray;
+  }
+
   onSubmit(): void {
     if (this.communityForm.invalid) {
       this.markFormGroupTouched();
       return;
     }
-
     this.isSubmitting = true;
     this.errorMessage = '';
     this.successMessage = '';
-
     const formData: CommunityCreateViewModel = {
-      title: this.communityForm.get('title')?.value?.trim(),
-      content: this.communityForm.get('content')?.value?.trim(),
       masjidId: +this.communityForm.get('masjidId')?.value,
-      languageId: +this.communityForm.get('languageId')?.value,
+      contents: this.contents.value.map((c: any) => ({
+        languageId: c.languageId,
+        title: c.title?.trim(),
+        content: c.content?.trim(),
+      })),
     };
-
     this.communityService.createCommunity(formData).subscribe({
       next: (response) => {
         this.translate
@@ -140,8 +149,6 @@ export class CreateCommunityComponent implements OnInit {
             this.successMessage = text;
           });
         this.isSubmitting = false;
-
-        // Redirect after a short delay
         setTimeout(() => {
           if (this.preselectedMasjidId) {
             this.router.navigate(['/masjid', this.preselectedMasjidId]);
@@ -165,18 +172,23 @@ export class CreateCommunityComponent implements OnInit {
   private markFormGroupTouched(): void {
     Object.keys(this.communityForm.controls).forEach((key) => {
       const control = this.communityForm.get(key);
-      control?.markAsTouched();
+      if (control instanceof FormArray) {
+        control.controls.forEach((group) => group.markAllAsTouched());
+      } else {
+        control?.markAsTouched();
+      }
     });
   }
 
-  // Form validation helpers
-  isFieldInvalid(fieldName: string): boolean {
-    const field = this.communityForm.get(fieldName);
+  isFieldInvalid(contentIndex: number, fieldName: string): boolean {
+    const contentGroup = this.contents.at(contentIndex) as FormGroup;
+    const field = contentGroup.get(fieldName);
     return !!(field && field.invalid && (field.dirty || field.touched));
   }
 
-  getFieldError(fieldName: string): string {
-    const field = this.communityForm.get(fieldName);
+  getFieldError(contentIndex: number, fieldName: string): string {
+    const contentGroup = this.contents.at(contentIndex) as FormGroup;
+    const field = contentGroup.get(fieldName);
     if (field && field.errors && (field.dirty || field.touched)) {
       if (field.errors['required']) {
         if (fieldName === 'title') {
@@ -190,20 +202,6 @@ export class CreateCommunityComponent implements OnInit {
           let errorMsg = '';
           this.translate
             .get('COMMUNITY_CREATE.DESCRIPTION_REQUIRED')
-            .subscribe((text: string) => (errorMsg = text));
-          return errorMsg;
-        }
-        if (fieldName === 'masjidId') {
-          let errorMsg = '';
-          this.translate
-            .get('COMMUNITY_CREATE.MASJID_REQUIRED')
-            .subscribe((text: string) => (errorMsg = text));
-          return errorMsg;
-        }
-        if (fieldName === 'languageId') {
-          let errorMsg = '';
-          this.translate
-            .get('COMMUNITY_CREATE.LANGUAGE_REQUIRED')
             .subscribe((text: string) => (errorMsg = text));
           return errorMsg;
         }
@@ -223,12 +221,10 @@ export class CreateCommunityComponent implements OnInit {
     return '';
   }
 
-  private getFieldDisplayName(fieldName: string): string {
+  getFieldDisplayName(fieldName: string): string {
     const displayNames: { [key: string]: string } = {
       title: 'Title',
       content: 'Content',
-      masjidId: 'Masjid',
-      languageId: 'Language',
     };
     return displayNames[fieldName] || fieldName;
   }
@@ -239,5 +235,9 @@ export class CreateCommunityComponent implements OnInit {
     } else {
       this.router.navigate(['/communities']);
     }
+  }
+
+  asFormControl(ctrl: AbstractControl | null): FormControl {
+    return ctrl as FormControl;
   }
 }

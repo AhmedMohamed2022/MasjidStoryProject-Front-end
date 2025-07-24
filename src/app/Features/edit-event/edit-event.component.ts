@@ -59,14 +59,35 @@ export class EditEventComponent implements OnInit {
 
   ngOnInit(): void {
     this.eventId = Number(this.route.snapshot.paramMap.get('id'));
-    this.initForm();
-    this.loadMasjids();
+    this.loadMasjidsAndThenEvent();
     this.translate.onLangChange.subscribe(() => {
-      this.loadMasjids();
+      this.loadMasjidsAndThenEvent();
     });
-    if (this.eventId) {
-      this.loadEventForEdit();
-    }
+  }
+
+  // Load masjids first, then event
+  loadMasjidsAndThenEvent(): void {
+    this.loadingMasjids = true;
+    this.masjidService.getAllMasjids(this.translate.currentLang).subscribe({
+      next: (masjids) => {
+        this.masjids = masjids;
+        this.loadingMasjids = false;
+        if (this.eventId) {
+          this.loadEventForEdit();
+        } else {
+          this.initForm();
+        }
+      },
+      error: (error) => {
+        console.error('Error loading masjids:', error);
+        this.loadingMasjids = false;
+        if (this.eventId) {
+          this.loadEventForEdit();
+        } else {
+          this.initForm();
+        }
+      },
+    });
   }
 
   initForm(): void {
@@ -93,11 +114,12 @@ export class EditEventComponent implements OnInit {
   }
 
   get contentsControls() {
-    return (this.eventForm.get('contents') as FormArray).controls;
+    return (this.eventForm?.get('contents') as FormArray)?.controls || [];
   }
 
   loadEventForEdit(): void {
     this.loadingEvent = true;
+    this.initForm(); // Ensure the form is initialized before patching
     this.eventService.getEventDetails(this.eventId).subscribe({
       next: (event) => {
         this.originalEvent = event;
@@ -130,11 +152,22 @@ export class EditEventComponent implements OnInit {
     const contentsArray = this.eventForm.get('contents') as FormArray;
     contentsArray.clear();
     this.languages.forEach((lang) => {
-      const existing = contents.find((c) => c.languageId === lang.id) || {
-        languageId: lang.id,
-        title: '',
-        description: '',
-      };
+      let existing = contents.find((c) => c.languageId === lang.id);
+      // Fallback for legacy events: use localizedTitle/Description for English if no contents
+      if (!existing && lang.code === 'en' && this.originalEvent) {
+        existing = {
+          languageId: lang.id,
+          title: this.originalEvent.localizedTitle || '',
+          description: this.originalEvent.localizedDescription || '',
+        };
+      }
+      if (!existing) {
+        existing = {
+          languageId: lang.id,
+          title: '',
+          description: '',
+        };
+      }
       contentsArray.push(
         this.fb.group({
           languageId: [lang.id, Validators.required],
@@ -148,7 +181,7 @@ export class EditEventComponent implements OnInit {
   isEventCreator(event: EventViewModel): boolean {
     if (!this.authService.isAuthenticated()) return false;
     const currentUser = this.authService.getCurrentUser();
-    return currentUser?.email === event.createdByName;
+    return currentUser?.userId === event.createdById;
   }
 
   onSubmit(): void {

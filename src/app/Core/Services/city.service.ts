@@ -26,10 +26,13 @@ export class CityService {
       .pipe(map((response) => response.data));
   }
 
-  getCitiesByCountry(countryId: number): Observable<CityViewModel[]> {
+  getCitiesByCountry(
+    countryId: number,
+    languageCode: string = 'en'
+  ): Observable<CityViewModel[]> {
     return this.http
       .get<ApiResponse<CityViewModel[]>>(
-        `${this.apiUrl}/bycountry/${countryId}`
+        `${this.apiUrl}/bycountry/${countryId}?languageCode=${languageCode}`
       )
       .pipe(map((response) => response.data));
   }

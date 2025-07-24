@@ -16,37 +16,68 @@
   <div class="dashboard-stats" *ngIf="!pendingLoading && !allStoriesLoading">
     <div class="stat-card">
       <div class="stat-icon pending">
-        <mat-icon>hourglass_empty</mat-icon>
+        <!-- Hourglass SVG -->
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <ellipse cx="16" cy="8" rx="7" ry="3" fill="#bfa046" fill-opacity="0.18" />
+          <path
+            d="M9 8c0 1.657 3.134 3 7 3s7-1.343 7-3m-14 0V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2m-14 0c0 1.657 3.134 3 7 3s7-1.343 7-3"
+            stroke="#bfa046" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <path
+            d="M9 24c0-1.657 3.134-3 7-3s7 1.343 7 3m-14 0v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2m-14 0c0-1.657 3.134-3 7-3s7 1.343 7 3"
+            stroke="#bfa046" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M16 11v10" stroke="#bfa046" stroke-width="2" stroke-linecap="round" />
+          <ellipse cx="16" cy="24" rx="7" ry="3" fill="#bfa046" fill-opacity="0.18" />
+        </svg>
       </div>
       <div class="stat-content">
-        <div class="stat-number">{{ pendingStories.length }}</div>
+        <div class="stat-number animated-number"><span #animatedNumber
+            [attr.data-target]="pendingStories.length"></span></div>
         <div class="stat-label">{{ 'ADMIN_DASHBOARD.PENDING_STORIES' | translate }}</div>
       </div>
     </div>
     <div class="stat-card">
       <div class="stat-icon published">
-        <mat-icon>library_books</mat-icon>
+        <!-- Book SVG -->
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <rect x="6" y="6" width="20" height="20" rx="4" fill="#1b5e20" fill-opacity="0.13" />
+          <rect x="8" y="8" width="16" height="16" rx="2" stroke="#1b5e20" stroke-width="2" />
+          <path d="M12 12h8M12 16h8M12 20h4" stroke="#1b5e20" stroke-width="2" stroke-linecap="round" />
+        </svg>
       </div>
       <div class="stat-content">
-        <div class="stat-number">{{ allStories.length }}</div>
+        <div class="stat-number animated-number"><span #animatedNumber [attr.data-target]="allStories.length"></span>
+        </div>
         <div class="stat-label">{{ 'ADMIN_DASHBOARD.PUBLISHED_STORIES' | translate }}</div>
       </div>
     </div>
     <div class="stat-card">
       <div class="stat-icon masjids">
-        <mat-icon>mosque</mat-icon>
+        <!-- Mosque SVG -->
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <ellipse cx="16" cy="24" rx="7" ry="3" fill="#388e3c" fill-opacity="0.13" />
+          <path d="M16 8l-4 8h8l-4-8z" fill="#388e3c" fill-opacity="0.18" />
+          <path d="M9 24v-4a7 7 0 0 1 14 0v4" stroke="#388e3c" stroke-width="2" stroke-linecap="round" />
+          <path d="M16 8l-4 8h8l-4-8z" stroke="#388e3c" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
       </div>
       <div class="stat-content">
-        <div class="stat-number">{{ masjids.length }}</div>
+        <div class="stat-number animated-number"><span #animatedNumber [attr.data-target]="masjids.length"></span></div>
         <div class="stat-label">{{ 'ADMIN_DASHBOARD.TOTAL_MASJIDS' | translate }}</div>
       </div>
     </div>
     <div class="stat-card">
       <div class="stat-icon events">
-        <mat-icon>event</mat-icon>
+        <!-- Calendar SVG -->
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <rect x="6" y="10" width="20" height="14" rx="4" fill="#bfa046" fill-opacity="0.13" />
+          <rect x="8" y="12" width="16" height="10" rx="2" stroke="#bfa046" stroke-width="2" />
+          <rect x="12" y="16" width="4" height="4" rx="1" fill="#bfa046" />
+          <rect x="16" y="16" width="4" height="4" rx="1" fill="#bfa046" />
+        </svg>
       </div>
       <div class="stat-content">
-        <div class="stat-number">{{ events.length }}</div>
+        <div class="stat-number animated-number"><span #animatedNumber [attr.data-target]="events.length"></span></div>
         <div class="stat-label">{{ 'ADMIN_DASHBOARD.TOTAL_EVENTS' | translate }}</div>
       </div>
     </div>
@@ -55,7 +86,7 @@
   <!-- Tab Navigation -->
   <div class="dashboard-container">
     <mat-tab-group (selectedTabChange)="onTabChange($event.index)" [selectedIndex]="selectedTab" class="dashboard-tabs">
-      <mat-tab *ngFor="let tab of tabs; let i = index" [label]="tab.label">
+      <mat-tab *ngFor="let tab of tabs; let i = index" [label]="tab.label | translate">
 
         <!-- Pending Stories Tab -->
         <div *ngIf="i === 0" class="tab-content">
@@ -511,66 +542,43 @@
               </div>
 
               <form [formGroup]="eventForm" (ngSubmit)="onSubmitEvent()" class="event-form form-content">
-                <div class="form-grid">
-                  <mat-form-field appearance="outline">
-                    <mat-label>{{ 'ADMIN_DASHBOARD.EVENT_TITLE_LABEL' | translate }}</mat-label>
-                    <input matInput formControlName="title"
-                      [placeholder]="'ADMIN_DASHBOARD.EVENT_TITLE_PLACEHOLDER' | translate">
-                    <mat-error *ngIf="eventForm.get('title')?.hasError('required')">
-                      {{ 'ADMIN_DASHBOARD.EVENT_TITLE_REQUIRED' | translate }}
-                    </mat-error>
-                  </mat-form-field>
-
-                  <mat-form-field appearance="outline">
-                    <mat-label>{{ 'ADMIN_DASHBOARD.EVENT_DATE_LABEL' | translate }}</mat-label>
-                    <input matInput [matDatepicker]="picker" formControlName="eventDate"
-                      [placeholder]="'ADMIN_DASHBOARD.EVENT_DATE_PLACEHOLDER' | translate">
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                    <mat-error *ngIf="eventForm.get('eventDate')?.hasError('required')">
-                      {{ 'ADMIN_DASHBOARD.EVENT_DATE_REQUIRED' | translate }}
-                    </mat-error>
-                  </mat-form-field>
-
-                  <mat-form-field appearance="outline">
-                    <mat-label>{{ 'ADMIN_DASHBOARD.EVENT_TIME_LABEL' | translate }}</mat-label>
-                    <input matInput type="time" formControlName="eventTime"
-                      [placeholder]="'ADMIN_DASHBOARD.EVENT_TIME_PLACEHOLDER' | translate">
-                    <mat-error *ngIf="eventForm.get('eventTime')?.hasError('required')">
-                      {{ 'ADMIN_DASHBOARD.EVENT_TIME_REQUIRED' | translate }}
-                    </mat-error>
-                  </mat-form-field>
-
-                  <mat-form-field appearance="outline">
-                    <mat-label>{{ 'ADMIN_DASHBOARD.EVENT_MASJID_LABEL' | translate }}</mat-label>
-                    <mat-select formControlName="masjidId">
-                      <mat-option [value]="null">{{ 'FORM.GENERAL_EVENT' | translate }}</mat-option>
-                      <mat-option *ngFor="let masjid of masjids" [value]="masjid.id">
-                        {{ masjid.shortName }}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-
-                  <mat-form-field appearance="outline">
-                    <mat-label>{{ 'ADMIN_DASHBOARD.EVENT_LANGUAGE_LABEL' | translate }}</mat-label>
-                    <mat-select formControlName="languageId">
-                      <mat-option [value]="null">{{ 'FORM.DEFAULT' | translate }}</mat-option>
-                      <mat-option [value]="1">Arabic</mat-option>
-                      <mat-option [value]="2">English</mat-option>
-                    </mat-select>
-                  </mat-form-field>
+                <!-- Multilingual Title/Description Fields -->
+                <div formArrayName="contents">
+                  <div *ngFor="let content of eventContents.controls; let i = index" [formGroupName]="i" class="mb-4">
+                    <h5>{{ languages[i].name }}</h5>
+                    <mat-form-field appearance="outline" class="full-width">
+                      <mat-label>{{ 'ADMIN_DASHBOARD.EVENT_TITLE_LABEL' | translate }} ({{
+                        languages[i].code.toUpperCase() }}) *</mat-label>
+                      <input matInput formControlName="title" maxlength="200" required />
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="full-width">
+                      <mat-label>{{ 'ADMIN_DASHBOARD.EVENT_DESCRIPTION_LABEL' | translate }} ({{
+                        languages[i].code.toUpperCase() }}) *</mat-label>
+                      <textarea matInput formControlName="description" rows="3" maxlength="1000" required></textarea>
+                      <mat-hint align="end">{{ content.get('description')?.value?.length || 0 }}/1000</mat-hint>
+                    </mat-form-field>
+                  </div>
                 </div>
 
-                <div class="form-row">
-                  <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>{{ 'ADMIN_DASHBOARD.EVENT_DESCRIPTION_LABEL' | translate }}</mat-label>
-                    <textarea matInput formControlName="description"
-                      [placeholder]="'ADMIN_DASHBOARD.EVENT_DESCRIPTION_PLACEHOLDER' | translate" rows="4"></textarea>
-                    <mat-error *ngIf="eventForm.get('description')?.hasError('required')">
-                      {{ 'ADMIN_DASHBOARD.EVENT_DESCRIPTION_REQUIRED' | translate }}
-                    </mat-error>
-                  </mat-form-field>
-                </div>
+                <!-- Event Date Field -->
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>{{ 'ADMIN_DASHBOARD.EVENT_DATE_LABEL' | translate }}</mat-label>
+                  <input matInput type="datetime-local" formControlName="eventDate" required />
+                  <mat-error *ngIf="eventForm.get('eventDate')?.hasError('required')">
+                    {{ 'ADMIN_DASHBOARD.EVENT_DATE_REQUIRED' | translate }}
+                  </mat-error>
+                </mat-form-field>
+
+                <!-- Masjid Selection -->
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>{{ 'ADMIN_DASHBOARD.EVENT_MASJID_LABEL' | translate }}</mat-label>
+                  <mat-select formControlName="masjidId">
+                    <mat-option [value]="null">{{ 'FORM.GENERAL_EVENT' | translate }}</mat-option>
+                    <mat-option *ngFor="let masjid of masjids" [value]="masjid.id">
+                      {{ getMasjidName(masjid) }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
 
                 <div class="form-actions">
                   <button type="button" mat-button class="btn-cancel" (click)="cancelEventForm()">{{
@@ -689,19 +697,13 @@
               <form [formGroup]="communityForm" (ngSubmit)="onSubmitCommunity()" class="community-form form-content">
                 <div class="form-grid">
                   <mat-form-field appearance="outline">
-                    <mat-label>{{ 'ADMIN_DASHBOARD.COMMUNITY_TITLE_LABEL' | translate }}</mat-label>
-                    <input matInput formControlName="title"
-                      [placeholder]="'ADMIN_DASHBOARD.COMMUNITY_TITLE_PLACEHOLDER' | translate">
-                    <mat-error *ngIf="communityForm.get('title')?.hasError('required')">
-                      {{ 'ADMIN_DASHBOARD.COMMUNITY_TITLE_REQUIRED' | translate }}
-                    </mat-error>
-                  </mat-form-field>
-
-                  <mat-form-field appearance="outline">
                     <mat-label>{{ 'ADMIN_DASHBOARD.COMMUNITY_MASJID_LABEL' | translate }}</mat-label>
-                    <mat-select formControlName="masjidId">
+                    <mat-select formControlName="masjidId" [disabled]="masjidsLoading">
+                      <mat-option *ngIf="masjidsLoading" disabled>
+                        <mat-spinner diameter="20"></mat-spinner> {{ 'ADMIN_DASHBOARD.LOADING_MASJIDS' | translate }}
+                      </mat-option>
                       <mat-option *ngFor="let masjid of masjids" [value]="masjid.id">
-                        {{ masjid.shortName }}
+                        {{ getMasjidName(masjid) }}
                       </mat-option>
                     </mat-select>
                     <mat-error *ngIf="communityForm.get('masjidId')?.hasError('required')">
@@ -709,27 +711,51 @@
                     </mat-error>
                   </mat-form-field>
 
-                  <mat-form-field appearance="outline">
-                    <mat-label>{{ 'ADMIN_DASHBOARD.COMMUNITY_LANGUAGE_LABEL' | translate }}</mat-label>
-                    <mat-select formControlName="languageId">
-                      <mat-option [value]="1">Arabic</mat-option>
-                      <mat-option [value]="2">English</mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="communityForm.get('languageId')?.hasError('required')">
-                      {{ 'ADMIN_DASHBOARD.COMMUNITY_LANGUAGE_REQUIRED' | translate }}
-                    </mat-error>
-                  </mat-form-field>
-                </div>
-
-                <div class="form-row">
-                  <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>{{ 'ADMIN_DASHBOARD.COMMUNITY_CONTENT_LABEL' | translate }}</mat-label>
-                    <textarea matInput formControlName="content"
-                      [placeholder]="'ADMIN_DASHBOARD.COMMUNITY_CONTENT_PLACEHOLDER' | translate" rows="4"></textarea>
-                    <mat-error *ngIf="communityForm.get('content')?.hasError('required')">
-                      {{ 'ADMIN_DASHBOARD.COMMUNITY_CONTENT_REQUIRED' | translate }}
-                    </mat-error>
-                  </mat-form-field>
+                  <!-- Multilingual Content Fields -->
+                  <ng-container *ngFor="let lang of languages; let i = index">
+                    <div class="language-section">
+                      <h3 class="language-title">
+                        <mat-icon>language</mat-icon>
+                        {{ lang.name }} ({{ lang.code.toUpperCase() }})
+                      </h3>
+                      <!-- Title Field -->
+                      <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>{{ 'ADMIN_DASHBOARD.COMMUNITY_TITLE_LABEL' | translate }} <span
+                            class="lang-label">[{{ lang.code.toUpperCase() }}]</span></mat-label>
+                        <input matInput [formControl]="asFormControl(communityContents.at(i).get('title'))"
+                          maxlength="200">
+                        <mat-hint align="end">{{ communityContents.at(i).get('title')?.value?.length || 0
+                          }}/200</mat-hint>
+                        <mat-error *ngIf="communityContents.at(i).get('title')?.hasError('required')">
+                          {{ 'ADMIN_DASHBOARD.COMMUNITY_TITLE_REQUIRED' | translate }}
+                        </mat-error>
+                        <mat-error *ngIf="communityContents.at(i).get('title')?.hasError('minlength')">
+                          {{ 'ADMIN_DASHBOARD.COMMUNITY_TITLE_MINLENGTH' | translate }}
+                        </mat-error>
+                        <mat-error *ngIf="communityContents.at(i).get('title')?.hasError('maxlength')">
+                          {{ 'ADMIN_DASHBOARD.COMMUNITY_TITLE_MAXLENGTH' | translate }}
+                        </mat-error>
+                      </mat-form-field>
+                      <!-- Content Field -->
+                      <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>{{ 'ADMIN_DASHBOARD.COMMUNITY_CONTENT_LABEL' | translate }} <span
+                            class="lang-label">[{{ lang.code.toUpperCase() }}]</span></mat-label>
+                        <textarea matInput [formControl]="asFormControl(communityContents.at(i).get('content'))"
+                          rows="4" maxlength="2000"></textarea>
+                        <mat-hint align="end">{{ communityContents.at(i).get('content')?.value?.length || 0
+                          }}/2000</mat-hint>
+                        <mat-error *ngIf="communityContents.at(i).get('content')?.hasError('required')">
+                          {{ 'ADMIN_DASHBOARD.COMMUNITY_CONTENT_REQUIRED' | translate }}
+                        </mat-error>
+                        <mat-error *ngIf="communityContents.at(i).get('content')?.hasError('minlength')">
+                          {{ 'ADMIN_DASHBOARD.COMMUNITY_CONTENT_MINLENGTH' | translate }}
+                        </mat-error>
+                        <mat-error *ngIf="communityContents.at(i).get('content')?.hasError('maxlength')">
+                          {{ 'ADMIN_DASHBOARD.COMMUNITY_CONTENT_MAXLENGTH' | translate }}
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </ng-container>
                 </div>
 
                 <div class="form-actions">
@@ -788,8 +814,8 @@
                       <span>{{ community.masjidName }}</span>
                     </div>
                     <div class="meta-item">
-                      <mat-icon>language</mat-icon>
-                      <span>{{ community.languageCode.toUpperCase() }}</span>
+                      <span class="flag">{{ getLanguageFlag(getCommunityLanguageCode(community)) }}</span>
+                      <span class="code">{{ getCommunityLanguageCode(community).toUpperCase() }}</span>
                     </div>
                     <div class="meta-item">
                       <mat-icon>person</mat-icon>
@@ -797,7 +823,7 @@
                     </div>
                     <div class="meta-item">
                       <mat-icon>group</mat-icon>
-                      <span>{{ community.memberCount }} {{ 'ADMIN_DASHBOARD.MEMBERS' | translate }}</span>
+                      <span>{{ community.memberCount || 0 }} {{ 'ADMIN_DASHBOARD.MEMBERS' | translate }}</span>
                     </div>
                     <div class="meta-item">
                       <mat-icon>schedule</mat-icon>

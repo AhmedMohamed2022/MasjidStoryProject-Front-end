@@ -61,6 +61,20 @@ export class UserProfileComponent {
     this.fetchAll();
   }
 
+  getTranslatedField(
+    community: CommunityViewModel,
+    field: 'title' | 'content'
+  ): string {
+    const langCode = this.translate.currentLang || 'en';
+    let translation = community.contents?.find((c) =>
+      langCode === 'ar' ? c.languageId === 2 : c.languageId === 1
+    );
+    if (!translation && community.contents && community.contents.length > 0) {
+      translation = community.contents[0];
+    }
+    return translation?.[field] || (community as any)[field] || '';
+  }
+
   getProfileImageUrl(): string {
     if (this.editMode && this.imagePreview) {
       return this.imagePreview as string;

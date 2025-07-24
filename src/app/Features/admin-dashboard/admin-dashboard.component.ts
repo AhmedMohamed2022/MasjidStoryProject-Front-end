@@ -1,4 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  Renderer2,
+  ElementRef,
+  ViewChildren,
+  QueryList,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
@@ -9,6 +17,7 @@ import {
   FormArray,
   AbstractControl,
   ValidatorFn,
+  FormControl,
 } from '@angular/forms';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
@@ -84,15 +93,15 @@ function atLeastOneNameValidator(): ValidatorFn {
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css'],
 })
-export class AdminDashboardComponent implements OnInit {
+export class AdminDashboardComponent implements OnInit, AfterViewInit {
   // Tab management
   selectedTab = 0;
   tabs = [
-    { label: 'Pending Stories', icon: 'hourglass_empty' },
-    { label: 'All Stories', icon: 'library_books' },
-    { label: 'Masjids', icon: 'mosque' },
-    { label: 'Events', icon: 'event' },
-    { label: 'Communities', icon: 'groups' },
+    { label: 'ADMIN_DASHBOARD.TAB_PENDING_STORIES', icon: 'hourglass_empty' },
+    { label: 'ADMIN_DASHBOARD.TAB_ALL_STORIES', icon: 'library_books' },
+    { label: 'ADMIN_DASHBOARD.TAB_MASJIDS', icon: 'mosque' },
+    { label: 'ADMIN_DASHBOARD.TAB_EVENTS', icon: 'event' },
+    { label: 'ADMIN_DASHBOARD.TAB_COMMUNITIES', icon: 'groups' },
   ];
 
   // Stories state
@@ -130,6 +139,14 @@ export class AdminDashboardComponent implements OnInit {
   showEditCommunityForm = false;
   editingCommunity: CommunityViewModel | null = null;
   communityForm: FormGroup;
+  languages = [
+    { id: 1, code: 'en', name: 'English' },
+    { id: 2, code: 'ar', name: 'Arabic' },
+  ];
+
+  get communityContents(): FormArray {
+    return this.communityForm.get('contents') as FormArray;
+  }
 
   // Masjid form state
   masjidForm: FormGroup;
@@ -147,7 +164,15 @@ export class AdminDashboardComponent implements OnInit {
     return this.masjidForm.get('contents') as FormArray;
   }
 
+  // Add a getter for the event contents FormArray
+  get eventContents(): FormArray {
+    return this.eventForm.get('contents') as FormArray;
+  }
+
   displayedColumns: string[] = ['title', 'author', 'date', 'actions'];
+
+  @ViewChildren('animatedNumber', { read: ElementRef })
+  animatedNumbers!: QueryList<ElementRef>;
 
   constructor(
     private fb: FormBuilder,
@@ -180,20 +205,63 @@ export class AdminDashboardComponent implements OnInit {
     });
 
     this.eventForm = this.fb.group({
-      title: ['', Validators.required],
-      description: ['', Validators.required],
       eventDate: ['', Validators.required],
-      eventTime: ['', Validators.required],
       masjidId: [null],
-      languageId: [null],
+      contents: this.fb.array([]),
     });
+    this.initEventContents();
 
     this.communityForm = this.fb.group({
-      title: ['', Validators.required],
-      content: ['', Validators.required],
       masjidId: [null, Validators.required],
-      languageId: [null, Validators.required],
+      contents: this.fb.array([]),
     });
+    this.initCommunityContents();
+  }
+
+  initCommunityContents(): void {
+    const contentsArray = this.communityForm.get('contents') as FormArray;
+    contentsArray.clear();
+    this.languages.forEach((lang) => {
+      contentsArray.push(
+        this.fb.group({
+          languageId: [lang.id, Validators.required],
+          title: [
+            '',
+            [
+              Validators.required,
+              Validators.minLength(3),
+              Validators.maxLength(200),
+            ],
+          ],
+          content: [
+            '',
+            [
+              Validators.required,
+              Validators.minLength(10),
+              Validators.maxLength(2000),
+            ],
+          ],
+        })
+      );
+    });
+  }
+
+  initEventContents(): void {
+    const contentsArray = this.eventForm.get('contents') as FormArray;
+    contentsArray.clear();
+    this.languages.forEach((lang) => {
+      contentsArray.push(
+        this.fb.group({
+          languageId: [lang.id, Validators.required],
+          title: ['', Validators.required],
+          description: ['', Validators.required],
+        })
+      );
+    });
+  }
+
+  ngAfterViewInit(): void {
+    this.animateAllNumbers();
   }
 
   ngOnInit(): void {
@@ -204,49 +272,68 @@ export class AdminDashboardComponent implements OnInit {
         const tabIndex = parseInt(tabParam);
         if (tabIndex >= 0 && tabIndex < this.tabs.length) {
           this.selectedTab = tabIndex;
-          this.onTabChange(tabIndex);
         }
       }
     });
 
-    // Load initial data
-    this.loadCountries();
-    this.loadMasjids();
-    this.onTabChange(this.selectedTab);
+    // Load all statistics and data for dashboard
+    this.loadAllDashboardStats();
     this.translate.onLangChange.subscribe(() => {
-      this.onTabChange(this.selectedTab);
+      this.loadAllDashboardStats();
+      if (this.showCreateForm || this.showEditForm) {
+        this.loadCountries();
+        this.loadCities();
+      }
     });
+  }
+
+  loadAllDashboardStats() {
+    this.loadPendingStories(true);
+    this.loadAllStories(true);
+    this.loadMasjids(true);
+    this.loadEvents();
+    this.loadCommunities();
+  }
+
+  animateAllNumbers() {
+    setTimeout(() => {
+      this.animatedNumbers?.forEach((el) => {
+        const target = +el.nativeElement.getAttribute('data-target');
+        this.animateNumber(el.nativeElement, target);
+      });
+    }, 100);
+  }
+
+  animateNumber(element: HTMLElement, target: number) {
+    let start = 0;
+    const duration = 700;
+    const step = (timestamp: number, startTime: number) => {
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      const value = Math.floor(progress * target);
+      element.textContent = value.toString();
+      if (progress < 1) {
+        requestAnimationFrame((t) => step(t, startTime));
+      } else {
+        element.textContent = target.toString();
+      }
+    };
+    requestAnimationFrame((t) => step(t, t));
   }
 
   onTabChange(index: number) {
     this.selectedTab = index;
-    switch (index) {
-      case 0:
-        this.loadPendingStories();
-        break;
-      case 1:
-        this.loadAllStories();
-        break;
-      case 2:
-        this.loadMasjids();
-        break;
-      case 3:
-        this.loadEvents();
-        break;
-      case 4:
-        this.loadCommunities();
-        break;
-    }
+    // No need to reload stats here, as all are loaded in ngOnInit and on language change
   }
 
   // Stories methods
-  async loadPendingStories() {
+  async loadPendingStories(animate = false) {
     this.pendingLoading = true;
     this.pendingError = '';
     try {
       this.pendingStories = await this.storyService.getPendingStories(
         this.translate.currentLang
       );
+      if (animate) this.animateAllNumbers();
     } catch (err) {
       this.pendingError = 'Failed to load pending stories.';
     } finally {
@@ -254,13 +341,14 @@ export class AdminDashboardComponent implements OnInit {
     }
   }
 
-  async loadAllStories() {
+  async loadAllStories(animate = false) {
     this.allStoriesLoading = true;
     this.allStoriesError = '';
     try {
       this.allStories = await this.storyService.getAllStories(
         this.translate.currentLang
       );
+      if (animate) this.animateAllNumbers();
     } catch (err) {
       this.allStoriesError = 'Failed to load all stories.';
     } finally {
@@ -447,7 +535,7 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   // Masjids methods
-  async loadMasjids() {
+  async loadMasjids(animate = false) {
     this.masjidsLoading = true;
     this.masjidsError = '';
     try {
@@ -455,6 +543,7 @@ export class AdminDashboardComponent implements OnInit {
         (await this.masjidService
           .getAllMasjids(this.translate.currentLang)
           .toPromise()) || [];
+      if (animate) this.animateAllNumbers();
     } catch (err) {
       this.masjidsError = 'Failed to load masjids.';
     } finally {
@@ -463,38 +552,12 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   loadCountries(): void {
-    this.countryService.getAllCountries().subscribe({
+    this.countryService.getAllCountries(this.translate.currentLang).subscribe({
       next: (countries) => {
         this.countries = countries;
       },
       error: (error) => {
-        console.error('Error loading countries:', error);
-        // Fallback to basic countries if API fails
-        this.countries = [
-          { id: 1, name: 'Egypt', code: 'EG' },
-          { id: 2, name: 'Saudi Arabia', code: 'SA' },
-          { id: 3, name: 'United Arab Emirates', code: 'AE' },
-          { id: 4, name: 'Qatar', code: 'QA' },
-          { id: 5, name: 'Kuwait', code: 'KW' },
-          { id: 6, name: 'Bahrain', code: 'BH' },
-          { id: 7, name: 'Oman', code: 'OM' },
-          { id: 8, name: 'Jordan', code: 'JO' },
-          { id: 9, name: 'Lebanon', code: 'LB' },
-          { id: 10, name: 'Syria', code: 'SY' },
-          { id: 11, name: 'Iraq', code: 'IQ' },
-          { id: 12, name: 'Yemen', code: 'YE' },
-          { id: 13, name: 'Palestine', code: 'PS' },
-          { id: 14, name: 'Morocco', code: 'MA' },
-          { id: 15, name: 'Algeria', code: 'DZ' },
-          { id: 16, name: 'Tunisia', code: 'TN' },
-          { id: 17, name: 'Libya', code: 'LY' },
-          { id: 18, name: 'Sudan', code: 'SD' },
-          { id: 19, name: 'Somalia', code: 'SO' },
-          { id: 20, name: 'Djibouti', code: 'DJ' },
-          { id: 21, name: 'Comoros', code: 'KM' },
-          { id: 22, name: 'Chad', code: 'TD' },
-          { id: 23, name: 'Mauritania', code: 'MR' },
-        ];
+        this.countries = [];
       },
     });
   }
@@ -502,16 +565,17 @@ export class AdminDashboardComponent implements OnInit {
   loadCities(): void {
     const countryId = this.masjidForm.get('countryId')?.value;
     if (countryId) {
-      this.cityService.getCitiesByCountry(countryId).subscribe({
-        next: (cities) => {
-          this.cities = cities;
-        },
-        error: (error) => {
-          console.error('Error loading cities:', error);
-          // Fallback to basic cities if API fails
-          this.cities = this.getFallbackCities(countryId);
-        },
-      });
+      this.cityService
+        .getCitiesByCountry(countryId, this.translate.currentLang)
+        .subscribe({
+          next: (cities) => {
+            this.cities = cities;
+          },
+          error: (error) => {
+            console.error('Error loading cities:', error);
+            this.cities = [];
+          },
+        });
     } else {
       this.cities = [];
     }
@@ -780,6 +844,7 @@ export class AdminDashboardComponent implements OnInit {
       )
     );
     this.selectedFiles = [];
+    this.loadCountries(); // Ensure countries are loaded when form is shown
   }
 
   showEditMasjidForm(masjid: MasjidViewModel): void {
@@ -810,6 +875,7 @@ export class AdminDashboardComponent implements OnInit {
       cityId: masjid.cityId,
       yearOfEstablishment: masjid.yearOfEstablishment,
     });
+    this.loadCountries(); // Ensure countries are loaded when editing
     this.loadCities();
   }
 
@@ -1004,50 +1070,72 @@ export class AdminDashboardComponent implements OnInit {
     }
   }
 
+  // Patch for create
   openCreateEventForm(): void {
     this.showCreateEventForm = true;
     this.showEditEventForm = false;
     this.eventForm.reset();
+    this.initEventContents();
   }
 
+  // Patch event form for editing
   openEditEventForm(event: EventViewModel): void {
     this.editingEvent = event;
     this.showEditEventForm = true;
     this.showCreateEventForm = false;
 
-    // Parse the event date to extract date and time
+    // Patch date/time
     const eventDateTime = new Date(event.eventDate);
-    const eventDate = eventDateTime.toISOString().split('T')[0]; // YYYY-MM-DD format
-    const eventTime = eventDateTime.toTimeString().split(' ')[0]; // HH:MM:SS format
+    const eventDateLocal = eventDateTime.toISOString().slice(0, 16); // yyyy-MM-ddTHH:mm
 
     this.eventForm.patchValue({
-      title: event.title,
-      description: event.description,
-      eventDate: eventDate,
-      eventTime: eventTime,
+      eventDate: eventDateLocal,
       masjidId: event.masjidId,
-      languageId: null, // Not available in EventViewModel
+    });
+    this.patchEventContentsArray(event.contents || [], event);
+  }
+
+  // Patch multilingual contents
+  patchEventContentsArray(contents: any[], event: EventViewModel): void {
+    const contentsArray = this.eventForm.get('contents') as FormArray;
+    contentsArray.clear();
+    this.languages.forEach((lang) => {
+      let existing = contents.find((c: any) => c.languageId === lang.id);
+      // Fallback for legacy events: use localizedTitle/Description for English if no contents
+      if (!existing && lang.code === 'en' && event) {
+        existing = {
+          languageId: lang.id,
+          title: event.localizedTitle || '',
+          description: event.localizedDescription || '',
+        };
+      }
+      if (!existing) {
+        existing = {
+          languageId: lang.id,
+          title: '',
+          description: '',
+        };
+      }
+      contentsArray.push(
+        this.fb.group({
+          languageId: [lang.id, Validators.required],
+          title: [existing.title, Validators.required],
+          description: [existing.description, Validators.required],
+        })
+      );
     });
   }
 
+  // Submission logic for multilingual event
   onSubmitEvent(): void {
     if (this.eventForm.valid) {
       this.isSubmitting = true;
-      const formData = this.eventForm.value;
-
-      // Combine date and time into a single datetime string
-      const eventDate = formData.eventDate;
-      const eventTime = formData.eventTime;
-      const combinedDateTime = `${eventDate}T${eventTime}`;
-
+      const formValue = this.eventForm.value;
       const eventData: EventCreateViewModel = {
-        title: formData.title,
-        description: formData.description,
-        eventDate: combinedDateTime,
-        masjidId: formData.masjidId,
-        languageId: formData.languageId,
+        eventDate: new Date(formValue.eventDate).toISOString(),
+        masjidId: formValue.masjidId,
+        contents: formValue.contents,
       };
-
       if (this.showCreateEventForm) {
         this.createEvent(eventData);
       } else if (this.showEditEventForm) {
@@ -1104,14 +1192,19 @@ export class AdminDashboardComponent implements OnInit {
         this.isSubmitting = false;
       },
       error: (error) => {
-        console.error('Error updating event:', error);
-        this.snackBar.open(
-          this.translate.instant('ADMIN_DASHBOARD.EVENT_UPDATE_FAILED'),
-          this.translate.instant('COMMON.CLOSE'),
-          {
-            duration: 3000,
-          }
-        );
+        if (error.status === 403) {
+          this.snackBar.open(
+            'You do not have permission to edit this event. Only the creator or an admin can edit events.',
+            this.translate.instant('COMMON.CLOSE'),
+            { duration: 4000 }
+          );
+        } else {
+          this.snackBar.open(
+            this.translate.instant('ADMIN_DASHBOARD.EVENT_UPDATE_FAILED'),
+            this.translate.instant('COMMON.CLOSE'),
+            { duration: 3000 }
+          );
+        }
         this.isSubmitting = false;
       },
     });
@@ -1165,6 +1258,34 @@ export class AdminDashboardComponent implements OnInit {
       // Use the new getAllCommunities endpoint for admin dashboard
       this.communityService.getAllCommunities().subscribe({
         next: (communities) => {
+          communities.forEach((community, idx) => {
+            if (!community.contents) {
+              console.warn(
+                `Community at index ${idx} is missing contents`,
+                community
+              );
+            }
+            if (!community.comments) {
+              console.warn(
+                `Community at index ${idx} is missing comments`,
+                community
+              );
+              community.comments = [];
+            }
+            // Defensive: set content for display
+            const langCode = this.translate.currentLang || 'en';
+            let translation = community.contents?.find((c) =>
+              langCode === 'ar' ? c.languageId === 2 : c.languageId === 1
+            );
+            if (
+              !translation &&
+              community.contents &&
+              community.contents.length > 0
+            ) {
+              translation = community.contents[0];
+            }
+            community.content = translation?.content || '';
+          });
           this.communities = communities;
         },
         error: (error) => {
@@ -1185,6 +1306,7 @@ export class AdminDashboardComponent implements OnInit {
     this.showCreateCommunityForm = true;
     this.showEditCommunityForm = false;
     this.communityForm.reset();
+    this.initCommunityContents();
   }
 
   openEditCommunityForm(community: CommunityViewModel): void {
@@ -1192,11 +1314,21 @@ export class AdminDashboardComponent implements OnInit {
     this.showEditCommunityForm = true;
     this.showCreateCommunityForm = false;
 
+    // Patch per-language fields
+    const contents = (community as any).contents || [];
+    const en = contents.find((c: any) => c.languageId === 1) || {
+      languageId: 1,
+      title: '',
+      content: '',
+    };
+    const ar = contents.find((c: any) => c.languageId === 2) || {
+      languageId: 2,
+      title: '',
+      content: '',
+    };
     this.communityForm.patchValue({
-      title: community.title,
-      content: community.content,
       masjidId: community.masjidId,
-      languageId: this.getLanguageIdFromCode(community.languageCode),
+      contents: [en, ar],
     });
   }
 
@@ -1204,14 +1336,14 @@ export class AdminDashboardComponent implements OnInit {
     if (this.communityForm.valid) {
       this.isSubmitting = true;
       const formData = this.communityForm.value;
-
       const communityData: CommunityCreateViewModel = {
-        title: formData.title,
-        content: formData.content,
         masjidId: formData.masjidId,
-        languageId: formData.languageId,
+        contents: formData.contents.map((c: any) => ({
+          languageId: c.languageId,
+          title: c.title?.trim(),
+          content: c.content?.trim(),
+        })),
       };
-
       if (this.showCreateCommunityForm) {
         this.createCommunity(communityData);
       } else if (this.showEditCommunityForm) {
@@ -1226,12 +1358,11 @@ export class AdminDashboardComponent implements OnInit {
         this.snackBar.open(
           this.translate.instant('ADMIN_DASHBOARD.COMMUNITY_CREATED'),
           this.translate.instant('COMMON.CLOSE'),
-          {
-            duration: 2000,
-          }
+          { duration: 2000 }
         );
         this.showCreateCommunityForm = false;
         this.communityForm.reset();
+        this.initCommunityContents();
         this.loadCommunities();
         this.isSubmitting = false;
       },
@@ -1240,9 +1371,7 @@ export class AdminDashboardComponent implements OnInit {
         this.snackBar.open(
           this.translate.instant('ADMIN_DASHBOARD.COMMUNITY_CREATE_FAILED'),
           this.translate.instant('COMMON.CLOSE'),
-          {
-            duration: 3000,
-          }
+          { duration: 3000 }
         );
         this.isSubmitting = false;
       },
@@ -1251,7 +1380,6 @@ export class AdminDashboardComponent implements OnInit {
 
   updateCommunity(formData: CommunityCreateViewModel): void {
     if (!this.editingCommunity) return;
-
     this.communityService
       .updateCommunity(this.editingCommunity.id, formData)
       .subscribe({
@@ -1259,13 +1387,12 @@ export class AdminDashboardComponent implements OnInit {
           this.snackBar.open(
             this.translate.instant('ADMIN_DASHBOARD.COMMUNITY_UPDATED'),
             this.translate.instant('COMMON.CLOSE'),
-            {
-              duration: 2000,
-            }
+            { duration: 2000 }
           );
           this.showEditCommunityForm = false;
           this.editingCommunity = null;
           this.communityForm.reset();
+          this.initCommunityContents();
           this.loadCommunities();
           this.isSubmitting = false;
         },
@@ -1274,9 +1401,7 @@ export class AdminDashboardComponent implements OnInit {
           this.snackBar.open(
             this.translate.instant('ADMIN_DASHBOARD.COMMUNITY_UPDATE_FAILED'),
             this.translate.instant('COMMON.CLOSE'),
-            {
-              duration: 3000,
-            }
+            { duration: 3000 }
           );
           this.isSubmitting = false;
         },
@@ -1321,6 +1446,7 @@ export class AdminDashboardComponent implements OnInit {
     this.showEditCommunityForm = false;
     this.editingCommunity = null;
     this.communityForm.reset();
+    this.initCommunityContents();
   }
 
   // Helper method to convert language code to language ID
@@ -1347,5 +1473,33 @@ export class AdminDashboardComponent implements OnInit {
     if (!url) return 'public/default-story.png';
     if (url.startsWith('http')) return url;
     return environment.apiUrl.replace(/\/$/, '') + url;
+  }
+
+  asFormControl(ctrl: AbstractControl | null): FormControl {
+    return ctrl as FormControl;
+  }
+
+  getCommunityLanguageCode(community: CommunityViewModel): string {
+    const langCode = this.translate.currentLang || 'en';
+    let translation = community.contents?.find((c) =>
+      langCode === 'ar' ? c.languageId === 2 : c.languageId === 1
+    );
+    if (!translation && community.contents && community.contents.length > 0) {
+      translation = community.contents[0];
+    }
+    if (translation?.languageId === 2) return 'ar';
+    return 'en';
+  }
+
+  getLanguageFlag(languageCode: string): string {
+    return languageCode === 'ar' ? 'AR' : 'EN';
+  }
+
+  getMasjidName(masjid: any): string {
+    const lang = this.translate.currentLang || 'en';
+    const content = masjid.contents?.find((c: any) =>
+      lang === 'ar' ? c.languageId === 2 : c.languageId === 1
+    );
+    return content?.name || masjid.localizedName || 'Unnamed Masjid';
   }
 }
