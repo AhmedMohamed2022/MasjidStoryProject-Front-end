@@ -9,6 +9,7 @@ import { MasjidDetailsViewModel } from '../../Core/Models/masjid-details.model';
 import { MasjidEventsComponent } from '../masjid-events/masjid-events.component';
 import { CommunityListComponent } from '../community-list/community-list.component';
 import { MapPickerComponent } from '../../Shared/Components/map-picker/map-picker.component';
+import { MasjidService } from '../../Core/Services/masjid.service';
 
 @Component({
   selector: 'app-masjid-detail',
@@ -36,6 +37,7 @@ export class MasjidDetailComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private masjidService: MasjidDetailService,
+    private masjidApiService: MasjidService, // Inject MasjidService
     public translate: TranslateService // make public for template
   ) {}
   // public test() {
@@ -73,8 +75,14 @@ export class MasjidDetailComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           if (response.success) {
-            console.log('Masjid details API response:', response.data);
             this.masjid = response.data;
+            // Register the visit
+            this.masjidApiService.registerVisit(id).subscribe({
+              next: () => {},
+              error: (err) => {
+                console.error('Error registering visit:', err);
+              },
+            });
           } else {
             this.translate
               .get('MASJID_DETAILS.ERROR_GENERAL')
