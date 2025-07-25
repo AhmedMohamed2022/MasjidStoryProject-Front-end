@@ -745,5 +745,28 @@
     "COMMUNITIES": "Communities",
     "EVENTS": "Events",
     "PROFILE": "Profile"
+  },
+  "ARCH_STYLE": {
+    "ISLAMIC": "Islamic",
+    "FATIMID": "Fatimid",
+    "MODERN_ISLAMIC": "Modern Islamic",
+    "CONTEMPORARY": "Contemporary",
+    "MODERN": "Modern",
+    "AGHLABID": "Aghlabid",
+    "SAFAVID": "Safavid",
+    "OTTOMAN": "Ottoman",
+    "UMAYYAD": "Umayyad",
+    "SUDANESE_ISLAMIC": "Sudanese Islamic",
+    "MAMLUK": "Mamluk",
+    "MOORISH": "Moorish",
+    "MUGHAL": "Mughal",
+    "SELJUK": "Seljuk",
+    "PERSIAN": "Persian",
+    "INDONESIAN": "Indonesian",
+    "CHINESE": "Chinese",
+    "YEMENI": "Yemeni",
+    "SUDANO_SAHELIAN": "Sudano-Sahelian",
+    "TRADITIONAL": "Traditional",
+    "OTHER": "Other"
   }
 }

@@ -164,9 +164,9 @@ export class MasjidDetailComponent implements OnInit, OnDestroy {
     const description = this.masjid.localizedDescription?.trim();
 
     // If no description or description is just the address, provide a fallback
-    if (!description || description === this.masjid.address) {
+    if (!description || description === this.masjid.localizedAddress) {
       return this.translate.instant('MASJID_DETAILS.FALLBACK_DESCRIPTION', {
-        address: this.masjid.address,
+        address: this.masjid.localizedAddress,
       });
     }
 

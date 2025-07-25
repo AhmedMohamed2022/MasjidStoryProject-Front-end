@@ -1,7 +1,6 @@
 export interface MasjidDetailsViewModel {
   id: number;
   shortName: string;
-  address: string;
   archStyle: string;
   latitude?: number;
   longitude?: number;
@@ -10,6 +9,7 @@ export interface MasjidDetailsViewModel {
   cityName: string;
   localizedName: string;
   localizedDescription: string;
+  localizedAddress?: string;
   mediaUrls: string[];
   stories: StorySummaryViewModel[];
   totalVisits: number;

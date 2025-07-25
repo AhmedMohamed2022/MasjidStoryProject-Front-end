@@ -346,52 +346,56 @@
                       <textarea matInput formControlName="description"
                         [placeholder]="'ADMIN_DASHBOARD.DESCRIPTION_PLACEHOLDER' | translate" rows="3"></textarea>
                     </mat-form-field>
+                    <mat-form-field appearance="outline" class="w-100 mb-2">
+                      <mat-label>{{ languages[i].name }} Address</mat-label>
+                      <input matInput formControlName="address" required
+                        [placeholder]="'ADMIN_DASHBOARD.ADDRESS_PLACEHOLDER' | translate">
+                      <mat-error *ngIf="content.get('address')?.hasError('required')">
+                        {{ 'ADMIN_DASHBOARD.ADDRESS_LABEL' | translate }} is required
+                      </mat-error>
+                    </mat-form-field>
                   </div>
                 </div>
                 <div
                   *ngIf="masjidForm.get('contents')?.hasError('atLeastOneName') && masjidForm.get('contents')?.touched">
                   <mat-error>{{ 'At least one language name is required.' | translate }}</mat-error>
                 </div>
-                <!-- Restore the rest of the Masjid fields -->
-                <div class="form-grid">
-                  <mat-form-field appearance="outline">
-                    <mat-label>{{ 'ADMIN_DASHBOARD.ADDRESS_LABEL' | translate }}</mat-label>
-                    <input matInput formControlName="address"
-                      [placeholder]="'ADMIN_DASHBOARD.ADDRESS_PLACEHOLDER' | translate">
-                  </mat-form-field>
-                  <mat-form-field appearance="outline">
-                    <mat-label>{{ 'ADMIN_DASHBOARD.ARCHITECTURAL_STYLE_LABEL' | translate }}</mat-label>
-                    <input matInput formControlName="archStyle"
-                      [placeholder]="'ADMIN_DASHBOARD.ARCHITECTURAL_STYLE_LABEL' | translate">
-                  </mat-form-field>
-                  <mat-form-field appearance="outline">
-                    <mat-label>{{ 'ADMIN_DASHBOARD.YEAR_LABEL' | translate }}</mat-label>
-                    <input matInput type="number" formControlName="yearOfEstablishment"
-                      [placeholder]="'ADMIN_DASHBOARD.YEAR_PLACEHOLDER' | translate">
-                  </mat-form-field>
-                  <mat-form-field appearance="outline">
-                    <mat-label>{{ 'ADMIN_DASHBOARD.COUNTRY_LABEL' | translate }}</mat-label>
-                    <mat-select formControlName="countryId" (selectionChange)="onCountryChange()">
-                      <mat-option *ngFor="let country of countries" [value]="country.id">
-                        {{ country.name }}
-                      </mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="masjidForm.get('countryId')?.hasError('required')">
-                      {{ 'ADMIN_DASHBOARD.COUNTRY_REQUIRED' | translate }}
-                    </mat-error>
-                  </mat-form-field>
-                  <mat-form-field appearance="outline">
-                    <mat-label>{{ 'ADMIN_DASHBOARD.CITY_LABEL' | translate }}</mat-label>
-                    <mat-select formControlName="cityId" [disabled]="!cities.length">
-                      <mat-option *ngFor="let city of cities" [value]="city.id">
-                        {{ city.name }}
-                      </mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="masjidForm.get('cityId')?.hasError('required')">
-                      {{ 'ADMIN_DASHBOARD.CITY_REQUIRED' | translate }}
-                    </mat-error>
-                  </mat-form-field>
-                </div>
+                <!-- Arch Style dropdown -->
+                <mat-form-field appearance="outline" class="w-100 mb-2">
+                  <mat-label>{{ 'ADMIN_DASHBOARD.ARCHITECTURAL_STYLE_LABEL' | translate }}</mat-label>
+                  <mat-select formControlName="archStyle">
+                    <mat-option *ngFor="let style of archStyleOptions" [value]="style.key">
+                      {{ style.label | translate }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>{{ 'ADMIN_DASHBOARD.YEAR_LABEL' | translate }}</mat-label>
+                  <input matInput type="number" formControlName="yearOfEstablishment"
+                    [placeholder]="'ADMIN_DASHBOARD.YEAR_PLACEHOLDER' | translate">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>{{ 'ADMIN_DASHBOARD.COUNTRY_LABEL' | translate }}</mat-label>
+                  <mat-select formControlName="countryId" (selectionChange)="onCountryChange()">
+                    <mat-option *ngFor="let country of countries" [value]="country.id">
+                      {{ country.name }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="masjidForm.get('countryId')?.hasError('required')">
+                    {{ 'ADMIN_DASHBOARD.COUNTRY_REQUIRED' | translate }}
+                  </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>{{ 'ADMIN_DASHBOARD.CITY_LABEL' | translate }}</mat-label>
+                  <mat-select formControlName="cityId" [disabled]="!cities.length">
+                    <mat-option *ngFor="let city of cities" [value]="city.id">
+                      {{ city.name }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="masjidForm.get('cityId')?.hasError('required')">
+                    {{ 'ADMIN_DASHBOARD.CITY_REQUIRED' | translate }}
+                  </mat-error>
+                </mat-form-field>
 
                 <!-- Map Picker for Location - Full Width -->
                 <div class="map-section">
@@ -482,9 +486,9 @@
                 </div>
                 <div class="card-body">
                   <div class="masjid-meta meta-grid">
-                    <div class="meta-item" *ngIf="masjid.address">
-                      <mat-icon>location_on</mat-icon>
-                      <span>{{ masjid.address }}</span>
+                    <div class="meta-item" *ngIf="masjid.localizedAddress">
+                      <mat-icon>home</mat-icon>
+                      <span>{{ masjid.localizedAddress }}</span>
                     </div>
                     <div class="meta-item">
                       <mat-icon>location_city</mat-icon>
@@ -492,7 +496,7 @@
                     </div>
                     <div class="meta-item" *ngIf="masjid.archStyle">
                       <mat-icon>architecture</mat-icon>
-                      <span>{{ masjid.archStyle }}</span>
+                      <span>{{ ('ARCH_STYLE.' + masjid.archStyle) | translate }}</span>
                     </div>
                     <div class="meta-item" *ngIf="masjid.yearOfEstablishment">
                       <mat-icon>calendar_today</mat-icon>
@@ -721,7 +725,8 @@
                       <!-- Title Field -->
                       <mat-form-field appearance="outline" class="full-width">
                         <mat-label>{{ 'ADMIN_DASHBOARD.COMMUNITY_TITLE_LABEL' | translate }} <span
-                            class="lang-label">[{{ lang.code.toUpperCase() }}]</span></mat-label>
+                            class="lang-label">[{{
+                            lang.code.toUpperCase() }}]</span></mat-label>
                         <input matInput [formControl]="asFormControl(communityContents.at(i).get('title'))"
                           maxlength="200">
                         <mat-hint align="end">{{ communityContents.at(i).get('title')?.value?.length || 0
@@ -739,7 +744,8 @@
                       <!-- Content Field -->
                       <mat-form-field appearance="outline" class="full-width">
                         <mat-label>{{ 'ADMIN_DASHBOARD.COMMUNITY_CONTENT_LABEL' | translate }} <span
-                            class="lang-label">[{{ lang.code.toUpperCase() }}]</span></mat-label>
+                            class="lang-label">[{{
+                            lang.code.toUpperCase() }}]</span></mat-label>
                         <textarea matInput [formControl]="asFormControl(communityContents.at(i).get('content'))"
                           rows="4" maxlength="2000"></textarea>
                         <mat-hint align="end">{{ communityContents.at(i).get('content')?.value?.length || 0
@@ -852,4 +858,3 @@
       </mat-tab>
     </mat-tab-group>
   </div>
-</div>

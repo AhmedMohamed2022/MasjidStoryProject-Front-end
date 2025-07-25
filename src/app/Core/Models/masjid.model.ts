@@ -25,12 +25,12 @@ export interface MasjidContentViewModel {
   languageId: number;
   name: string;
   description: string;
+  address: string;
 }
 
 export interface MasjidViewModel {
   id: number;
   shortName: string;
-  address: string;
   archStyle: string;
   latitude?: number;
   longitude?: number;
@@ -43,10 +43,10 @@ export interface MasjidViewModel {
   mediaItems?: MediaViewModel[];
   contents?: MasjidContentViewModel[];
   localizedName?: string;
+  localizedAddress?: string;
 }
 
 export interface MasjidCreateViewModel {
-  address: string;
   archStyle: string;
   latitude?: number;
   longitude?: number;
@@ -68,4 +68,14 @@ export function getTranslatedMasjidName(
   const langId = lang === 'ar' ? 2 : 1;
   const found = contents.find((c) => c.languageId === langId);
   return found?.name || contents[0].name;
+}
+
+export function getTranslatedMasjidAddress(
+  contents: MasjidContentViewModel[] | undefined,
+  lang: string
+): string {
+  if (!contents || contents.length === 0) return '';
+  const langId = lang === 'ar' ? 2 : 1;
+  const found = contents.find((c) => c.languageId === langId);
+  return found?.address || contents[0].address;
 }

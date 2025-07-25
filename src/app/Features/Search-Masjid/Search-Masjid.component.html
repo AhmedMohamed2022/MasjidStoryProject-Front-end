@@ -42,11 +42,9 @@
               <div class="col-md-3 mb-2">
                 <select class="form-select" [(ngModel)]="selectedArchStyle" (change)="onFilterChange()">
                   <option value="">{{ 'SEARCH_MASJID.ALL_STYLES' | translate }}</option>
-                  <option value="Ottoman">Ottoman</option>
-                  <option value="Mamluk">Mamluk</option>
-                  <option value="Fatimid">Fatimid</option>
-                  <option value="Modern">Modern</option>
-                  <option value="Traditional">Traditional</option>
+                  <option *ngFor="let style of archStyleOptions" [value]="style.key">
+                    {{ style.label | translate }}
+                  </option>
                 </select>
               </div>
               <div class="col-md-3 mb-2">
@@ -124,16 +122,17 @@
           <div class="masjid-card" (click)="navigateToMasjid(masjid.id)">
             <div class="card-header">
               <h5 class="card-title">{{ getTranslatedMasjidName(masjid.contents, translate.currentLang) }}</h5>
-              <span class="badge badge-emerald" *ngIf="masjid.archStyle">{{ masjid.archStyle }}</span>
+              <span class="badge badge-emerald" *ngIf="masjid.archStyle">{{ ('ARCH_STYLE.' + masjid.archStyle) |
+                translate }}</span>
             </div>
             <div class="card-body">
               <p class="card-location">
                 <i class="fas fa-map-marker-alt"></i>
                 {{ masjid.cityName }}, {{ masjid.countryName }}
               </p>
-              <p class="card-address" *ngIf="masjid.address">
+              <p class="card-address" *ngIf="masjid.contents">
                 <i class="fas fa-home"></i>
-                {{ masjid.address }}
+                {{ getTranslatedMasjidAddress(masjid.contents, translate.currentLang) }}
               </p>
               <p class="card-year" *ngIf="masjid.yearOfEstablishment">
                 <i class="fas fa-calendar-alt"></i>

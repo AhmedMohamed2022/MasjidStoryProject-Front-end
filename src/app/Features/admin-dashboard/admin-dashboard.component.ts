@@ -141,7 +141,7 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
   communityForm: FormGroup;
   languages = [
     { id: 1, code: 'en', name: 'English' },
-    { id: 2, code: 'ar', name: 'Arabic' },
+    { id: 2, code: 'ar', name: 'العربية' },
   ];
 
   get communityContents(): FormArray {
@@ -174,6 +174,31 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
   @ViewChildren('animatedNumber', { read: ElementRef })
   animatedNumbers!: QueryList<ElementRef>;
 
+  // Add archStyleOptions for dropdown
+  archStyleOptions = [
+    { key: 'ISLAMIC', label: 'ARCH_STYLE.ISLAMIC' },
+    { key: 'FATIMID', label: 'ARCH_STYLE.FATIMID' },
+    { key: 'MODERN_ISLAMIC', label: 'ARCH_STYLE.MODERN_ISLAMIC' },
+    { key: 'CONTEMPORARY', label: 'ARCH_STYLE.CONTEMPORARY' },
+    { key: 'MODERN', label: 'ARCH_STYLE.MODERN' },
+    { key: 'AGHLABID', label: 'ARCH_STYLE.AGHLABID' },
+    { key: 'SAFAVID', label: 'ARCH_STYLE.SAFAVID' },
+    { key: 'OTTOMAN', label: 'ARCH_STYLE.OTTOMAN' },
+    { key: 'UMAYYAD', label: 'ARCH_STYLE.UMAYYAD' },
+    { key: 'SUDANESE_ISLAMIC', label: 'ARCH_STYLE.SUDANESE_ISLAMIC' },
+    { key: 'MAMLUK', label: 'ARCH_STYLE.MAMLUK' },
+    { key: 'MOORISH', label: 'ARCH_STYLE.MOORISH' },
+    { key: 'MUGHAL', label: 'ARCH_STYLE.MUGHAL' },
+    { key: 'SELJUK', label: 'ARCH_STYLE.SELJUK' },
+    { key: 'PERSIAN', label: 'ARCH_STYLE.PERSIAN' },
+    { key: 'INDONESIAN', label: 'ARCH_STYLE.INDONESIAN' },
+    { key: 'CHINESE', label: 'ARCH_STYLE.CHINESE' },
+    { key: 'YEMENI', label: 'ARCH_STYLE.YEMENI' },
+    { key: 'SUDANO_SAHELIAN', label: 'ARCH_STYLE.SUDANO_SAHELIAN' },
+    { key: 'TRADITIONAL', label: 'ARCH_STYLE.TRADITIONAL' },
+    { key: 'OTHER', label: 'ARCH_STYLE.OTHER' },
+  ];
+
   constructor(
     private fb: FormBuilder,
     private masjidService: MasjidService,
@@ -189,20 +214,24 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
   ) {
     this.masjidForm = this.fb.group({
       contents: this.fb.array(
-        [
-          this.fb.group({ languageId: 1, name: '', description: '' }), // English
-          this.fb.group({ languageId: 2, name: '', description: '' }), // Arabic
-        ],
+        this.languages.map((lang) =>
+          this.fb.group({
+            languageId: [lang.id],
+            name: ['', Validators.required],
+            description: ['', Validators.required],
+            address: ['', Validators.required],
+          })
+        ),
         { validators: atLeastOneNameValidator() }
       ),
-      address: [''],
-      archStyle: [''],
+      archStyle: ['', Validators.required],
       latitude: [null],
       longitude: [null],
       countryId: [null, Validators.required],
       cityId: [null, Validators.required],
       yearOfEstablishment: [null],
     });
+    console.log('Form initialized:', this.masjidForm.value);
 
     this.eventForm = this.fb.group({
       eventDate: ['', Validators.required],
@@ -836,10 +865,14 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
     this.masjidForm.setControl(
       'contents',
       this.fb.array(
-        [
-          this.fb.group({ languageId: 1, name: '', description: '' }),
-          this.fb.group({ languageId: 2, name: '', description: '' }),
-        ],
+        this.languages.map((lang) =>
+          this.fb.group({
+            languageId: [lang.id],
+            name: ['', Validators.required],
+            description: ['', Validators.required],
+            address: ['', Validators.required],
+          })
+        ),
         { validators: atLeastOneNameValidator() }
       )
     );
@@ -854,20 +887,19 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
     this.selectedFiles = [];
     this.selectedMediaToDelete = [];
     // Patch per-language fields
-    const contents = masjid.contents || [];
-    const en = contents.find((c) => c.languageId === 1) || {
-      languageId: 1,
-      name: '',
-      description: '',
-    };
-    const ar = contents.find((c) => c.languageId === 2) || {
-      languageId: 2,
-      name: '',
-      description: '',
-    };
+    const contents = this.languages.map((lang) => {
+      const c =
+        (masjid.contents?.find((x) => x.languageId === lang.id) as any) || {};
+      return {
+        languageId: lang.id,
+        name: c?.name ?? '',
+        description: c?.description ?? '',
+        address: c?.address ?? '',
+      };
+    });
+    console.log('Patching form with contents:', contents);
     this.masjidForm.patchValue({
-      contents: [en, ar],
-      address: masjid.address,
+      contents,
       archStyle: masjid.archStyle,
       latitude: masjid.latitude,
       longitude: masjid.longitude,
@@ -875,52 +907,81 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
       cityId: masjid.cityId,
       yearOfEstablishment: masjid.yearOfEstablishment,
     });
-    this.loadCountries(); // Ensure countries are loaded when editing
+    console.log('Form after patchValue:', this.masjidForm.value);
+    this.loadCountries();
     this.loadCities();
   }
 
   onSubmit(): void {
-    if (this.masjidForm.valid) {
-      this.isSubmitting = true;
-      const formData = this.masjidForm.value;
-      // Prepare contents array for backend
-      formData.contents = formData.contents.map((c: any) => ({
-        languageId: c.languageId,
-        name: c.name,
-        description: c.description,
-      }));
-      if (this.showCreateForm) {
-        this.createMasjid(formData);
-      } else if (this.showEditForm) {
-        this.updateMasjid(formData);
-      }
-    } else {
-      this.masjidForm.get('contents')?.markAsTouched();
+    console.log('Form validity:', this.masjidForm.valid);
+    console.log('Form raw value before submit:', this.masjidForm.getRawValue());
+
+    if (!this.masjidForm.valid) {
+      console.log('Form is invalid. Errors:', this.getFormValidationErrors());
+      this.markFormGroupTouched(this.masjidForm);
+      this.snackBar.open(
+        'Please fill all required fields for all languages.',
+        'Close',
+        { duration: 4000 }
+      );
+      return;
+    }
+
+    // Validate that at least one language has complete data
+    const formValue = this.masjidForm.value;
+    const validContents = formValue.contents?.filter(
+      (c: any) => c.name?.trim() && c.description?.trim() && c.address?.trim()
+    );
+
+    if (!validContents || validContents.length === 0) {
+      this.snackBar.open(
+        'Please provide complete information for at least one language.',
+        'Close',
+        { duration: 4000 }
+      );
+      return;
+    }
+
+    this.isSubmitting = true;
+
+    // Prepare data with proper structure for backend
+    const formData = {
+      archStyle: formValue.archStyle,
+      latitude: formValue.latitude,
+      longitude: formValue.longitude,
+      countryId: formValue.countryId,
+      cityId: formValue.cityId,
+      yearOfEstablishment: formValue.yearOfEstablishment,
+      // Map to PascalCase for backend and filter out empty entries
+      Contents: validContents.map((c: any) => ({
+        LanguageId: c.languageId,
+        Name: c.name.trim(),
+        Description: c.description.trim(),
+        Address: c.address.trim(),
+      })),
+    };
+
+    console.log('Prepared data for submission:', formData);
+    console.log('Contents being sent:', formData.Contents);
+
+    if (this.showCreateForm) {
+      this.createMasjid(formData);
+    } else if (this.showEditForm) {
+      this.updateMasjid(formData);
     }
   }
 
   createMasjid(formData: any): void {
+    console.log('Creating masjid with:', formData);
     this.masjidService.createMasjid(formData, this.selectedFiles).subscribe({
       next: (response) => {
-        // Show the detailed response message from backend
+        console.log('Masjid created successfully:', response);
         const message =
           response.data || response.message || 'Masjid created successfully!';
         this.snackBar.open(message, 'Close', {
-          duration: 5000, // Longer duration to read processing details
+          duration: 5000,
         });
-        this.showCreateForm = false;
-        this.masjidForm.reset();
-        this.masjidForm.setControl(
-          'contents',
-          this.fb.array(
-            [
-              this.fb.group({ languageId: 1, name: '', description: '' }),
-              this.fb.group({ languageId: 2, name: '', description: '' }),
-            ],
-            { validators: atLeastOneNameValidator() }
-          )
-        );
-        this.selectedFiles = [];
+        this.resetForm();
         this.loadMasjids();
         this.isSubmitting = false;
       },
@@ -936,8 +997,11 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
   }
 
   updateMasjid(formData: any): void {
-    if (!this.editingMasjid) return;
-
+    if (!this.editingMasjid) {
+      this.isSubmitting = false;
+      return;
+    }
+    console.log('Updating masjid with:', formData);
     this.masjidService
       .updateMasjid(
         this.editingMasjid.id,
@@ -947,27 +1011,13 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
       )
       .subscribe({
         next: (response) => {
-          // Show the detailed response message from backend
+          console.log('Masjid updated successfully:', response);
           const message =
             response.data || response.message || 'Masjid updated successfully!';
           this.snackBar.open(message, 'Close', {
-            duration: 5000, // Longer duration to read processing details
+            duration: 5000,
           });
-          this.showEditForm = false;
-          this.editingMasjid = null;
-          this.masjidForm.reset();
-          this.masjidForm.setControl(
-            'contents',
-            this.fb.array(
-              [
-                this.fb.group({ languageId: 1, name: '', description: '' }),
-                this.fb.group({ languageId: 2, name: '', description: '' }),
-              ],
-              { validators: atLeastOneNameValidator() }
-            )
-          );
-          this.selectedFiles = [];
-          this.selectedMediaToDelete = [];
+          this.resetForm();
           this.loadMasjids();
           this.isSubmitting = false;
         },
@@ -1034,10 +1084,14 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
     this.masjidForm.setControl(
       'contents',
       this.fb.array(
-        [
-          this.fb.group({ languageId: 1, name: '', description: '' }),
-          this.fb.group({ languageId: 2, name: '', description: '' }),
-        ],
+        this.languages.map((lang) =>
+          this.fb.group({
+            languageId: [lang.id],
+            name: ['', Validators.required],
+            description: [''],
+            address: ['', Validators.required],
+          })
+        ),
         { validators: atLeastOneNameValidator() }
       )
     );
@@ -1501,5 +1555,69 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
       lang === 'ar' ? c.languageId === 2 : c.languageId === 1
     );
     return content?.name || masjid.localizedName || 'Unnamed Masjid';
+  }
+
+  private getFormValidationErrors(): any {
+    let formErrors: any = {};
+    Object.keys(this.masjidForm.controls).forEach((key) => {
+      const controlErrors = this.masjidForm.get(key)?.errors;
+      if (controlErrors) {
+        formErrors[key] = controlErrors;
+      }
+    });
+    // Check contents array errors
+    const contentsArray = this.masjidForm.get('contents') as FormArray;
+    if (contentsArray) {
+      formErrors.contents = [];
+      contentsArray.controls.forEach((group, index) => {
+        const groupErrors: any = {};
+        const groupControls = (group as FormGroup).controls;
+        Object.keys(groupControls).forEach((controlKey) => {
+          const controlErrors = groupControls[controlKey]?.errors;
+          if (controlErrors) {
+            groupErrors[controlKey] = controlErrors;
+          }
+        });
+        if (Object.keys(groupErrors).length > 0) {
+          formErrors.contents[index] = groupErrors;
+        }
+      });
+    }
+    return formErrors;
+  }
+
+  private markFormGroupTouched(formGroup: FormGroup | FormArray): void {
+    Object.keys(formGroup.controls).forEach((key) => {
+      const control = formGroup.get(key);
+      if (control instanceof FormGroup || control instanceof FormArray) {
+        this.markFormGroupTouched(control);
+      } else {
+        control?.markAsTouched();
+      }
+    });
+  }
+
+  private resetForm(): void {
+    this.showCreateForm = false;
+    this.showEditForm = false;
+    this.editingMasjid = null;
+    this.masjidForm.reset();
+    // Recreate the contents FormArray with proper structure
+    this.masjidForm.setControl(
+      'contents',
+      this.fb.array(
+        this.languages.map((lang) =>
+          this.fb.group({
+            languageId: [lang.id],
+            name: ['', Validators.required],
+            description: ['', Validators.required],
+            address: ['', Validators.required],
+          })
+        ),
+        { validators: atLeastOneNameValidator() }
+      )
+    );
+    this.selectedFiles = [];
+    this.selectedMediaToDelete = [];
   }
 }

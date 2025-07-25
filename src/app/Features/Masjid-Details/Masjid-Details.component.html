@@ -87,7 +87,7 @@
                   <i class="fas fa-map-marker-alt info-icon"></i>
                   <div class="info-content">
                     <strong>{{ 'MASJID_DETAILS.LOCATION' | translate }}</strong>
-                    <p>{{ masjid.address }}</p>
+                    <p>{{ masjid.localizedAddress }}</p>
                     <p class="text-muted">{{ masjid.cityName }}, {{ masjid.countryName }}</p>
                   </div>
                 </div>
@@ -97,7 +97,7 @@
                   <i class="fas fa-building info-icon"></i>
                   <div class="info-content">
                     <strong>{{ 'MASJID_DETAILS.ARCHITECTURAL_STYLE' | translate }}</strong>
-                    <p>{{ masjid.archStyle }}</p>
+                    <p>{{ ('ARCH_STYLE.' + masjid.archStyle) | translate }}</p>
                   </div>
                 </div>
 

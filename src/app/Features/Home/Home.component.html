@@ -107,12 +107,16 @@
           <div class="masjid-card" (click)="navigateToMasjid(masjid.id)">
             <div class="card-header">
               <h5 class="card-title">{{ getTranslatedMasjidName(masjid.contents, translate.currentLang) }}</h5>
-              <span class="badge badge-emerald">{{ masjid.archStyle }}</span>
+              <span class="badge badge-emerald">{{ ('ARCH_STYLE.' + masjid.archStyle) | translate }}</span>
             </div>
             <div class="card-body">
               <p class="card-location">
                 <i class="fas fa-map-marker-alt"></i>
                 {{ masjid.cityName }}, {{ masjid.countryName }}
+              </p>
+              <p class="card-address" *ngIf="masjid.contents">
+                <i class="fas fa-home"></i>
+                {{ getTranslatedMasjidAddress(masjid.contents, translate.currentLang) }}
               </p>
               <p class="card-year" *ngIf="masjid.yearOfEstablishment">
                 <i class="fas fa-calendar-alt"></i>

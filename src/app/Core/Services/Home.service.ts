@@ -17,9 +17,13 @@ export class HomeService {
 
   constructor(private http: HttpClient) {}
 
-  getFeaturedMasjids(): Observable<MasjidViewModel[]> {
+  getFeaturedMasjids(
+    languageCode: string = 'en'
+  ): Observable<MasjidViewModel[]> {
     return this.http
-      .get<ApiResponse<MasjidViewModel[]>>(`${this.apiUrl}/api/masjid/featured`)
+      .get<ApiResponse<MasjidViewModel[]>>(
+        `${this.apiUrl}/api/masjid/featured?languageCode=${languageCode}`
+      )
       .pipe(map((response) => response.data));
   }
 

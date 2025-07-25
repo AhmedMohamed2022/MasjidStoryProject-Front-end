@@ -743,5 +743,28 @@
     "COMMUNITIES": "المجتمعات",
     "EVENTS": "الفعاليات",
     "PROFILE": "الملف الشخصي"
+  },
+  "ARCH_STYLE": {
+    "ISLAMIC": "إسلامي",
+    "FATIMID": "فاطمي",
+    "MODERN_ISLAMIC": "إسلامي حديث",
+    "CONTEMPORARY": "معاصر",
+    "MODERN": "حديث",
+    "AGHLABID": "أغلبي",
+    "SAFAVID": "صفوي",
+    "OTTOMAN": "عثماني",
+    "UMAYYAD": "أموي",
+    "SUDANESE_ISLAMIC": "إسلامي سوداني",
+    "MAMLUK": "مملوكي",
+    "MOORISH": "مغاربي/أندلسي",
+    "MUGHAL": "مغولي",
+    "SELJUK": "سلجوقي",
+    "PERSIAN": "فارسي",
+    "INDONESIAN": "إندونيسي",
+    "CHINESE": "صيني",
+    "YEMENI": "يمني",
+    "SUDANO_SAHELIAN": "سوداني ساحلي",
+    "TRADITIONAL": "تقليدي",
+    "OTHER": "أخرى"
   }
 }

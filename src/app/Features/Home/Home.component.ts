@@ -5,6 +5,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
   MasjidViewModel,
   getTranslatedMasjidName,
+  getTranslatedMasjidAddress,
 } from '../../Core/Models/masjid.model';
 import { StoryViewModel } from '../../Core/Models/story.model';
 import { EventViewModel } from '../../Core/Models/event.model';
@@ -65,7 +66,7 @@ export class HomeComponent implements OnInit {
   }
 
   loadFeaturedMasjids(): void {
-    this.homeService.getFeaturedMasjids().subscribe({
+    this.homeService.getFeaturedMasjids(this.translate.currentLang).subscribe({
       next: (masjids) => {
         this.featuredMasjids = masjids.slice(0, 6); // Show only 6
         console.log('Loaded featured masjids:', this.featuredMasjids);
@@ -269,4 +270,5 @@ export class HomeComponent implements OnInit {
 
   // Expose the helper for template
   public getTranslatedMasjidName = getTranslatedMasjidName;
+  public getTranslatedMasjidAddress = getTranslatedMasjidAddress;
 }

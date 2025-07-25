@@ -8,6 +8,7 @@ import {
   CountryViewModel,
   CityViewModel,
   getTranslatedMasjidName,
+  getTranslatedMasjidAddress,
 } from '../../Core/Models/masjid.model';
 import { MasjidService } from '../../Core/Services/masjid.service';
 import { CountryService } from '../../Core/Services/country.service';
@@ -43,6 +44,31 @@ export class SearchMasjidComponent implements OnInit {
   totalPages: number = 1;
   totalItems: number = 0;
 
+  // Architectural style options (keys)
+  archStyleOptions = [
+    { key: 'ISLAMIC', label: 'ARCH_STYLE.ISLAMIC' },
+    { key: 'FATIMID', label: 'ARCH_STYLE.FATIMID' },
+    { key: 'MODERN_ISLAMIC', label: 'ARCH_STYLE.MODERN_ISLAMIC' },
+    { key: 'CONTEMPORARY', label: 'ARCH_STYLE.CONTEMPORARY' },
+    { key: 'MODERN', label: 'ARCH_STYLE.MODERN' },
+    { key: 'AGHLABID', label: 'ARCH_STYLE.AGHLABID' },
+    { key: 'SAFAVID', label: 'ARCH_STYLE.SAFAVID' },
+    { key: 'OTTOMAN', label: 'ARCH_STYLE.OTTOMAN' },
+    { key: 'UMAYYAD', label: 'ARCH_STYLE.UMAYYAD' },
+    { key: 'SUDANESE_ISLAMIC', label: 'ARCH_STYLE.SUDANESE_ISLAMIC' },
+    { key: 'MAMLUK', label: 'ARCH_STYLE.MAMLUK' },
+    { key: 'MOORISH', label: 'ARCH_STYLE.MOORISH' },
+    { key: 'MUGHAL', label: 'ARCH_STYLE.MUGHAL' },
+    { key: 'SELJUK', label: 'ARCH_STYLE.SELJUK' },
+    { key: 'PERSIAN', label: 'ARCH_STYLE.PERSIAN' },
+    { key: 'INDONESIAN', label: 'ARCH_STYLE.INDONESIAN' },
+    { key: 'CHINESE', label: 'ARCH_STYLE.CHINESE' },
+    { key: 'YEMENI', label: 'ARCH_STYLE.YEMENI' },
+    { key: 'SUDANO_SAHELIAN', label: 'ARCH_STYLE.SUDANO_SAHELIAN' },
+    { key: 'TRADITIONAL', label: 'ARCH_STYLE.TRADITIONAL' },
+    { key: 'OTHER', label: 'ARCH_STYLE.OTHER' },
+  ];
+
   constructor(
     private masjidService: MasjidService,
     private countryService: CountryService,
@@ -54,10 +80,15 @@ export class SearchMasjidComponent implements OnInit {
   ngOnInit(): void {
     this.loadCountries();
     this.loadMasjids();
+    this.translate.onLangChange.subscribe(() => {
+      this.loadCountries();
+      this.loadCities();
+      this.loadMasjids();
+    });
   }
 
   loadCountries(): void {
-    this.countryService.getAllCountries().subscribe({
+    this.countryService.getAllCountries(this.translate.currentLang).subscribe({
       next: (countries: CountryViewModel[]) => {
         this.countries = countries;
       },
@@ -70,7 +101,10 @@ export class SearchMasjidComponent implements OnInit {
   loadCities(): void {
     if (this.selectedCountry) {
       this.cityService
-        .getCitiesByCountry(parseInt(this.selectedCountry))
+        .getCitiesByCountry(
+          parseInt(this.selectedCountry),
+          this.translate.currentLang
+        )
         .subscribe({
           next: (cities: CityViewModel[]) => {
             this.cities = cities;
@@ -90,7 +124,12 @@ export class SearchMasjidComponent implements OnInit {
     this.error = null;
 
     this.masjidService
-      .searchMasjids(this.searchTerm, this.currentPage, this.pageSize)
+      .searchMasjids(
+        this.searchTerm,
+        this.currentPage,
+        this.pageSize,
+        this.translate.currentLang
+      )
       .subscribe({
         next: (masjids: MasjidViewModel[]) => {
           this.masjids = masjids;
@@ -225,6 +264,7 @@ export class SearchMasjidComponent implements OnInit {
     this.router.navigate(['/masjid', masjidId], { fragment: 'events' });
   }
 
-  // Expose the helper for template
+  // Expose the helpers for template
   public getTranslatedMasjidName = getTranslatedMasjidName;
+  public getTranslatedMasjidAddress = getTranslatedMasjidAddress;
 }

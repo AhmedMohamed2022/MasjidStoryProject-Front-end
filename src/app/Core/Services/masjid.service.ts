@@ -38,9 +38,10 @@ export class MasjidService {
   searchMasjids(
     query?: string,
     page: number = 1,
-    size: number = 10
+    size: number = 10,
+    languageCode: string = 'en'
   ): Observable<MasjidViewModel[]> {
-    let url = `${this.apiUrl}/search?page=${page}&size=${size}`;
+    let url = `${this.apiUrl}/search?page=${page}&size=${size}&languageCode=${languageCode}`;
     if (query) {
       url += `&query=${encodeURIComponent(query)}`;
     }
@@ -53,23 +54,40 @@ export class MasjidService {
   createMasjid(masjidData: any, mediaFiles?: File[]): Observable<any> {
     const formData = new FormData();
 
-    // Add masjid data except contents
-    Object.keys(masjidData).forEach((key) => {
-      if (
-        key !== 'contents' &&
-        masjidData[key] !== null &&
-        masjidData[key] !== undefined
-      ) {
-        formData.append(key, masjidData[key]);
+    // Add basic masjid properties (exclude Contents array)
+    const basicProperties = [
+      'archStyle',
+      'latitude',
+      'longitude',
+      'countryId',
+      'cityId',
+      'yearOfEstablishment',
+    ];
+    basicProperties.forEach((key) => {
+      const value = masjidData[key];
+      if (value !== null && value !== undefined && value !== '') {
+        formData.append(key, value.toString());
       }
     });
 
-    // Serialize contents array as indexed fields
-    if (masjidData.contents && Array.isArray(masjidData.contents)) {
-      masjidData.contents.forEach((content: any, idx: number) => {
-        formData.append(`Contents[${idx}].LanguageId`, content.languageId);
-        formData.append(`Contents[${idx}].Name`, content.name);
-        formData.append(`Contents[${idx}].Description`, content.description);
+    // Handle Contents array properly (PascalCase)
+    if (masjidData.Contents && Array.isArray(masjidData.Contents)) {
+      masjidData.Contents.forEach((content: any, idx: number) => {
+        // Only add complete entries
+        if (
+          content.LanguageId &&
+          content.Name &&
+          content.Description &&
+          content.Address
+        ) {
+          formData.append(
+            `Contents[${idx}].LanguageId`,
+            content.LanguageId.toString()
+          );
+          formData.append(`Contents[${idx}].Name`, content.Name);
+          formData.append(`Contents[${idx}].Description`, content.Description);
+          formData.append(`Contents[${idx}].Address`, content.Address);
+        }
       });
     }
 
@@ -78,6 +96,12 @@ export class MasjidService {
       mediaFiles.forEach((file) => {
         formData.append('MediaFiles', file);
       });
+    }
+
+    // Debug: Log all FormData entries
+    console.log('FormData entries:');
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ': ' + pair[1]);
     }
 
     return this.http
@@ -94,23 +118,40 @@ export class MasjidService {
     const formData = new FormData();
     formData.append('Id', id.toString());
 
-    // Add masjid data except contents
-    Object.keys(masjidData).forEach((key) => {
-      if (
-        key !== 'contents' &&
-        masjidData[key] !== null &&
-        masjidData[key] !== undefined
-      ) {
-        formData.append(key, masjidData[key]);
+    // Add basic masjid properties (exclude Contents array)
+    const basicProperties = [
+      'archStyle',
+      'latitude',
+      'longitude',
+      'countryId',
+      'cityId',
+      'yearOfEstablishment',
+    ];
+    basicProperties.forEach((key) => {
+      const value = masjidData[key];
+      if (value !== null && value !== undefined && value !== '') {
+        formData.append(key, value.toString());
       }
     });
 
-    // Serialize contents array as indexed fields
-    if (masjidData.contents && Array.isArray(masjidData.contents)) {
-      masjidData.contents.forEach((content: any, idx: number) => {
-        formData.append(`Contents[${idx}].LanguageId`, content.languageId);
-        formData.append(`Contents[${idx}].Name`, content.name);
-        formData.append(`Contents[${idx}].Description`, content.description);
+    // Handle Contents array properly (PascalCase)
+    if (masjidData.Contents && Array.isArray(masjidData.Contents)) {
+      masjidData.Contents.forEach((content: any, idx: number) => {
+        // Only add complete entries
+        if (
+          content.LanguageId &&
+          content.Name &&
+          content.Description &&
+          content.Address
+        ) {
+          formData.append(
+            `Contents[${idx}].LanguageId`,
+            content.LanguageId.toString()
+          );
+          formData.append(`Contents[${idx}].Name`, content.Name);
+          formData.append(`Contents[${idx}].Description`, content.Description);
+          formData.append(`Contents[${idx}].Address`, content.Address);
+        }
       });
     }
 
@@ -126,6 +167,12 @@ export class MasjidService {
       mediaIdsToDelete.forEach((mediaId) => {
         formData.append('MediaIdsToDelete', mediaId.toString());
       });
+    }
+
+    // Debug: Log all FormData entries
+    console.log('FormData entries for update:');
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ': ' + pair[1]);
     }
 
     return this.http
