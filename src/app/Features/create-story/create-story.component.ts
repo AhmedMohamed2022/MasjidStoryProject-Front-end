@@ -31,6 +31,11 @@ export class CreateStoryComponent implements OnInit {
   tags: string[] = [];
   selectedTags: string[] = [];
   imagePreviews: string[] = [];
+  totalFileSize = 0;
+  maxFileSizeMB = 10;
+  maxFiles = 5;
+  fileSizeWarning = '';
+  fileCountWarning = '';
 
   loading = false;
   loadingMasjids = true;
@@ -116,10 +121,36 @@ export class CreateStoryComponent implements OnInit {
     const files: FileList = event.target.files;
     this.story.storyImages = Array.from(files);
     this.imagePreviews = [];
+    this.totalFileSize = 0;
+    this.fileSizeWarning = '';
+    this.fileCountWarning = '';
+
+    // Validate file count
+    if (this.story.storyImages.length > this.maxFiles) {
+      this.fileCountWarning = this.translate.instant(
+        'CREATE_STORY.FILE_COUNT_WARNING',
+        { maxFiles: this.maxFiles }
+      );
+      this.story.storyImages = this.story.storyImages.slice(0, this.maxFiles);
+    }
+
+    // Calculate total file size and validate
     for (let file of this.story.storyImages) {
+      this.totalFileSize += file.size;
       const reader = new FileReader();
       reader.onload = (e: any) => this.imagePreviews.push(e.target.result);
       reader.readAsDataURL(file);
+    }
+
+    const totalSizeMB = this.totalFileSize / (1024 * 1024);
+    if (totalSizeMB > this.maxFileSizeMB) {
+      this.fileSizeWarning = this.translate.instant(
+        'CREATE_STORY.FILE_SIZE_WARNING',
+        {
+          size: totalSizeMB.toFixed(1),
+          maxSize: this.maxFileSizeMB,
+        }
+      );
     }
   }
 
@@ -137,10 +168,9 @@ export class CreateStoryComponent implements OnInit {
         this.loading = false;
         setTimeout(() => this.router.navigate(['/stories']), 2000);
       })
-      .catch(() => {
-        this.translate.get('CREATE_STORY.ERROR').subscribe((text: string) => {
-          this.error = text;
-        });
+      .catch((err) => {
+        this.error =
+          err?.error?.message || this.translate.instant('CREATE_STORY.ERROR');
         this.loading = false;
       });
   }
@@ -168,6 +198,10 @@ export class CreateStoryComponent implements OnInit {
         .subscribe((text: string) => {
           this.error = text;
         });
+      return false;
+    }
+    if (this.fileSizeWarning) {
+      this.error = this.fileSizeWarning;
       return false;
     }
     return true;

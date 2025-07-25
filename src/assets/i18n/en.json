@@ -34,7 +34,12 @@
     "BY": "by",
     "DELETE": "Delete notification",
     "COUNT": "notification",
-    "COUNT_PLURAL": "notifications"
+    "COUNT_PLURAL": "notifications",
+    "LIKE": "{{user}} liked your {{contentType}}",
+    "COMMENT": "{{user}} commented on your {{contentType}}",
+    "APPROVAL": "Your {{contentType}} was approved.",
+    "GENERAL": "You have a new notification.",
+    "NEW_STORY_PENDING": "A new story '{{storyTitle}}' by {{author}} is waiting for your approval."
   },
 
   "HOME": {
@@ -533,7 +538,13 @@
     "CONTENT_REQUIRED": "Story content is required",
     "MASJID_REQUIRED": "Please select a masjid",
     "LOADING": "Creating story...",
-    "CHAR_COUNT": "{count}/3000 characters"
+    "CHAR_COUNT": "{count}/3000 characters",
+    "FILE_SIZE_WARNING": "Total file size ({{size}}MB) exceeds the {{maxSize}}MB limit. Please reduce file sizes.",
+    "FILE_COUNT_WARNING": "You can upload a maximum of {{maxFiles}} images. Only the first {{maxFiles}} will be used.",
+    "FILE_SIZE_INFO": "Total size: {{currentSize}}MB / {{maxSize}}MB",
+    "FILE_COUNT_INFO": "({{count}} files)",
+    "MAX_FILES": "5",
+    "MAX_SIZE_MB": "10"
   },
 
   "FORM": {

@@ -1,5 +1,12 @@
 // src/app/shared/header/header.component.ts
-import { Component, HostListener, ElementRef } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  ElementRef,
+  ViewChild,
+  Renderer2,
+  AfterViewInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../../Core/Services/auth.service';
@@ -19,7 +26,7 @@ import { TranslateService, TranslateModule } from '@ngx-translate/core';
   templateUrl: './Header.component.html',
   styleUrls: ['./Header.component.css'],
 })
-export class HeaderComponent {
+export class HeaderComponent implements AfterViewInit {
   isMenuCollapsed = true;
   isEventsDropdownCollapsed = true;
   isUserDropdownCollapsed = true;
@@ -27,12 +34,16 @@ export class HeaderComponent {
   isLanguageDropdownCollapsed = true;
   currentLang = 'en';
 
+  @ViewChild('userMenu') userMenuRef!: ElementRef;
+  @ViewChild('languageMenu') languageMenuRef!: ElementRef;
+
   constructor(
     private authService: AuthService,
     private userRegistrationService: UserRegistrationService,
     private router: Router,
     private translate: TranslateService,
-    private eRef: ElementRef
+    private eRef: ElementRef,
+    private renderer: Renderer2
   ) {
     translate.addLangs(['en', 'ar']);
     translate.setDefaultLang('en');
@@ -44,6 +55,10 @@ export class HeaderComponent {
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
   }
 
+  ngAfterViewInit(): void {
+    // nothing for now
+  }
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     // Only close language dropdown if open and click is outside language switcher
@@ -52,6 +67,55 @@ export class HeaderComponent {
         this.eRef.nativeElement.querySelector('.language-switcher');
       if (langSwitcher && !langSwitcher.contains(event.target)) {
         this.closeLanguageDropdown();
+      }
+    }
+    // Close user dropdown if open and click is outside user dropdown
+    if (!this.isUserDropdownCollapsed) {
+      const userDropdown =
+        this.eRef.nativeElement.querySelector('.user-dropdown');
+      if (userDropdown && !userDropdown.contains(event.target)) {
+        this.closeUserDropdown();
+      }
+    }
+    // Close events dropdown if open and click is outside events dropdown
+    if (!this.isEventsDropdownCollapsed) {
+      const eventsDropdown =
+        this.eRef.nativeElement.querySelector('.nav-item.dropdown');
+      if (eventsDropdown && !eventsDropdown.contains(event.target)) {
+        this.closeEventsDropdown();
+      }
+    }
+    // Close admin dropdown if open and click is outside admin dropdown
+    if (!this.isAdminDropdownCollapsed) {
+      const adminDropdown =
+        this.eRef.nativeElement.querySelector('.admin-dropdown');
+      if (adminDropdown && !adminDropdown.contains(event.target)) {
+        this.closeAdminDropdown();
+      }
+    }
+  }
+
+  @HostListener('document:focusin', ['$event'])
+  onDocumentFocusIn(event: FocusEvent) {
+    if (!this.isUserDropdownCollapsed) {
+      const userDropdown =
+        this.eRef.nativeElement.querySelector('.user-dropdown');
+      if (userDropdown && !userDropdown.contains(event.target)) {
+        this.closeUserDropdown();
+      }
+    }
+    if (!this.isEventsDropdownCollapsed) {
+      const eventsDropdown =
+        this.eRef.nativeElement.querySelector('.nav-item.dropdown');
+      if (eventsDropdown && !eventsDropdown.contains(event.target)) {
+        this.closeEventsDropdown();
+      }
+    }
+    if (!this.isAdminDropdownCollapsed) {
+      const adminDropdown =
+        this.eRef.nativeElement.querySelector('.admin-dropdown');
+      if (adminDropdown && !adminDropdown.contains(event.target)) {
+        this.closeAdminDropdown();
       }
     }
   }
@@ -69,6 +133,13 @@ export class HeaderComponent {
     this.isEventsDropdownCollapsed = true;
     this.isUserDropdownCollapsed = true;
     this.isAdminDropdownCollapsed = true;
+    setTimeout(() => {
+      if (!this.isLanguageDropdownCollapsed) {
+        this.adjustLanguageMenuPosition();
+      } else {
+        this.resetLanguageMenuPosition();
+      }
+    }, 0);
   }
 
   get isAuthenticated(): boolean {
@@ -106,6 +177,46 @@ export class HeaderComponent {
     this.isUserDropdownCollapsed = !this.isUserDropdownCollapsed;
     this.isEventsDropdownCollapsed = true; // Close other dropdown
     this.isAdminDropdownCollapsed = true; // Close other dropdown
+    setTimeout(() => {
+      if (!this.isUserDropdownCollapsed) {
+        this.adjustUserMenuPosition();
+      } else {
+        this.resetUserMenuPosition();
+      }
+    }, 0);
+  }
+
+  adjustUserMenuPosition(): void {
+    if (!this.userMenuRef) return;
+    const menu: HTMLElement = this.userMenuRef.nativeElement;
+    // Reset any previous transform
+    this.renderer.setStyle(menu, 'transform', 'translateY(0)');
+    const rect = menu.getBoundingClientRect();
+    const vw = window.innerWidth;
+    // For RTL
+    const isRTL =
+      document.dir === 'rtl' || document.documentElement.dir === 'rtl';
+    if (isRTL && rect.left < 0) {
+      const shift = Math.abs(rect.left) + 8;
+      this.renderer.setStyle(
+        menu,
+        'transform',
+        `translateY(0) translateX(${shift}px)`
+      );
+    } else if (!isRTL && rect.right > vw) {
+      const shift = rect.right - vw + 8;
+      this.renderer.setStyle(
+        menu,
+        'transform',
+        `translateY(0) translateX(-${shift}px)`
+      );
+    }
+  }
+
+  resetUserMenuPosition(): void {
+    if (!this.userMenuRef) return;
+    const menu: HTMLElement = this.userMenuRef.nativeElement;
+    this.renderer.setStyle(menu, 'transform', 'translateY(0)');
   }
 
   toggleAdminDropdown(): void {
@@ -147,5 +258,66 @@ export class HeaderComponent {
   }
   closeLanguageDropdown() {
     this.isLanguageDropdownCollapsed = true;
+  }
+
+  adjustLanguageMenuPosition(): void {
+    if (!this.languageMenuRef) return;
+    const menu: HTMLElement = this.languageMenuRef.nativeElement;
+    // Reset any previous transform
+    this.renderer.setStyle(menu, 'transform', 'translateY(0)');
+    const rect = menu.getBoundingClientRect();
+    const vw = window.innerWidth;
+    // For RTL
+    const isRTL =
+      document.dir === 'rtl' || document.documentElement.dir === 'rtl';
+    if (isRTL && rect.left < 0) {
+      const shift = Math.abs(rect.left) + 8;
+      this.renderer.setStyle(
+        menu,
+        'transform',
+        `translateY(0) translateX(${shift}px)`
+      );
+    } else if (!isRTL && rect.right > vw) {
+      const shift = rect.right - vw + 8;
+      this.renderer.setStyle(
+        menu,
+        'transform',
+        `translateY(0) translateX(-${shift}px)`
+      );
+    }
+    // On mobile, make it fixed and full width
+    if (window.innerWidth <= 600) {
+      this.renderer.setStyle(menu, 'position', 'fixed');
+      this.renderer.setStyle(menu, 'left', '0');
+      this.renderer.setStyle(menu, 'right', '0');
+      this.renderer.setStyle(menu, 'top', '56px');
+      this.renderer.setStyle(menu, 'width', '100vw');
+      this.renderer.setStyle(menu, 'z-index', '2000');
+      this.renderer.setStyle(menu, 'background', '#fff');
+      this.renderer.setStyle(menu, 'box-shadow', '0 4px 24px rgba(0,0,0,0.18)');
+    } else {
+      this.renderer.removeStyle(menu, 'position');
+      this.renderer.removeStyle(menu, 'left');
+      this.renderer.removeStyle(menu, 'right');
+      this.renderer.removeStyle(menu, 'top');
+      this.renderer.removeStyle(menu, 'width');
+      this.renderer.removeStyle(menu, 'z-index');
+      this.renderer.removeStyle(menu, 'background');
+      this.renderer.removeStyle(menu, 'box-shadow');
+    }
+  }
+
+  resetLanguageMenuPosition(): void {
+    if (!this.languageMenuRef) return;
+    const menu: HTMLElement = this.languageMenuRef.nativeElement;
+    this.renderer.setStyle(menu, 'transform', 'translateY(0)');
+    this.renderer.removeStyle(menu, 'position');
+    this.renderer.removeStyle(menu, 'left');
+    this.renderer.removeStyle(menu, 'right');
+    this.renderer.removeStyle(menu, 'top');
+    this.renderer.removeStyle(menu, 'width');
+    this.renderer.removeStyle(menu, 'z-index');
+    this.renderer.removeStyle(menu, 'background');
+    this.renderer.removeStyle(menu, 'box-shadow');
   }
 }

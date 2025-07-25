@@ -34,7 +34,12 @@
     "BY": "بواسطة",
     "DELETE": "حذف الإشعار",
     "COUNT": "إشعار",
-    "COUNT_PLURAL": "إشعارات"
+    "COUNT_PLURAL": "إشعارات",
+    "LIKE": "قام {{user}} بالإعجاب بـ{{contentType}} الخاص بك",
+    "COMMENT": "قام {{user}} بالتعليق على {{contentType}} الخاص بك",
+    "APPROVAL": "تمت الموافقة على {{contentType}} الخاص بك.",
+    "GENERAL": "لديك إشعار جديد.",
+    "NEW_STORY_PENDING": "قصة جديدة '{{storyTitle}}' بواسطة {{author}} بانتظار موافقتك."
   },
 
   "HOME": {
@@ -526,7 +531,13 @@
     "CONTENT_REQUIRED": "محتوى القصة مطلوب",
     "MASJID_REQUIRED": "يرجى اختيار مسجد",
     "LOADING": "جاري إنشاء القصة...",
-    "CHAR_COUNT": "{count}/3000 حرف"
+    "CHAR_COUNT": "{count}/3000 حرف",
+    "FILE_SIZE_WARNING": "إجمالي حجم الملفات ({{size}}MB) يتجاوز الحد الأقصى {{maxSize}}MB. يرجى تقليل أحجام الملفات.",
+    "FILE_COUNT_WARNING": "يمكنك رفع حد أقصى {{maxFiles}} صور. سيتم استخدام أول {{maxFiles}} فقط.",
+    "FILE_SIZE_INFO": "الحجم الإجمالي: {{currentSize}}MB / {{maxSize}}MB",
+    "FILE_COUNT_INFO": "({{count}} ملفات)",
+    "MAX_FILES": "5",
+    "MAX_SIZE_MB": "10"
   },
 
   "FORM": {

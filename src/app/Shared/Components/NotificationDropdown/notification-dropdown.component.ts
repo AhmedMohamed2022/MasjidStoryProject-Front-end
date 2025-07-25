@@ -1,4 +1,13 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ElementRef,
+  HostListener,
+  ViewChild,
+  Renderer2,
+  AfterViewInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Subscription, interval } from 'rxjs';
@@ -16,7 +25,9 @@ import { AuthService } from '../../../Core/Services/auth.service';
   standalone: true,
   imports: [CommonModule, TranslateModule],
 })
-export class NotificationDropdownComponent implements OnInit, OnDestroy {
+export class NotificationDropdownComponent
+  implements OnInit, OnDestroy, AfterViewInit
+{
   notifications: NotificationViewModel[] = [];
   unreadCount = 0;
   isDropdownOpen = false;
@@ -27,10 +38,14 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
   private unreadCountSubscription?: Subscription;
   private refreshSubscription?: Subscription;
 
+  @ViewChild('notificationMenu') notificationMenuRef!: ElementRef;
+
   constructor(
     private notificationService: NotificationService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private eRef: ElementRef,
+    private renderer: Renderer2
   ) {
     this.isAuthenticated = this.authService.isAuthenticated();
   }
@@ -50,6 +65,10 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unreadCountSubscription?.unsubscribe();
     this.refreshSubscription?.unsubscribe();
+  }
+
+  ngAfterViewInit(): void {
+    // nothing for now
   }
 
   loadNotifications(): void {
@@ -86,7 +105,43 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
     this.isDropdownOpen = !this.isDropdownOpen;
     if (this.isDropdownOpen) {
       this.loadNotifications();
+      setTimeout(() => this.adjustPanelPosition(), 0);
+    } else {
+      this.resetPanelPosition();
     }
+  }
+
+  adjustPanelPosition(): void {
+    if (!this.notificationMenuRef) return;
+    const menu: HTMLElement = this.notificationMenuRef.nativeElement;
+    // Reset any previous transform
+    this.renderer.setStyle(menu, 'transform', 'translateY(-10px)');
+    const rect = menu.getBoundingClientRect();
+    const vw = window.innerWidth;
+    // For RTL
+    const isRTL =
+      document.dir === 'rtl' || document.documentElement.dir === 'rtl';
+    if (isRTL && rect.left < 0) {
+      const shift = Math.abs(rect.left) + 8;
+      this.renderer.setStyle(
+        menu,
+        'transform',
+        `translateY(-10px) translateX(${shift}px)`
+      );
+    } else if (!isRTL && rect.right > vw) {
+      const shift = rect.right - vw + 8;
+      this.renderer.setStyle(
+        menu,
+        'transform',
+        `translateY(-10px) translateX(-${shift}px)`
+      );
+    }
+  }
+
+  resetPanelPosition(): void {
+    if (!this.notificationMenuRef) return;
+    const menu: HTMLElement = this.notificationMenuRef.nativeElement;
+    this.renderer.setStyle(menu, 'transform', 'translateY(-10px)');
   }
 
   markAsRead(notification: NotificationViewModel): void {
@@ -206,5 +261,23 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
       day: 'numeric',
       year: dateObj.getFullYear() !== now.getFullYear() ? 'numeric' : undefined,
     });
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (this.isDropdownOpen) {
+      if (!this.eRef.nativeElement.contains(event.target)) {
+        this.isDropdownOpen = false;
+      }
+    }
+  }
+
+  @HostListener('document:focusin', ['$event'])
+  onDocumentFocusIn(event: FocusEvent) {
+    if (this.isDropdownOpen) {
+      if (!this.eRef.nativeElement.contains(event.target)) {
+        this.isDropdownOpen = false;
+      }
+    }
   }
 }

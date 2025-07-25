@@ -12,7 +12,9 @@ export interface NotificationViewModel {
   id: number;
   userId: string;
   title: string;
-  message: string;
+  messageKey?: string; // i18n key
+  messageVariables?: { [key: string]: string }; // i18n variables
+  message?: string; // Obsolete
   type: string; // "Like", "Comment", "Approval", "General"
   contentType: string; // "Story", "Event", "Community"
   contentId?: number;

@@ -6,7 +6,7 @@
     </button>
 
     <!-- Notification Dropdown Menu -->
-    <div class="notification-menu" [class.show]="isDropdownOpen">
+    <div class="notification-menu" [class.show]="isDropdownOpen" #notificationMenu>
         <div class="notification-header">
             <h6 class="notification-title">
                 <i class="fas fa-bell me-2"></i>
@@ -48,7 +48,14 @@
                     </div>
                     <div class="notification-content">
                         <div class="notification-title">{{ notification.title }}</div>
-                        <div class="notification-message">{{ notification.message }}</div>
+                        <div class="notification-message">
+                            <ng-container *ngIf="notification.messageKey; else fallbackMessage">
+                                {{ notification.messageKey | translate:notification.messageVariables }}
+                            </ng-container>
+                            <ng-template #fallbackMessage>
+                                {{ notification.message }}
+                            </ng-template>
+                        </div>
                         <div class="notification-meta">
                             <span class="notification-time">{{ formatDate(notification.dateCreated) }}</span>
                             <span class="notification-sender" *ngIf="notification.senderName">
