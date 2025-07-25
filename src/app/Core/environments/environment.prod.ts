@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://masjidstoryapi.azurewebsites.net',
+  apiUrl: 'http://masjidstory-001-site1.mtempurl.com/',
 };
