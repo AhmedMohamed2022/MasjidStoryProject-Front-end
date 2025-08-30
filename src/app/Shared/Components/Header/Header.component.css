@@ -159,6 +159,13 @@
   border-radius: 1px;
 }
 
+/* RTL nav link adjustments */
+[dir="rtl"] .nav-link.active::after {
+  left: auto;
+  right: 50%;
+  transform: translateX(50%);
+}
+
 /* Dropdown Styles */
 .dropdown {
   position: relative;
@@ -195,6 +202,12 @@
   z-index: 1001;
 }
 
+/* RTL dropdown positioning */
+[dir="rtl"] .dropdown-menu {
+  left: auto;
+  right: 0;
+}
+
 .dropdown-menu.show {
   opacity: 1;
   visibility: visible;
@@ -229,6 +242,11 @@
   background: rgba(24, 85, 66, 0.1);
   color: var(--deep-emerald);
   transform: translateX(4px);
+}
+
+/* RTL dropdown item hover effect */
+[dir="rtl"] .dropdown-item:hover {
+  transform: translateX(-4px);
 }
 
 .dropdown-item i {
@@ -309,6 +327,7 @@
   border: none;
   cursor: pointer;
   white-space: nowrap;
+  margin: 0.25rem;
 }
 
 .btn-outline {
@@ -453,6 +472,12 @@
   z-index: 1001;
 }
 
+/* RTL user menu positioning */
+[dir="rtl"] .user-menu {
+  right: auto;
+  left: 0;
+}
+
 .user-menu.show {
   opacity: 1;
   visibility: visible;
@@ -534,7 +559,6 @@ body.mobile-menu-open {
   .nav-container {
     max-width: 1200px;
     padding: 0 1.5rem;
-    /* flex-wrap: wrap; */
   }
 }
 
@@ -542,11 +566,9 @@ body.mobile-menu-open {
   .nav-container {
     padding: 0 1rem;
     gap: 0.5rem;
-    /* flex-wrap: wrap; */
   }
   .nav-actions,
   .user-actions {
-    /* flex-wrap: wrap; */
     gap: 0.3rem;
   }
   .user-dropdown {
@@ -803,6 +825,12 @@ body.mobile-menu-open {
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
   }
 
+  /* RTL mobile dropdown adjustments */
+  [dir="rtl"] .dropdown-menu {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
   .dropdown-header {
     color: var(--rich-gold) !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
@@ -862,6 +890,7 @@ body.mobile-menu-open {
   .btn {
     padding: 0.5rem 1rem;
     font-size: 0.8rem;
+    margin: 0.25rem;
   }
 
   .btn span {
@@ -895,6 +924,12 @@ body.mobile-menu-open {
     border-radius: 12px !important;
     margin-top: 0.5rem !important;
     z-index: 1100 !important;
+  }
+
+  /* RTL mobile user menu positioning */
+  [dir="rtl"] .user-menu {
+    right: auto !important;
+    left: 0 !important;
   }
 
   .user-menu .dropdown-header {
@@ -933,6 +968,22 @@ body.mobile-menu-open {
   .language-switcher {
     margin: 0 auto 0.1rem auto;
   }
+
+  /* Mobile button spacing fixes */
+  .btn {
+    margin: 0.5rem 0;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btn-group {
+    width: 100%;
+  }
+
+  .btn-group .btn {
+    width: 100%;
+    margin: 0.25rem 0;
+  }
 }
 
 @media (max-width: 400px) {
@@ -953,6 +1004,12 @@ body.mobile-menu-open {
 .language-switcher {
   position: relative;
   margin-right: 1rem;
+}
+
+/* RTL language switcher margin */
+[dir="rtl"] .language-switcher {
+  margin-right: 0;
+  margin-left: 1rem;
 }
 
 .language-toggle {
@@ -987,6 +1044,12 @@ body.mobile-menu-open {
   min-width: 160px;
 }
 
+/* RTL language menu positioning */
+[dir="rtl"] .language-menu {
+  right: auto;
+  left: 0;
+}
+
 .language-menu .dropdown-item {
   display: flex;
   align-items: center;
@@ -1016,6 +1079,10 @@ body.mobile-menu-open {
     margin-right: 0.5rem;
   }
 
+  [dir="rtl"] .language-switcher {
+    margin-left: 0.5rem;
+  }
+
   .language-toggle {
     padding: 0.4rem 0.6rem;
     font-size: 0.8rem;
@@ -1029,6 +1096,10 @@ body.mobile-menu-open {
 @media (max-width: 576px) {
   .language-switcher {
     margin-right: 0.25rem;
+  }
+
+  [dir="rtl"] .language-switcher {
+    margin-left: 0.25rem;
   }
 
   .language-toggle {
@@ -1087,20 +1158,42 @@ body.mobile-menu-open {
   overflow-x: auto;
   z-index: 2001;
 }
+
+/* RTL menu positioning */
 [dir="rtl"] .user-menu,
 [dir="rtl"] .language-menu {
   left: 0;
   right: auto;
 }
 
+/* RTL brand and navigation adjustments */
 [dir="rtl"] .nav-brand,
 [dir="rtl"] .brand-link {
   flex-direction: row-reverse;
 }
+
 [dir="rtl"] .nav-actions {
   flex-direction: row-reverse;
 }
-[dir="rtl"] .language-switcher {
-  margin-right: 0;
-  margin-left: 1rem;
+
+/* RTL button adjustments */
+[dir="rtl"] .btn {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .btn i {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+/* RTL mobile menu adjustments */
+@media (max-width: 992px) {
+  [dir="rtl"] .nav-link {
+    justify-content: flex-end;
+  }
+
+  [dir="rtl"] .dropdown-menu {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
 }

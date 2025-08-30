@@ -71,7 +71,8 @@
     "LOADING": "Loading...",
     "ERROR_LOADING_MASJIDS": "Failed to load featured masjids",
     "ERROR_LOADING_STORIES": "Failed to load latest stories",
-    "ERROR_LOADING_EVENTS": "Failed to load upcoming events"
+    "ERROR_LOADING_EVENTS": "Failed to load upcoming events",
+    "VIEW_ALL_STORIES": "View All Stories"
   },
 
   "FOOTER": {

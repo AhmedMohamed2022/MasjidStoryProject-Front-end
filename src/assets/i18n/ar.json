@@ -71,7 +71,8 @@
     "LOADING": "جاري التحميل...",
     "ERROR_LOADING_MASJIDS": "فشل في تحميل المساجد المميزة",
     "ERROR_LOADING_STORIES": "فشل في تحميل أحدث القصص",
-    "ERROR_LOADING_EVENTS": "فشل في تحميل الفعاليات القادمة"
+    "ERROR_LOADING_EVENTS": "فشل في تحميل الفعاليات القادمة",
+    "VIEW_ALL_STORIES": "عرض جميع القصص"
   },
 
   "FOOTER": {

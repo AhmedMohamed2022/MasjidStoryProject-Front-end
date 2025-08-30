@@ -11,19 +11,20 @@
 
           <!-- Search Box -->
           <div class="search-box mt-4">
-            <div class="input-group input-group-lg">
-              <input type="text" class="form-control" [(ngModel)]="searchTerm" (keyup.enter)="onSearch()"
+            <div class="search-input-group">
+              <input type="text" class="form-control search-input" [(ngModel)]="searchTerm" (keyup.enter)="onSearch()"
                 [placeholder]="'SEARCH_MASJID.PLACEHOLDER' | translate">
-              <button class="btn btn-gold" (click)="onSearch()">
-                <i class="fas fa-search"></i> {{ 'SEARCH_MASJID.SEARCH' | translate }}
+              <button class="btn btn-gold search-btn" (click)="onSearch()">
+                <i class="fas fa-search"></i>
+                <span class="search-btn-text">{{ 'SEARCH_MASJID.SEARCH' | translate }}</span>
               </button>
             </div>
           </div>
 
           <!-- Filter Options -->
           <div class="filter-options mt-4">
-            <div class="row justify-content-center">
-              <div class="col-md-3 mb-2">
+            <div class="filter-grid">
+              <div class="filter-item">
                 <select class="form-select" [(ngModel)]="selectedCountry" (change)="onFilterChange()">
                   <option value="">{{ 'SEARCH_MASJID.ALL_COUNTRIES' | translate }}</option>
                   <option *ngFor="let country of countries" [value]="country.id">
@@ -31,7 +32,7 @@
                   </option>
                 </select>
               </div>
-              <div class="col-md-3 mb-2">
+              <div class="filter-item">
                 <select class="form-select" [(ngModel)]="selectedCity" (change)="onFilterChange()">
                   <option value="">{{ 'SEARCH_MASJID.ALL_CITIES' | translate }}</option>
                   <option *ngFor="let city of cities" [value]="city.id">
@@ -39,7 +40,7 @@
                   </option>
                 </select>
               </div>
-              <div class="col-md-3 mb-2">
+              <div class="filter-item">
                 <select class="form-select" [(ngModel)]="selectedArchStyle" (change)="onFilterChange()">
                   <option value="">{{ 'SEARCH_MASJID.ALL_STYLES' | translate }}</option>
                   <option *ngFor="let style of archStyleOptions" [value]="style.key">
@@ -47,9 +48,10 @@
                   </option>
                 </select>
               </div>
-              <div class="col-md-3 mb-2">
-                <button class="btn btn-outline-emerald w-100" (click)="clearFilters()">
-                  <i class="fas fa-times"></i> {{ 'SEARCH_MASJID.CLEAR_FILTERS' | translate }}
+              <div class="filter-item">
+                <button class="btn btn-outline-emerald clear-filters-btn" (click)="clearFilters()">
+                  <i class="fas fa-times"></i>
+                  <span class="clear-filters-text">{{ 'SEARCH_MASJID.CLEAR_FILTERS' | translate }}</span>
                 </button>
               </div>
             </div>
@@ -63,8 +65,8 @@
   <section class="results-section section-padding">
     <div class="container">
       <!-- Results Header -->
-      <div class="results-header d-flex justify-content-between align-items-center mb-4">
-        <div>
+      <div class="results-header">
+        <div class="results-info">
           <h3 class="results-title">
             {{ loading ? ('SEARCH_MASJID.LOADING' | translate) : (searchTerm || selectedCountry || selectedCity ||
             selectedArchStyle ? ('SEARCH_MASJID.SEARCH_RESULTS' | translate) : ('SEARCH_MASJID.ALL_MASJIDS' |
@@ -97,11 +99,14 @@
 
       <!-- Error State -->
       <div *ngIf="error && !loading" class="alert alert-danger text-center">
-        <i class="fas fa-exclamation-triangle me-2"></i>
+        <i class="fas fa-exclamation-triangle"></i>
         {{ error }}
-        <button class="btn btn-outline-danger ms-3" (click)="loadMasjids()">
-          <i class="fas fa-redo"></i> {{ 'SEARCH_MASJID.TRY_AGAIN' | translate }}
-        </button>
+        <div class="error-actions">
+          <button class="btn btn-outline-danger" (click)="loadMasjids()">
+            <i class="fas fa-redo"></i>
+            {{ 'SEARCH_MASJID.TRY_AGAIN' | translate }}
+          </button>
+        </div>
       </div>
 
       <!-- No Results -->
@@ -112,7 +117,8 @@
           {{ 'SEARCH_MASJID.NO_RESULTS_DESC' | translate }}
         </p>
         <button class="btn btn-outline-emerald" (click)="clearFilters()">
-          <i class="fas fa-times"></i> {{ 'SEARCH_MASJID.CLEAR_ALL_FILTERS' | translate }}
+          <i class="fas fa-times"></i>
+          {{ 'SEARCH_MASJID.CLEAR_ALL_FILTERS' | translate }}
         </button>
       </div>
 
@@ -139,16 +145,18 @@
                 {{ 'SEARCH_MASJID.ESTABLISHED' | translate }} {{ masjid.yearOfEstablishment }}
               </p>
               <div class="card-actions">
-                <button class="btn btn-sm btn-outline-emerald me-2"
-                  (click)="navigateToMasjid(masjid.id); $event.stopPropagation()">
-                  <i class="fas fa-info-circle me-1"></i>
-                  {{ 'SEARCH_MASJID.VIEW_DETAILS' | translate }}
-                </button>
-                <button class="btn btn-sm btn-outline-primary"
-                  (click)="navigateToMasjidEvents(masjid.id); $event.stopPropagation()">
-                  <i class="fas fa-calendar me-1"></i>
-                  {{ 'SEARCH_MASJID.EVENTS' | translate }}
-                </button>
+                <div class="btn-group">
+                  <button class="btn btn-sm btn-outline-emerald"
+                    (click)="navigateToMasjid(masjid.id); $event.stopPropagation()">
+                    <i class="fas fa-info-circle"></i>
+                    {{ 'SEARCH_MASJID.VIEW_DETAILS' | translate }}
+                  </button>
+                  <button class="btn btn-sm btn-outline-primary"
+                    (click)="navigateToMasjidEvents(masjid.id); $event.stopPropagation()">
+                    <i class="fas fa-calendar"></i>
+                    {{ 'SEARCH_MASJID.EVENTS' | translate }}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -161,7 +169,8 @@
           <ul class="pagination justify-content-center">
             <li class="page-item" [class.disabled]="currentPage === 1">
               <button class="page-link" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
-                <i class="fas fa-chevron-left"></i> {{ 'SEARCH_MASJID.PREVIOUS' | translate }}
+                <i class="fas fa-chevron-left"></i>
+                <span class="page-text">{{ 'SEARCH_MASJID.PREVIOUS' | translate }}</span>
               </button>
             </li>
 
@@ -171,7 +180,8 @@
 
             <li class="page-item" [class.disabled]="currentPage === totalPages">
               <button class="page-link" (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">
-                {{ 'SEARCH_MASJID.NEXT' | translate }} <i class="fas fa-chevron-right"></i>
+                <span class="page-text">{{ 'SEARCH_MASJID.NEXT' | translate }}</span>
+                <i class="fas fa-chevron-right"></i>
               </button>
             </li>
           </ul>

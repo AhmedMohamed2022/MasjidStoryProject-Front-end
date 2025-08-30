@@ -44,6 +44,12 @@
   background: linear-gradient(45deg, #c2a25d, #ad8d49);
 }
 
+/* RTL support for form card border */
+[dir="rtl"] .event-form-card::before {
+  left: auto;
+  right: 0;
+}
+
 .form-group {
   position: relative;
 }
@@ -102,6 +108,15 @@ select.form-control option {
   margin-top: 5px;
 }
 
+/* RTL form control adjustments */
+[dir="rtl"] .form-control {
+  text-align: right;
+}
+
+[dir="rtl"] .form-text {
+  text-align: right;
+}
+
 .btn-gold {
   background: linear-gradient(45deg, #c2a25d, #ad8d49);
   border: none;
@@ -151,6 +166,18 @@ select.form-control option {
   cursor: not-allowed;
 }
 
+/* RTL button adjustments */
+[dir="rtl"] .btn-gold,
+[dir="rtl"] .btn-outline-secondary {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .btn-gold i,
+[dir="rtl"] .btn-outline-secondary i {
+  margin-left: 0;
+  margin-right: 8px;
+}
+
 .form-actions {
   display: flex;
   justify-content: flex-end;
@@ -160,6 +187,11 @@ select.form-control option {
   border-top: 1px solid #e9ecef;
 }
 
+/* RTL form actions adjustments */
+[dir="rtl"] .form-actions {
+  justify-content: flex-start;
+}
+
 .alert {
   border-radius: 12px;
   border: none;
@@ -167,6 +199,7 @@ select.form-control option {
   margin-bottom: 2rem;
   display: flex;
   align-items: center;
+  gap: 10px;
 }
 
 .alert-success {
@@ -192,6 +225,12 @@ select.form-control option {
   margin-left: auto;
 }
 
+/* RTL close button adjustments */
+[dir="rtl"] .btn-close {
+  margin-left: 0;
+  margin-right: auto;
+}
+
 .btn-close:hover {
   opacity: 1;
 }
@@ -205,6 +244,7 @@ select.form-control option {
   height: 1rem;
 }
 
+/* Mobile responsive styles */
 @media (max-width: 768px) {
   .create-event-container {
     padding: 20px 0;
@@ -222,9 +262,14 @@ select.form-control option {
   .form-actions {
     flex-direction: column;
     gap: 15px;
+    align-items: stretch;
   }
 
-  .form-actions button {
+  .form-actions .btn-group {
+    width: 100%;
+  }
+
+  .form-actions .btn-group .btn {
     width: 100%;
     justify-content: center;
   }
@@ -237,6 +282,21 @@ select.form-control option {
 
   .event-form-card {
     padding: 20px;
+  }
+
+  .alert {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+
+  .btn-close {
+    margin: 0;
+    align-self: flex-end;
+  }
+
+  [dir="rtl"] .btn-close {
+    align-self: flex-start;
   }
 }
 
@@ -258,6 +318,11 @@ select.form-control option {
   text-align: right;
   font-size: 0.8rem;
   color: #6c757d;
+}
+
+/* RTL form text adjustments */
+[dir="rtl"] .form-text {
+  text-align: left;
 }
 
 .form-group.has-error .form-control {
@@ -288,6 +353,7 @@ select.form-control option {
   font-size: 1rem;
   padding: 10px 18px;
   transition: all 0.2s;
+  margin: 0.25rem;
 }
 
 .badge.bg-gold:hover,
@@ -300,4 +366,61 @@ img.img-fluid.rounded.shadow-sm.border {
   border: 2px solid #e8f4f1;
   background: #fafbfc;
   padding: 2px;
+}
+
+/* Button group improvements for mobile */
+.btn-group {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-group .btn {
+  margin: 0.25rem;
+  flex: 0 0 auto;
+}
+
+/* Mobile button stacking fixes */
+@media (max-width: 768px) {
+  .btn-group {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.75rem;
+  }
+
+  .btn-group .btn {
+    width: 100%;
+    margin: 0.25rem 0;
+    justify-content: center;
+  }
+
+  /* Fix for buttons that should be side by side on mobile */
+  .btn-group.horizontal-mobile {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn-group.horizontal-mobile .btn {
+    flex: 1 1 auto;
+    min-width: 120px;
+    max-width: 200px;
+  }
+}
+
+/* RTL button group adjustments */
+[dir="rtl"] .btn-group {
+  flex-direction: row-reverse;
+}
+
+@media (max-width: 768px) {
+  [dir="rtl"] .btn-group {
+    flex-direction: column;
+  }
+
+  [dir="rtl"] .btn-group.horizontal-mobile {
+    flex-direction: row-reverse;
+  }
 }

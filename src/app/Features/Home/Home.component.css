@@ -40,6 +40,13 @@
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+/* RTL support for hero actions */
+[dir="rtl"] .hero-actions {
+  flex-direction: row-reverse;
+  justify-content: flex-end;
 }
 
 .hero-image {
@@ -69,7 +76,7 @@
 /* Quick Actions Section */
 .quick-actions {
   background: var(--primary-white);
-  border-radius: 15px;
+  border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   border: 1px solid var(--border-color);
@@ -82,8 +89,11 @@
   gap: 0.5rem;
   font-size: 1rem;
   font-weight: 600;
-  border-radius: 10px;
+  border-radius: 12px;
   transition: all 0.3s ease;
+  margin: 0.5rem;
+  height: auto;
+  min-height: 120px;
 }
 
 .quick-actions .btn i {
@@ -92,7 +102,7 @@
 
 .cta-actions {
   background: var(--primary-white);
-  border-radius: 15px;
+  border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   border: 1px solid var(--border-color);
@@ -123,7 +133,7 @@
 /* Masjid Cards */
 .masjid-card {
   background: var(--primary-white);
-  border-radius: 15px;
+  border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   border: 1px solid var(--border-color);
   overflow: hidden;
@@ -193,7 +203,7 @@
 /* Story Cards */
 .story-card {
   background: var(--primary-white);
-  border-radius: 15px;
+  border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   border: 1px solid var(--border-color);
   padding: 1.5rem;
@@ -226,10 +236,16 @@
   background: var(--rich-gold);
   color: var(--primary-white);
   padding: 0.3rem 0.8rem;
-  border-radius: 15px;
+  border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 600;
   margin-left: 1rem;
+}
+
+/* RTL support for story masjid badge */
+[dir="rtl"] .story-masjid {
+  margin-left: 0;
+  margin-right: 1rem;
 }
 
 .story-excerpt {
@@ -259,7 +275,7 @@
 /* Event Cards */
 .event-card {
   background: var(--primary-white);
-  border-radius: 15px;
+  border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   border: 1px solid var(--border-color);
   overflow: hidden;
@@ -310,7 +326,7 @@
   align-items: center;
   gap: 0.3rem;
   padding: 0.4rem 0.8rem;
-  border-radius: 15px;
+  border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 600;
 }
@@ -386,10 +402,10 @@
   font-weight: 600;
 }
 
-/* Button Styles */
+/* Button Styles with RTL support - STANDARDIZED BORDER RADIUS */
 .btn {
   padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  border-radius: 0.375rem !important;
   font-weight: 600;
   font-size: 1rem;
   display: inline-flex;
@@ -399,6 +415,10 @@
   border: none;
   cursor: pointer;
   text-decoration: none;
+  margin: 0.25rem;
+  min-height: auto;
+  height: auto;
+  width: auto;
 }
 
 .btn-gold {
@@ -439,11 +459,39 @@
 .btn-lg {
   padding: 1rem 2rem;
   font-size: 1.1rem;
+  min-height: 48px;
 }
 
 .btn-sm {
   padding: 0.5rem 1rem;
   font-size: 0.9rem;
+  min-height: 36px;
+}
+
+/* RTL button adjustments */
+[dir="rtl"] .btn {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .btn i {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+/* Button group improvements */
+.btn-group {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-group .btn {
+  margin: 0.25rem;
+  flex: 0 0 auto;
+  min-width: auto;
+  width: auto;
 }
 
 /* Utility Classes */
@@ -465,7 +513,7 @@
 }
 
 .alert {
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 1rem 1.5rem;
   margin-bottom: 1.5rem;
   border: none;
@@ -477,7 +525,13 @@
   border-left: 4px solid #dc3545;
 }
 
-/* Responsive Design */
+/* RTL alert border adjustments */
+[dir="rtl"] .alert-danger {
+  border-left: none;
+  border-right: 4px solid #dc3545;
+}
+
+/* Responsive Design with improved button handling */
 @media (max-width: 768px) {
   .hero-title {
     font-size: 2.5rem;
@@ -490,6 +544,14 @@
   .hero-actions {
     flex-direction: column;
     align-items: stretch;
+    gap: 1rem;
+  }
+
+  .hero-actions .btn {
+    width: 100%;
+    justify-content: center;
+    min-height: 48px;
+    font-size: 1rem;
   }
 
   .section-title {
@@ -507,10 +569,39 @@
 
   .quick-actions .btn {
     font-size: 0.9rem;
+    margin: 0.5rem 0;
+    min-height: 100px;
   }
 
   .quick-actions .btn i {
     font-size: 1.2rem;
+  }
+
+  /* Mobile button spacing fixes */
+  .btn-group {
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  .btn-group .btn {
+    margin: 0.25rem 0;
+    width: 100%;
+    justify-content: center;
+    min-height: 48px;
+  }
+
+  /* Horizontal mobile button groups */
+  .btn-group.horizontal-mobile {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn-group.horizontal-mobile .btn {
+    flex: 1 1 auto;
+    min-width: 140px;
+    max-width: 200px;
+    width: auto;
   }
 }
 
@@ -542,6 +633,38 @@
 
   .story-masjid {
     margin-left: 0;
+    margin-right: 0;
     align-self: flex-start;
+  }
+
+  /* RTL mobile adjustments */
+  [dir="rtl"] .story-masjid {
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  /* Ensure buttons don't stick together on mobile */
+  .btn {
+    margin: 0.5rem 0;
+    width: 100%;
+    justify-content: center;
+    min-height: 44px;
+  }
+
+  .btn-group {
+    width: 100%;
+  }
+
+  .btn-group .btn {
+    width: 100%;
+    margin: 0.25rem 0;
+    min-height: 44px;
+  }
+
+  /* Horizontal mobile buttons */
+  .btn-group.horizontal-mobile .btn {
+    min-width: 120px;
+    max-width: 180px;
+    width: auto;
   }
 }

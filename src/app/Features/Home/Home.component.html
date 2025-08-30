@@ -9,13 +9,13 @@
             <p class="hero-subtitle">
               {{ 'HOME.HERO_SUBTITLE' | translate }}
             </p>
-            <div class="hero-actions">
-              <button class="btn btn-gold btn-lg me-3" (click)="navigateToExplore()">
-                <i class="fas fa-search me-2"></i>
+            <div class="hero-actions btn-group horizontal-mobile">
+              <button class="btn btn-gold btn-lg" (click)="navigateToExplore()">
+                <i class="fas fa-search"></i>
                 {{ 'HOME.START_EXPLORING' | translate }}
               </button>
               <button class="btn btn-outline-emerald btn-lg" (click)="navigateToAllEvents()">
-                <i class="fas fa-calendar-alt me-2"></i>
+                <i class="fas fa-calendar-alt"></i>
                 {{ 'HOME.VIEW_EVENTS' | translate }}
               </button>
             </div>
@@ -80,14 +80,16 @@
       <div class="row justify-content-center">
         <div class="col-lg-6">
           <div class="cta-actions text-center">
-            <button class="btn btn-gold btn-lg me-3" (click)="navigateToRegister()">
-              <i class="fas fa-user-plus me-2"></i>
-              {{ 'HOME.SIGN_UP' | translate }}
-            </button>
-            <button class="btn btn-outline-emerald btn-lg" (click)="navigateToLogin()">
-              <i class="fas fa-sign-in-alt me-2"></i>
-              {{ 'LOGIN.SIGN_IN' | translate }}
-            </button>
+            <div class="btn-group horizontal-mobile">
+              <button class="btn btn-gold btn-lg" (click)="navigateToRegister()">
+                <i class="fas fa-user-plus"></i>
+                {{ 'HOME.SIGN_UP' | translate }}
+              </button>
+              <button class="btn btn-outline-emerald btn-lg" (click)="navigateToLogin()">
+                <i class="fas fa-sign-in-alt"></i>
+                {{ 'HOME.SIGN_IN' | translate }}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -123,37 +125,52 @@
                 {{ 'HOME.ESTABLISHED' | translate }} {{ masjid.yearOfEstablishment }}
               </p>
               <div class="card-actions">
-                <button class="btn btn-sm btn-outline-emerald"
-                  (click)="navigateToMasjidEvents(masjid.id); $event.stopPropagation()">
-                  <i class="fas fa-calendar me-1"></i>
-                  {{ 'HOME.VIEW_EVENTS_BUTTON' | translate }}
-                </button>
+                <div class="btn-group">
+                  <button class="btn btn-sm btn-outline-emerald"
+                    (click)="navigateToMasjid(masjid.id); $event.stopPropagation()">
+                    <i class="fas fa-info-circle"></i>
+                    {{ 'HOME.VIEW_DETAILS' | translate }}
+                  </button>
+                  <button class="btn btn-sm btn-outline-primary"
+                    (click)="navigateToMasjidEvents(masjid.id); $event.stopPropagation()">
+                    <i class="fas fa-calendar"></i>
+                    {{ 'HOME.VIEW_EVENTS' | translate }}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="text-center" *ngIf="loadingMasjids">
+      <!-- Loading State -->
+      <div *ngIf="loadingMasjids" class="text-center py-5">
         <div class="spinner-border text-emerald" role="status">
           <span class="visually-hidden">{{ 'HOME.LOADING' | translate }}</span>
         </div>
+        <p class="mt-3">{{ 'HOME.LOADING_MASJIDS' | translate }}</p>
       </div>
 
-      <div class="alert alert-danger" *ngIf="masjidError">
+      <!-- Error State -->
+      <div *ngIf="masjidError && !loadingMasjids" class="alert alert-danger text-center">
+        <i class="fas fa-exclamation-triangle"></i>
         {{ masjidError }}
+        <div class="error-actions">
+          <button class="btn btn-outline-danger" (click)="loadFeaturedMasjids()">
+            <i class="fas fa-redo"></i>
+            {{ 'HOME.TRY_AGAIN' | translate }}
+          </button>
+        </div>
       </div>
 
       <!-- View All Masjids Button -->
       <div class="text-center mt-4" *ngIf="!loadingMasjids && !masjidError">
-        <button class="btn btn-outline-emerald btn-lg me-3" (click)="navigateToAllMasjids()">
-          <i class="fas fa-mosque me-2"></i>
-          {{ 'HOME.VIEW_ALL_MASJIDS' | translate }}
-        </button>
-        <button class="btn btn-gold btn-lg" (click)="navigateToSearch()">
-          <i class="fas fa-search me-2"></i>
-          {{ 'HOME.SEARCH_MASJIDS' | translate }}
-        </button>
+        <div class="btn-group">
+          <button class="btn btn-outline-emerald btn-lg" (click)="navigateToAllMasjids()">
+            <i class="fas fa-mosque"></i>
+            {{ 'HOME.VIEW_ALL_MASJIDS' | translate }}
+          </button>
+        </div>
       </div>
     </div>
   </section>
@@ -167,41 +184,59 @@
       </div>
 
       <div class="row" *ngIf="!loadingStories">
-        <div class="col-lg-6 mb-4" *ngFor="let story of latestStories">
+        <div class="col-lg-4 col-md-6 mb-4" *ngFor="let story of latestStories">
           <div class="story-card" (click)="navigateToStory(story.id)">
             <div class="story-header">
               <h5 class="story-title">{{ story.localizedTitle }}</h5>
-              <span class="story-masjid">{{ story.masjidName }}</span>
+              <span class="story-masjid" *ngIf="story.masjidName">
+                {{ story.masjidName }}
+              </span>
             </div>
-            <div class="story-content">
-              <p class="story-excerpt">{{ getStoryExcerpt(story.localizedContent) }}</p>
-              <div class="story-meta">
-                <span class="story-author">
-                  <i class="fas fa-user"></i>
-                  {{ story.authorFullName }}
-                </span>
-                <span class="story-date">
-                  <i class="fas fa-calendar"></i>
-                  {{ formatDate(story.datePublished) }}
-                </span>
-                <span class="story-likes">
-                  <i class="fas fa-heart"></i>
-                  {{ story.likeCount }}
-                </span>
-              </div>
+            <p class="story-excerpt">
+              {{ getStoryExcerpt(story.localizedContent) }}
+            </p>
+            <div class="story-meta">
+              <span>
+                <i class="fas fa-user"></i>
+                {{ story.authorFullName }}
+              </span>
+              <span>
+                <i class="fas fa-calendar"></i>
+                {{ formatDate(story.datePublished) }}
+              </span>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="text-center" *ngIf="loadingStories">
+      <!-- Loading State -->
+      <div *ngIf="loadingStories" class="text-center py-5">
         <div class="spinner-border text-emerald" role="status">
           <span class="visually-hidden">{{ 'HOME.LOADING' | translate }}</span>
         </div>
+        <p class="mt-3">{{ 'HOME.LOADING_STORIES' | translate }}</p>
       </div>
 
-      <div class="alert alert-danger" *ngIf="storyError">
+      <!-- Error State -->
+      <div *ngIf="storyError && !loadingStories" class="alert alert-danger text-center">
+        <i class="fas fa-exclamation-triangle"></i>
         {{ storyError }}
+        <div class="error-actions">
+          <button class="btn btn-outline-danger" (click)="loadLatestStories()">
+            <i class="fas fa-redo"></i>
+            {{ 'HOME.TRY_AGAIN' | translate }}
+          </button>
+        </div>
+      </div>
+
+      <!-- View All Stories Button -->
+      <div class="text-center mt-4" *ngIf="!loadingStories && !storyError">
+        <div class="btn-group">
+          <button class="btn btn-outline-emerald btn-lg" (click)="navigateToSearch()">
+            <i class="fas fa-book-open"></i>
+            {{ 'HOME.VIEW_ALL_STORIES' | translate }}
+          </button>
+        </div>
       </div>
     </div>
   </section>
@@ -222,66 +257,68 @@
                 <span class="day">{{ getEventDay(event.eventDate) }}</span>
                 <span class="month">{{ getEventMonth(event.eventDate) }}</span>
               </div>
-              <div class="event-status">
-                <span class="status-badge" [class]="getEventStatus(event.eventDate)">
-                  <i class="fas" [class]="getEventStatusIcon(event.eventDate)"></i>
-                  {{ getEventStatusText(event.eventDate) }}
-                </span>
-              </div>
+              <span class="status-badge" [class]="getEventStatus(event.eventDate)">
+                <i class="fas" [class]="getEventStatusIcon(event.eventDate)"></i>
+                {{ getEventStatusText(event.eventDate) }}
+              </span>
             </div>
             <div class="event-content">
-              <h5 class="event-title">{{ event.title }}</h5>
-              <p class="event-description">{{ event.description }}</p>
+              <h5 class="event-title">{{ event.localizedTitle }}</h5>
+              <p class="event-description">{{ event.localizedDescription }}</p>
               <div class="event-meta">
-                <p class="event-location" *ngIf="event.masjidName">
-                  <i class="fas fa-mosque"></i>
+                <p>
+                  <i class="fas fa-map-marker-alt"></i>
                   {{ event.masjidName }}
                 </p>
-                <p class="event-organizer">
-                  <i class="fas fa-user"></i>
-                  {{ event.createdByName }}
-                </p>
-                <p class="event-time">
+                <p>
                   <i class="fas fa-clock"></i>
                   {{ formatEventTime(event.eventDate) }}
                 </p>
               </div>
               <div class="event-actions">
-                <button class="btn btn-sm btn-gold"
+                <div class="registration-status">
+                  <i class="fas fa-users"></i>
+                  {{ event.likeCount || 0 }} {{ 'HOME.LIKES' | translate }}
+                </div>
+                <button class="btn btn-sm btn-outline-primary"
                   (click)="navigateToEventDetails(event.id); $event.stopPropagation()">
-                  <i class="fas fa-info-circle me-1"></i>
+                  <i class="fas fa-info-circle"></i>
                   {{ 'HOME.VIEW_DETAILS' | translate }}
                 </button>
-                <span class="registration-status" *ngIf="event.isUserRegistered">
-                  <i class="fas fa-check-circle text-success"></i>
-                  {{ 'HOME.REGISTERED' | translate }}
-                </span>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="text-center" *ngIf="loadingEvents">
+      <!-- Loading State -->
+      <div *ngIf="loadingEvents" class="text-center py-5">
         <div class="spinner-border text-emerald" role="status">
           <span class="visually-hidden">{{ 'HOME.LOADING' | translate }}</span>
         </div>
+        <p class="mt-3">{{ 'HOME.LOADING_EVENTS' | translate }}</p>
       </div>
 
-      <div class="alert alert-danger" *ngIf="eventError">
+      <!-- Error State -->
+      <div *ngIf="eventError && !loadingEvents" class="alert alert-danger text-center">
+        <i class="fas fa-exclamation-triangle"></i>
         {{ eventError }}
+        <div class="error-actions">
+          <button class="btn btn-outline-danger" (click)="loadUpcomingEvents()">
+            <i class="fas fa-redo"></i>
+            {{ 'HOME.TRY_AGAIN' | translate }}
+          </button>
+        </div>
       </div>
 
       <!-- View All Events Button -->
       <div class="text-center mt-4" *ngIf="!loadingEvents && !eventError">
-        <button class="btn btn-outline-emerald btn-lg me-3" (click)="navigateToAllEvents()">
-          <i class="fas fa-calendar-week me-2"></i>
-          {{ 'HOME.VIEW_ALL_EVENTS' | translate }}
-        </button>
-        <button class="btn btn-gold btn-lg" (click)="navigateToCreateEvent()" *ngIf="isAuthenticated">
-          <i class="fas fa-plus me-2"></i>
-          {{ 'HOME.CREATE_EVENT' | translate }}
-        </button>
+        <div class="btn-group">
+          <button class="btn btn-outline-emerald btn-lg" (click)="navigateToAllEvents()">
+            <i class="fas fa-calendar-alt"></i>
+            {{ 'HOME.VIEW_ALL_EVENTS' | translate }}
+          </button>
+        </div>
       </div>
     </div>
   </section>

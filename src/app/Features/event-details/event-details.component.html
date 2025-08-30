@@ -10,7 +10,7 @@
 
     <!-- Error State -->
     <div *ngIf="error" class="alert alert-danger text-center" role="alert">
-      <i class="fas fa-exclamation-triangle me-2"></i>
+      <i class="fas fa-exclamation-triangle"></i>
       {{ 'EVENT_DETAILS.ERROR' | translate }}
     </div>
 
@@ -20,7 +20,7 @@
         <!-- Back Button -->
         <div class="mb-4">
           <a routerLink="/upcoming-events" class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left me-2"></i>{{ 'EVENT_DETAILS.BACK_TO_EVENTS' | translate }}
+            <i class="fas fa-arrow-left"></i>{{ 'EVENT_DETAILS.BACK_TO_EVENTS' | translate }}
           </a>
         </div>
 
@@ -44,15 +44,17 @@
 
             <!-- Action Buttons for Creator -->
             <div class="event-actions" *ngIf="isEventCreator">
-              <button class="btn btn-outline-primary me-2" (click)="editEvent()" [disabled]="isEventPast">
-                <i class="fas fa-edit"></i>
-                {{ 'EVENT_DETAILS.EDIT' | translate }}
-              </button>
-              <button class="btn btn-outline-danger" (click)="deleteEvent()" [disabled]="deleting">
-                <span *ngIf="deleting" class="spinner-border spinner-border-sm me-2" role="status"></span>
-                <i *ngIf="!deleting" class="fas fa-trash"></i>
-                {{ deleting ? ('EVENT_DETAILS.DELETING' | translate) : ('EVENT_DETAILS.DELETE' | translate) }}
-              </button>
+              <div class="btn-group horizontal-mobile">
+                <button class="btn btn-outline-primary" (click)="editEvent()" [disabled]="isEventPast">
+                  <i class="fas fa-edit"></i>
+                  {{ 'EVENT_DETAILS.EDIT' | translate }}
+                </button>
+                <button class="btn btn-outline-danger" (click)="deleteEvent()" [disabled]="deleting">
+                  <span *ngIf="deleting" class="spinner-border spinner-border-sm" role="status"></span>
+                  <i *ngIf="!deleting" class="fas fa-trash"></i>
+                  {{ deleting ? ('EVENT_DETAILS.DELETING' | translate) : ('EVENT_DETAILS.DELETE' | translate) }}
+                </button>
+              </div>
             </div>
           </div>
 
@@ -102,53 +104,6 @@
               </div>
             </div>
 
-            <!-- Description -->
-            <div class="description-section">
-              <h3 class="section-title">
-                <i class="fas fa-align-left"></i>
-                {{ 'EVENT_DETAILS.DESCRIPTION' | translate }}
-              </h3>
-              <div class="description-content">
-                <p>{{ event.localizedDescription }}</p>
-              </div>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="action-buttons">
-              <div class="action-group">
-                <!-- Registration Button -->
-                <button *ngIf="!event.isUserRegistered && !isEventPast" class="btn btn-gold btn-lg"
-                  (click)="registerForEvent()" [disabled]="registering">
-                  <span *ngIf="registering" class="spinner-border spinner-border-sm me-2" role="status"></span>
-                  <i *ngIf="!registering" class="fas fa-user-plus me-2"></i>
-                  {{ registering ? ('EVENT_DETAILS.REGISTERING' | translate) : ('EVENT_DETAILS.REGISTER_FOR_EVENT' |
-                  translate) }}
-                </button>
-
-                <span *ngIf="event.isUserRegistered" class="btn btn-success btn-lg disabled">
-                  <i class="fas fa-check me-2"></i>{{ 'EVENT_DETAILS.ALREADY_REGISTERED' | translate }}
-                </span>
-
-                <span *ngIf="isEventPast" class="btn btn-secondary btn-lg disabled">
-                  <i class="fas fa-calendar-times me-2"></i>{{ 'EVENT_DETAILS.EVENT_HAS_PASSED' | translate }}
-                </span>
-              </div>
-
-              <div class="action-group">
-                <!-- Share Button -->
-                <button class="btn btn-outline-secondary" (click)="shareEvent()">
-                  <i class="fas fa-share-alt me-2"></i>
-                  {{ 'EVENT_DETAILS.SHARE_EVENT' | translate }}
-                </button>
-
-                <!-- View Masjid Button -->
-                <a *ngIf="event.masjidId" [routerLink]="['/masjid', event.masjidId]" class="btn btn-outline-primary">
-                  <i class="fas fa-mosque me-2"></i>
-                  {{ 'EVENT_DETAILS.VIEW_MASJID' | translate }}
-                </a>
-              </div>
-            </div>
-
             <!-- Like Section -->
             <div class="interaction-section">
               <div class="like-section">
@@ -166,7 +121,7 @@
             <div class="comments-section">
               <div class="comments-header">
                 <h3 class="section-title">
-                  <i class="fas fa-comments me-2"></i>
+                  <i class="fas fa-comments"></i>
                   {{ 'EVENT_DETAILS.COMMENTS' | translate }} ({{ event.comments?.length || 0 }})
                 </h3>
               </div>
@@ -186,8 +141,8 @@
                   <div class="comment-actions">
                     <button class="btn btn-primary submit-comment-btn"
                       [disabled]="!newComment.trim() || submittingComment" (click)="addComment()">
-                      <i class="fas fa-paper-plane me-2" *ngIf="!submittingComment"></i>
-                      <i class="fas fa-spinner fa-spin me-2" *ngIf="submittingComment"></i>
+                      <i class="fas fa-paper-plane" *ngIf="!submittingComment"></i>
+                      <i class="fas fa-spinner fa-spin" *ngIf="submittingComment"></i>
                       {{ submittingComment ? ('EVENT_DETAILS.POSTING' | translate) : ('EVENT_DETAILS.POST_COMMENT' |
                       translate) }}
                     </button>
@@ -196,7 +151,7 @@
 
                 <!-- Error Message for Comment Submission -->
                 <div class="alert alert-danger mt-2" *ngIf="commentError">
-                  <i class="fas fa-exclamation-circle me-2"></i>
+                  <i class="fas fa-exclamation-circle"></i>
                   {{ commentError }}
                 </div>
               </div>
@@ -204,7 +159,7 @@
               <!-- Login Prompt -->
               <div class="login-prompt" *ngIf="!isAuthenticated">
                 <div class="alert alert-info">
-                  <i class="fas fa-info-circle me-2"></i>
+                  <i class="fas fa-info-circle"></i>
                   {{ 'EVENT_DETAILS.LOGIN_TO_INTERACT' | translate }} <a href="/login" class="alert-link">{{
                     'EVENT_DETAILS.LOGIN' | translate }}</a>.
                 </div>
