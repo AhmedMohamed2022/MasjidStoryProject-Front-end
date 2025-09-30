@@ -231,7 +231,7 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
       cityId: [null, Validators.required],
       yearOfEstablishment: [null],
     });
-    console.log('Form initialized:', this.masjidForm.value);
+    // Form initialized
 
     this.eventForm = this.fb.group({
       eventDate: ['', Validators.required],
@@ -897,9 +897,7 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
         address: c?.address ?? '',
       };
     });
-    console.log('Patching form with contents:', contents);
     this.masjidForm.patchValue({
-      contents,
       archStyle: masjid.archStyle,
       latitude: masjid.latitude,
       longitude: masjid.longitude,
@@ -907,17 +905,12 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
       cityId: masjid.cityId,
       yearOfEstablishment: masjid.yearOfEstablishment,
     });
-    console.log('Form after patchValue:', this.masjidForm.value);
     this.loadCountries();
     this.loadCities();
   }
 
   onSubmit(): void {
-    console.log('Form validity:', this.masjidForm.valid);
-    console.log('Form raw value before submit:', this.masjidForm.getRawValue());
-
     if (!this.masjidForm.valid) {
-      console.log('Form is invalid. Errors:', this.getFormValidationErrors());
       this.markFormGroupTouched(this.masjidForm);
       this.snackBar.open(
         'Please fill all required fields for all languages.',
@@ -961,8 +954,7 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
       })),
     };
 
-    console.log('Prepared data for submission:', formData);
-    console.log('Contents being sent:', formData.Contents);
+    // Data prepared for submission
 
     if (this.showCreateForm) {
       this.createMasjid(formData);
@@ -972,10 +964,8 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
   }
 
   createMasjid(formData: any): void {
-    console.log('Creating masjid with:', formData);
-    this.masjidService.createMasjid(formData, this.selectedFiles).subscribe({
+    this.masjidService.createMasjid(formData).subscribe({
       next: (response) => {
-        console.log('Masjid created successfully:', response);
         const message =
           response.data || response.message || 'Masjid created successfully!';
         this.snackBar.open(message, 'Close', {
@@ -1001,7 +991,6 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
       this.isSubmitting = false;
       return;
     }
-    console.log('Updating masjid with:', formData);
     this.masjidService
       .updateMasjid(
         this.editingMasjid.id,
@@ -1011,7 +1000,6 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
       )
       .subscribe({
         next: (response) => {
-          console.log('Masjid updated successfully:', response);
           const message =
             response.data || response.message || 'Masjid updated successfully!';
           this.snackBar.open(message, 'Close', {

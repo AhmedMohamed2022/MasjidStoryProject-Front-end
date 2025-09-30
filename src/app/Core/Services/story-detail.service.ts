@@ -127,14 +127,11 @@ export class StoryService {
     languageCode: string = 'en'
   ): Promise<PaginatedResponse<StoryViewModel>> {
     try {
-      console.log(`Fetching stories: page=${page}, size=${size}`);
       const response = await firstValueFrom(
         this.http.get<PaginatedResponse<StoryViewModel>>(
           `${this.baseUrl}/story/paginated?page=${page}&size=${size}&languageCode=${languageCode}`
         )
       );
-
-      console.log('Raw pagination response:', response);
 
       return (
         response || {

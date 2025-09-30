@@ -68,7 +68,6 @@ export class LoginComponent {
 
       this.authService.login(loginData).subscribe({
         next: (response) => {
-          console.log(response);
           this.isLoading = false;
           // Refresh user registrations after successful login
           this.userRegistrationService.refreshRegistrations();

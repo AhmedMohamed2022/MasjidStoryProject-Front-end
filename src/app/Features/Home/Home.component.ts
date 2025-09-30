@@ -69,7 +69,6 @@ export class HomeComponent implements OnInit {
     this.homeService.getFeaturedMasjids(this.translate.currentLang).subscribe({
       next: (masjids) => {
         this.featuredMasjids = masjids.slice(0, 6); // Show only 6
-        console.log('Loaded featured masjids:', this.featuredMasjids);
         this.loadingMasjids = false;
       },
       error: (error) => {

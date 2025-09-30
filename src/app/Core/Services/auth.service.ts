@@ -29,7 +29,6 @@ export class AuthService {
   login(loginData: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, loginData).pipe(
       tap((response) => {
-        console.log('Login Response:', response);
         if (response.token && response.email) {
           this.setAuthData(response);
         } else {
@@ -82,8 +81,6 @@ export class AuthService {
       userId: response.userId,
       roles: response.roles,
     };
-
-    console.log('Setting auth data:', { token: response.token, user });
 
     localStorage.setItem('authToken', response.token);
     localStorage.setItem('currentUser', JSON.stringify(user));

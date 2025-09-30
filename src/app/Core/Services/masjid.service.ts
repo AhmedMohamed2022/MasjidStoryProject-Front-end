@@ -98,11 +98,7 @@ export class MasjidService {
       });
     }
 
-    // Debug: Log all FormData entries
-    console.log('FormData entries:');
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ': ' + pair[1]);
-    }
+    // Debug: // FormData entries prepared for submission
 
     return this.http
       .post(`${this.apiUrl}/create`, formData)
@@ -169,11 +165,7 @@ export class MasjidService {
       });
     }
 
-    // Debug: Log all FormData entries
-    console.log('FormData entries for update:');
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ': ' + pair[1]);
-    }
+    // FormData entries prepared for update
 
     return this.http
       .put(`${this.apiUrl}/${id}`, formData)

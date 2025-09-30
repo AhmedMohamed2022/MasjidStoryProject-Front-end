@@ -84,7 +84,6 @@ export class CreateCommunityComponent implements OnInit {
           (lang) => lang.code === 'en' || lang.code === 'ar'
         );
         this.masjids = masjids || [];
-        console.log('Masjids loaded:', this.masjids);
         // Initialize contents FormArray for both languages
         const contentsArray = this.communityForm.get('contents') as FormArray;
         contentsArray.clear();

@@ -176,7 +176,7 @@ export class EventDetailsComponent implements OnInit {
           text: `Check out this event: ${this.event?.title}`,
           url: window.location.href,
         })
-        .catch((error) => console.log('Error sharing', error));
+        .catch((error) => {});
     } else {
       // Fallback - copy to clipboard
       navigator.clipboard

@@ -91,7 +91,6 @@ export class StoryDetailComponent implements OnInit {
 
   async toggleLike(): Promise<void> {
     if (!this.isAuthenticated) {
-      console.warn('User not authenticated, redirecting to login');
       // Store the current URL and redirect to login
       this.router.navigate(['/login'], {
         queryParams: { returnUrl: this.router.url },
@@ -210,7 +209,7 @@ export class StoryDetailComponent implements OnInit {
           }),
           url: window.location.href,
         })
-        .catch((error) => console.log('Error sharing', error));
+        .catch((error) => {});
     } else {
       // Fallback - copy to clipboard
       navigator.clipboard
