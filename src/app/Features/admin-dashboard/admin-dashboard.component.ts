@@ -45,6 +45,7 @@ import {
   CityViewModel,
   MasjidContentViewModel,
 } from '../../Core/Models/masjid.model';
+import { MasjidDetailsViewModel } from '../../Core/Models/masjid-details.model';
 import { StoryViewModel } from '../../Core/Models/story.model';
 import {
   EventViewModel,
@@ -886,17 +887,33 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
     this.showCreateForm = false;
     this.selectedFiles = [];
     this.selectedMediaToDelete = [];
+
     // Patch per-language fields
     const contents = this.languages.map((lang) => {
-      const c =
-        (masjid.contents?.find((x) => x.languageId === lang.id) as any) || {};
+      const c = masjid.contents?.find((x) => x.languageId === lang.id) as
+        | MasjidContentViewModel
+        | undefined;
       return {
         languageId: lang.id,
-        name: c?.name ?? '',
-        description: c?.description ?? '',
-        address: c?.address ?? '',
+        name: c?.name || '',
+        description: c?.description || '',
+        address: c?.address || '',
       };
     });
+
+    // Clear and set the contents array
+    this.contentsArray.clear();
+    contents.forEach((content) => {
+      this.contentsArray.push(
+        this.fb.group({
+          languageId: [content.languageId],
+          name: [content.name, Validators.required],
+          description: [content.description, Validators.required],
+          address: [content.address, Validators.required],
+        })
+      );
+    });
+
     this.masjidForm.patchValue({
       archStyle: masjid.archStyle,
       latitude: masjid.latitude,
@@ -905,6 +922,7 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
       cityId: masjid.cityId,
       yearOfEstablishment: masjid.yearOfEstablishment,
     });
+
     this.loadCountries();
     this.loadCities();
   }
@@ -964,7 +982,7 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
   }
 
   createMasjid(formData: any): void {
-    this.masjidService.createMasjid(formData).subscribe({
+    this.masjidService.createMasjid(formData, this.selectedFiles).subscribe({
       next: (response) => {
         const message =
           response.data || response.message || 'Masjid created successfully!';
