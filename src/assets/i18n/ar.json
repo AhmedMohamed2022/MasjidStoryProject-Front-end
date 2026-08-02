@@ -22,7 +22,8 @@
     "MY_EVENTS": "فعالياتي",
     "MY_PROFILE": "ملفي الشخصي",
     "MY_STORIES": "قصصي",
-    "USER": "المستخدم"
+    "USER": "المستخدم",
+    "WELCOME": "مرحباً، {{name}}"
   },
 
   "NOTIFICATION": {
